@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KUKA at the Physical-AI Inflection</title>
+
+<!-- Fonts are self-hosted. The deck lays out on a fixed canvas verified against
+     these exact metrics, so it must not depend on a network fetch at present
+     time — a fallback face would reflow every screen. -->
+<link rel="stylesheet" href="fonts.css" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body class="theme-dark">
+  <div id="stage">
+    <!-- Fixed 1600x900 design canvas. Everything the audience sees lives inside
+         it and scales as one unit, so the composition never drifts between
+         resolutions. fit.js owns the scale; nothing in here uses vw/vh. -->
+    <div id="deck-canvas">
+      <main id="screen-mount" aria-live="polite"></main>
+
+      <!-- Attribution watermark. Lives in the shell, not in a page, so all
+           nineteen screens carry it identically and it costs one edit. Parked
+           in the canvas's dead left margin — see .deck-watermark. -->
+      <p class="deck-watermark">A synopsis for KUKA by Dr. Aswin Chandarr</p>
+
+      <div id="theme-wash" class="theme-wash" aria-hidden="true"></div>
+
+      <button id="master-nav-btn" class="master-nav-btn" type="button" aria-label="Open screen overview">
+        <span class="master-nav-btn__grid" aria-hidden="true"></span>
+        <span>Overview</span>
+      </button>
+
+      <nav class="progress-rail" aria-label="Screen progress">
+        <div class="progress-segs" id="progress-segs"></div>
+        <span class="progress-counter" id="progress-counter" aria-hidden="true"></span>
+      </nav>
+
+      <div id="overview" class="overview" role="dialog" aria-modal="true" aria-label="Screen overview">
+        <div class="overview-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="fit.js"></script>
+  <script src="data.js"></script>
+  <script src="anim.js"></script>
+  <script src="arm-geometry.js"></script>
+  <script src="act-divider.js"></script>
+  <script src="engine.js"></script>
+
+  <!-- Script order IS the running order: engine.js registers pages in the
+       order these load. The four act dividers carry letter-suffixed numbers
+       (02a, 05a, 08a, 11a) because they were inserted after the fifteen
+       content screens were built — see pages/02a-act-i.js. Nineteen screens. -->
+  <script src="pages/01-cover.js"></script>
+  <script src="pages/02-four-acts.js"></script>
+  <script src="pages/02a-act-i.js"></script>
+  <script src="pages/03-inflection.js"></script>
+  <script src="pages/04-signals.js"></script>
+  <script src="pages/05-what-changes.js"></script>
+  <script src="pages/05a-act-ii.js"></script>
+  <script src="pages/06-competitive-map.js"></script>
+  <script src="pages/07-three-responses.js"></script>
+  <script src="pages/08-four-corners.js"></script>
+  <script src="pages/08a-act-iii.js"></script>
+  <script src="pages/09-paradox.js"></script>
+  <script src="pages/10-india-comparison.js"></script>
+  <script src="pages/11-diagnosis.js"></script>
+  <script src="pages/11a-act-iv.js"></script>
+  <script src="pages/12-two-layers.js"></script>
+  <script src="pages/13-flywheel.js"></script>
+  <script src="pages/14-ecosystem.js"></script>
+  <script src="pages/15-proposition.js"></script>
+</body>
+</html>

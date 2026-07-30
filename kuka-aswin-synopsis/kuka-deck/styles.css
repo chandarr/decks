@@ -1,0 +1,3565 @@
+/* styles.css — design system (GLOBAL-INSTRUCTIONS.md §4)
+   Light middle (screens 2–18), dark bookends (screens 1, 19). One accent hue.
+*/
+
+/* ---------- tokens ---------- */
+
+:root {
+  --font-display: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+
+  --accent: #ff5800;
+
+  /* light palette */
+  --light-canvas: #ffffff;
+  --light-section: #f5f5f7;
+  --light-panel: #ffffff;
+  --light-border: #e5e5e8;
+  --light-ink: #111113;
+  --light-secondary: #6e6e76;
+
+  /* dark palette */
+  --dark-base-top: #0a0a0b;
+  --dark-base-bottom: #131316;
+  --dark-surface: rgba(255, 255, 255, 0.05);
+  --dark-hairline: rgba(255, 255, 255, 0.12);
+  --dark-ink: #f4f4f6;
+  --dark-secondary: #9a9aa4;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 30px -12px rgba(0, 0, 0, 0.16);
+  --glow-accent: 0 0 32px rgba(255, 88, 0, 0.35);
+
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* active theme surface, redeclared per theme class below */
+  --canvas: var(--light-canvas);
+  --panel: var(--light-panel);
+  --border: var(--light-border);
+  --ink: var(--light-ink);
+  --secondary: var(--light-secondary);
+}
+
+/* ---------- reset ---------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: var(--font-body);
+}
+h1, h2, h3, p, figure { margin: 0; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+svg { display: block; }
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* ---------- theme application ---------- */
+
+body.theme-light {
+  --canvas: var(--light-canvas);
+  --panel: var(--light-panel);
+  --border: var(--light-border);
+  --ink: var(--light-ink);
+  --secondary: var(--light-secondary);
+  background: var(--light-canvas);
+}
+
+body.theme-dark {
+  --canvas: var(--dark-base-top);
+  --panel: var(--dark-surface);
+  --border: var(--dark-hairline);
+  --ink: var(--dark-ink);
+  --secondary: var(--dark-secondary);
+  background: linear-gradient(180deg, var(--dark-base-top), var(--dark-base-bottom));
+}
+
+/* ---------- layout shell ---------- */
+
+/* The stage is the letterbox: it fills the real window and centres the canvas.
+   Overflow is hidden here so an oversized canvas is cropped rather than
+   scrolled — the deck must never scroll. */
+#stage {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* The design canvas. Immutable 1600x900: all layout is computed at this size
+   and the whole thing is then scaled as one unit by fit.js. Uniform scale keeps
+   every SVG angle and aspect ratio exactly as designed. Never put vw/vh inside. */
+#deck-canvas {
+  position: relative;
+  flex: 0 0 auto;
+  width: 1600px;
+  height: 900px;
+  transform: scale(var(--fit, 1));
+  transform-origin: center center;
+}
+
+#screen-mount {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Asymmetric: the extra bottom padding clears the progress rail and sits the
+     optical centre of the content slightly above the canvas centre. */
+  padding: 40px 80px 76px;
+}
+
+.screen {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.screen--stub-dark,
+.screen--stub-light {
+  align-items: flex-start;
+}
+
+/* ---------- typography ---------- */
+
+.kicker {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 13.6px;
+  color: var(--secondary);
+}
+
+.theme-dark .kicker { color: var(--accent); }
+
+.display-1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 86.4px;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.display-2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 56px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+/* For headlines long enough to sit on the 2-line/3-line boundary at 56px, where
+   a third line would silently steal height from the diagram below it. Same
+   family and weight — a size step, not a new type style. */
+.display-2--long {
+  font-size: 48px;
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 21.6px;
+  color: var(--secondary);
+  max-width: 46em;
+}
+
+.body {
+  font-family: var(--font-body);
+  font-size: 18.4px;
+  line-height: 1.5;
+  max-width: 46em;
+}
+
+.num, .figure {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.figure {
+  font-family: var(--font-display);
+  font-size: 72px;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1;
+}
+
+/* ---------- evidence chips ---------- */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  color: var(--secondary);
+}
+
+.chip::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.chip--confirmed::before { background: var(--accent); }
+.chip--estimate::before { background: var(--secondary); }
+.chip--frontier::before { background: transparent; border: 1px solid var(--secondary); }
+
+/* ---------- cards / panels ---------- */
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.theme-dark .card {
+  box-shadow: none;
+}
+
+/* ---------- step reveal system ---------- */
+
+.step {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.38s var(--ease-standard), transform 0.38s var(--ease-standard);
+}
+
+.step.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.step.scale-in {
+  transform: scale(0.97);
+}
+
+.step.scale-in.is-visible {
+  transform: scale(1);
+  box-shadow: var(--shadow-lg);
+}
+
+.reduced-motion .step {
+  transition: none !important;
+}
+
+/* ---------- reveal (JS-only fadeUp, not engine step-gated) ---------- */
+/* Same visual language as .step, for content whose visibility is driven
+   entirely by a page's own onEnter/onStep choreography (a timed base
+   sequence, a two-phase reveal) rather than the engine's step counter. */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.38s var(--ease-standard), transform 0.38s var(--ease-standard);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reduced-motion .reveal {
+  transition: none !important;
+}
+
+/* ---------- arm motif shared rule (screens 01, 16 — also exercised by the
+   Stage 0 stub) ----------
+   jointStagger rotates `.joint` elements directly via WAAPI; pin the pivot
+   to the element's own local origin rather than the CSS default bbox
+   centre, so a joint rotates about where it attaches, not about itself. */
+
+.joint {
+  transform-box: view-box;
+  transform-origin: 0 0;
+}
+
+/* ---------- Stage 0 stub-only visuals ---------- */
+
+.stub-joints {
+  display: flex;
+  gap: 16px;
+}
+
+.stub-joint {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: var(--glow-accent);
+  opacity: 0;
+}
+
+.stub-path path {
+  filter: drop-shadow(0 0 6px rgba(255, 88, 0, 0.4));
+}
+
+/* ---------- master nav button ---------- */
+
+.master-nav-btn {
+  position: fixed;
+  top: 28px;
+  right: 40px;
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.theme-dark .master-nav-btn {
+  background: var(--dark-surface);
+  border-color: var(--dark-hairline);
+  backdrop-filter: blur(6px);
+}
+
+.master-nav-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+.master-nav-btn__grid {
+  width: 12px;
+  height: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+}
+
+.master-nav-btn__grid::before,
+.master-nav-btn__grid::after {
+  content: "";
+  background: currentColor;
+  border-radius: 1px;
+  box-shadow: 6px 0 0 currentColor, 0 6px 0 currentColor, 6px 6px 0 currentColor;
+}
+
+/* ---------- progress rail ---------- */
+
+.progress-rail {
+  position: fixed;
+  bottom: 28px;
+  right: 40px;
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.theme-dark .progress-rail {
+  background: var(--dark-surface);
+  border-color: var(--dark-hairline);
+  backdrop-filter: blur(6px);
+}
+
+.progress-segs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.progress-seg {
+  width: 20px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--border);
+  transition: background-color 0.2s;
+}
+
+.theme-dark .progress-seg { background: var(--dark-hairline); }
+
+.progress-seg.is-active { background: var(--accent); }
+
+.progress-counter {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--secondary);
+  white-space: nowrap;
+}
+
+/* ---------- overview grid ---------- */
+
+.overview {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(10, 10, 11, 0.94);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.overview.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(160px, 1fr));
+  gap: 14px;
+  max-width: 1400px;
+  width: 90vw;
+  padding: 40px;
+}
+
+.overview-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid var(--dark-hairline);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--dark-ink);
+  text-align: left;
+  transition: border-color 0.15s, background-color 0.15s, transform 0.15s;
+}
+
+.overview-tile:hover {
+  border-color: var(--accent);
+  background: rgba(255, 88, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.overview-tile.is-current {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent) inset;
+}
+
+.overview-num {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.overview-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+/* ---------- attribution watermark ---------- */
+
+/* Present on every screen. Position is the whole problem: the top-right corner
+   is the overview button, the bottom-right is the progress rail, and the
+   bottom-left is the cover's key hint — so the only band clear on all nineteen
+   screens is the left margin, which #screen-mount reserves as 80px of padding
+   and no screen draws into. Set as a vertical spine credit there: reads
+   bottom-to-top, the printed-spine convention, and stays out of every
+   composition.
+
+   `vertical-rl` + a 180deg flip rather than `sideways-lr`, which is the newer
+   spelling but not safe on every engine this may be opened in.
+
+   Colour resolves from --secondary, so it re-tones itself across the
+   dark<->light bookend switch with no per-theme override, and z-index 20 puts
+   it under the wash — the watermark crosses that transition with the content
+   rather than hovering above it. */
+
+.deck-watermark {
+  position: fixed;
+  left: 15px;
+  top: 50%;
+  z-index: 20;
+  transform: translateY(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+  color: var(--secondary);
+  opacity: 0.42;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ---------- theme wash ---------- */
+
+.theme-wash {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.theme-wash.is-active {
+  opacity: 1;
+}
+
+/* ---------- keyboard hint ---------- */
+/* Visibility/transition comes from `.step` (or `.reveal`) — this class only
+   supplies the static pill styling, so the two don't fight over `opacity`
+   and `transition`. Always pair `.key-hint` with one of those. */
+
+.key-hint {
+  position: fixed;
+  left: 40px;
+  bottom: 28px;
+  z-index: 44;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--dark-secondary);
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--dark-hairline);
+  background: rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+}
+
+.key-hint kbd {
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+
+/* ---------- screen 01 — cover ---------- */
+
+.screen--cover {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  align-items: center;
+  gap: 40px;
+  height: 100%;
+  min-height: 0;
+}
+
+/* The arm owns the full left column, floor to ceiling — it is the first
+   thing on screen and carries the thesis before a word is read. */
+.cover-arm-wrap {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  justify-self: stretch;
+  align-self: stretch;
+}
+
+.cover-arm-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.cover-dot-grid {
+  fill: url(#cover-dot-pattern);
+}
+
+.cover-dot-pattern circle {
+  fill: rgba(255, 255, 255, 0.05);
+}
+
+.arm-plinth {
+  fill: rgba(255, 88, 0, 0.14);
+  stroke: none;
+}
+
+/* Arm motif, shared by screens 01 and 16.
+
+   NO stroke-width here. Screen 16 draws the same arm inside a scaled group and
+   divides its weights back out so the arm keeps the cover's apparent weight; a
+   stylesheet rule beats a presentation attribute, so a stroke-width here would
+   silently defeat that. Each screen emits its own from G.weights. */
+
+/* Link housings sit behind the lit spine and give the chain mass, so the arm
+   reads as a machine rather than a stick figure. Fill comes from the gradient
+   set on the element itself; only the edge is styled here. */
+.arm-body {
+  stroke: rgba(255, 88, 0, 0.34);
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 10px rgba(255, 88, 0, 0.14));
+}
+
+/* Rotary hub at each pivot — slightly denser than the housing so the joints
+   themselves stay legible during the power-up. */
+.arm-hub {
+  fill: rgba(255, 88, 0, 0.16);
+  stroke: rgba(255, 88, 0, 0.3);
+}
+
+.arm-gripper {
+  fill: rgba(255, 88, 0, 0.2);
+  stroke: rgba(255, 88, 0, 0.46);
+  stroke-linejoin: round;
+}
+
+.arm-link {
+  stroke: var(--accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  /* dark-screen glow allowance — restrained, so the links read as lit
+     filament rather than neon */
+  filter: drop-shadow(0 0 7px rgba(255, 88, 0, 0.32));
+}
+
+.joint-dot {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 9px rgba(255, 88, 0, 0.65));
+}
+
+.end-effector-dot {
+  filter: drop-shadow(0 0 14px rgba(255, 88, 0, 0.85));
+}
+
+.cover-trajectory {
+  stroke: var(--accent);
+  stroke-width: 2px;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.85;
+}
+
+.traj-glow-head {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* The destination the trajectory is heading for. Both start hidden and are
+   driven by the base sequence once the stroke lands on them, then loop for as
+   long as the screen is up. */
+.cover-pulse {
+  fill: var(--accent);
+  opacity: 0;
+  filter: drop-shadow(0 0 10px rgba(255, 88, 0, 0.7));
+  /* scale about the endpoint itself, not the viewBox origin */
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.cover-pulse-ring {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5px;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.cover-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.cover-title {
+  max-width: 14ch;
+}
+
+.cover-credential {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cred-rule {
+  overflow: visible;
+}
+
+.cred-rule line {
+  stroke: var(--dark-hairline);
+  stroke-width: 1;
+}
+
+.cover-credential-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cover-name {
+  font-family: var(--font-display);
+  font-size: 20.8px;
+  font-weight: 600;
+}
+
+.cover-credential-line {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--dark-secondary);
+  max-width: 42ch;
+}
+
+/* ---------- screen 02 — four acts ---------- */
+
+.screen--four-acts {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 16px;
+}
+
+.fa-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fa-path-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.fa-path-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.fa-ghost {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2px;
+  opacity: 0.15;
+}
+
+.fa-connector {
+  stroke: #e5e5e8;
+  stroke-width: 1px;
+}
+
+.fa-seg {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2px;
+  stroke-linecap: round;
+}
+
+.fa-node {
+  fill: #c9c9ce;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.fa-node-ring {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.5px;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.fa-pulse-ring {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5px;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.fa-columns {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.fa-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.fa-col-rule {
+  width: 100%;
+  max-width: 56px;
+  height: 1px;
+  background: var(--border);
+}
+
+.fa-col-label {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  color: var(--secondary);
+}
+
+.fa-col-beat {
+  font-family: var(--font-body);
+  font-size: 16.8px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+/* ---------- screen 03 — the inflection ---------- */
+
+.screen--inflection {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 14px;
+}
+
+.infl-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  /* Was 62ch, which resolves against the header's *body* font (~558px) and
+     squeezed the display headline to three lines. The spec allows two. */
+  max-width: 1180px;
+}
+
+.infl-plot-wrap {
+  flex: 1 1 auto;
+  /* The plot is the argument and the spec gives it ~50% of the screen. */
+  min-height: 380px;
+}
+
+.infl-plot-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.infl-axis-label,
+.infl-tick,
+.infl-now-label,
+.infl-threshold-label,
+.infl-llm-label,
+.infl-pai-label,
+.infl-milestone-label,
+.infl-window-label {
+  font-family: var(--font-mono);
+  fill: var(--secondary);
+}
+
+.infl-axis-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.infl-tick,
+.infl-now-label {
+  font-size: 11px;
+}
+
+.infl-now-label {
+  fill: var(--accent);
+}
+
+.infl-axis {
+  stroke: #c9c9ce;
+  stroke-width: 1.5px;
+  fill: none;
+}
+
+.infl-now-line {
+  stroke: var(--accent);
+  stroke-width: 1px;
+  stroke-dasharray: 3 3;
+  opacity: 0.6;
+}
+
+.infl-threshold {
+  stroke: var(--secondary);
+  stroke-width: 1.5px;
+  stroke-dasharray: 6 4;
+}
+
+.infl-threshold-label {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.infl-window-band {
+  fill: rgba(255, 88, 0, 0.08);
+  opacity: 0;
+}
+
+.infl-window-label {
+  font-size: 11px;
+  fill: var(--accent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.infl-window-label.is-visible {
+  opacity: 1;
+}
+
+.infl-llm-curve {
+  fill: none;
+  stroke: #c9c9ce;
+  stroke-width: 2px;
+  stroke-dasharray: 2 3;
+  opacity: 0.55;
+}
+
+.infl-llm-label {
+  font-size: 11px;
+  font-style: normal;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.infl-llm-label.is-visible {
+  opacity: 0.7;
+}
+
+.infl-pai-curve {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5px;
+}
+
+.infl-pai-projection {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5px;
+  stroke-dasharray: 5 4;
+  opacity: 0.5;
+}
+
+.infl-pai-label {
+  font-size: 11.5px;
+  fill: var(--accent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.infl-pai-label.is-visible {
+  opacity: 1;
+}
+
+.infl-milestone {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.2s;
+}
+
+.infl-milestone.is-visible {
+  opacity: 1;
+}
+
+.infl-milestone-dot {
+  fill: var(--accent);
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.infl-milestone-label {
+  font-size: 11px;
+}
+
+.infl-footer {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
+  padding-top: 4px;
+}
+
+.infl-contrast-header,
+.infl-contrast-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.infl-contrast-header {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--secondary);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.infl-contrast-row {
+  opacity: 0.28;
+  transition: opacity 0.35s;
+  padding: 4px 0;
+  font-size: 15.2px;
+}
+
+.infl-contrast-row.is-visible {
+  opacity: 1;
+}
+
+.infl-contrast-left {
+  /* Left-aligned so each 1.0 term starts under the "1.0" column header, as
+     the task sketch shows. Right-aligning them detached the column from its
+     own heading. */
+  text-align: left;
+  color: var(--ink);
+}
+
+.infl-contrast-right {
+  color: var(--ink);
+}
+
+.infl-contrast-arrow {
+  color: var(--secondary);
+}
+
+.infl-evidence {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.infl-evidence-heading {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--secondary);
+  margin-bottom: 8px;
+}
+
+.infl-evidence-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.infl-evidence-line {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--secondary);
+}
+
+.infl-ev-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.infl-ev-dot--confirmed {
+  background: var(--accent);
+}
+
+.infl-ev-dot--frontier {
+  background: transparent;
+  border: 1px solid var(--secondary);
+}
+
+/* ---------- screen 04 — the signals ---------- */
+
+.screen--signals {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 26px;
+  /* Every band hugs its content, so the spare height becomes even air between
+     them rather than pooling inside one element. */
+  justify-content: space-between;
+}
+
+.sig-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sig-cards {
+  /* Hug the content: the cards are facts, not panels to be filled. */
+  flex: 0 0 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+}
+
+.sig-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 26px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sig-card-figure {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 43.2px;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.sig-card-rule {
+  height: 1px;
+  background: var(--border);
+}
+
+.sig-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* Fill the card so the evidence chip can sit on its floor. The three cards
+     are equal-height by grid, and the tallest sets the row — without this the
+     shorter two showed ~200px of empty card below the source line. */
+  flex: 1 1 auto;
+}
+
+.sig-card-text .chip {
+  margin-top: auto;
+}
+
+.sig-card-label {
+  font-size: 16.32px;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.sig-card-consequence {
+  font-size: 15.68px;
+  color: var(--secondary);
+}
+
+/* --- the evidence block (replaced the India pivot card) --- */
+
+/* One bounded field holding the heading, the headline, the four sub-boxes
+   and the inference line, so the row reads as one argument rather than four
+   loose facts. Section grey behind white boxes is what makes the boundary
+   legible without a heavy border. */
+.sig-block {
+  flex: 0 0 auto;
+  background: var(--light-section);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 22px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sig-block-head {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sig-block-heading {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 12.8px;
+  color: var(--secondary);
+}
+
+.sig-block-headline {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 26.4px;
+  line-height: 1.15;
+  color: var(--accent);
+}
+
+/* Primary ink against the orange headline: the evidence and the reading of
+   it must not carry the same weight. This is the only first-person line on
+   the screen and the only interpretation on it. */
+.sig-inference {
+  font-family: var(--font-body);
+  font-size: 17.6px;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+/* One row, always four columns — never 2+2. The row is what makes the
+   sequence legible as an argument. */
+.sig-subs {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* At base each box is a ghost frame — a hairline lighter than the border
+   proper, holding its own height with its contents laid out but invisible.
+   Reserving the row this way is what keeps step 0 looking finished rather
+   than leaving the void the removed pivot card used to fill, and it means
+   nothing reflows when the boxes arrive. */
+.sig-sub {
+  background: var(--panel);
+  border: 1px solid #ececef;
+  border-radius: 10px;
+  padding: 16px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  /* scaleIn, driven per box by the page's stagger rather than the engine's
+     step classes — same motion as .step.scale-in, own trigger. */
+  transform: scale(0.97);
+  transition: transform 0.38s var(--ease-standard), border-color 0.38s var(--ease-standard),
+    opacity 0.38s var(--ease-standard), box-shadow 0.38s var(--ease-standard);
+}
+
+.sig-sub > * {
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-standard);
+}
+
+.sig-sub {
+  opacity: 0.55;
+}
+
+.sig-sub.is-visible {
+  opacity: 1;
+  transform: scale(1);
+  border-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.sig-sub.is-visible > * {
+  opacity: 1;
+}
+
+/* Labels may wrap to two lines; the rule below them stays put because the
+   label box is allowed to grow and every box in the row shares a height. */
+.sig-sub-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.11em;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.sig-sub-rule {
+  height: 1px;
+  background: var(--border);
+}
+
+/* ~55% of the upper signal cards' 43.2px figures — subordinate to them by
+   design: this row is the evidence under the signals, not four more signals. */
+.sig-sub-figure {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 23.8px;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.sig-sub-body {
+  font-size: 14.4px;
+  line-height: 1.45;
+  color: var(--secondary);
+  flex: 1 1 auto;
+}
+
+.sig-sub .chip {
+  margin-top: auto;
+  font-size: 0.66rem;
+  align-items: flex-start;
+}
+
+.sig-sub .chip::before {
+  margin-top: 0.45em;
+}
+
+.sig-closing {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--secondary);
+}
+
+/* ---------- screen 05 — what changes ---------- */
+
+.screen--what-changes {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 16px;
+}
+
+.wc-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.wc-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 48px;
+}
+
+.wc-plot-col {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: 8px;
+}
+
+.wc-plot-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.wc-plot-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.wc-axis {
+  stroke: #c9c9ce;
+  stroke-width: 1.5px;
+  fill: none;
+}
+
+.wc-axis-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--secondary);
+}
+
+.wc-axis-label--y {
+  text-anchor: start;
+}
+
+.wc-dot {
+  fill: #c9c9ce;
+  transition: fill 0.3s;
+}
+
+.wc-dot.is-darkened {
+  fill: #8a8a92;
+}
+
+.wc-zone1 {
+  fill: rgba(17, 17, 19, 0.08);
+  stroke: var(--secondary);
+  stroke-width: 1px;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.35s;
+}
+
+.wc-zone1.is-visible {
+  opacity: 1;
+}
+
+.wc-zone1-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  fill: var(--secondary);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+.wc-zone1-label.is-visible {
+  opacity: 1;
+}
+
+.wc-zone2 {
+  fill: var(--accent);
+  fill-opacity: 0;
+  stroke: var(--accent);
+  stroke-width: 1.5px;
+  stroke-dasharray: 7 5;
+}
+
+.wc-zone2-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--accent);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+.wc-zone2-label.is-visible {
+  opacity: 1;
+}
+
+.wc-mechanisms {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wc-mechanism {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s, transform 0.35s;
+}
+
+.wc-mechanism.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.wc-mechanism-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 19.2px;
+  color: var(--ink);
+}
+
+.wc-mechanism-sub {
+  font-size: 0.85rem;
+  color: var(--secondary);
+  max-width: 52ch;
+}
+
+.wc-stack {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: 18px;
+  /* The stack is the right half of the argument and should carry the same
+     vertical weight as the plot beside it, not stop two-thirds of the way
+     down. The heading owns its own rule, so spreading is safe. */
+  justify-content: space-between;
+}
+
+.wc-stack-heading {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.wc-stack-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wc-row-text {
+  font-size: 16px;
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.wc-row-text.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.wc-stack-rule {
+  height: 1px;
+  background: var(--border);
+  transition: background-color 0.25s, height 0.25s;
+}
+
+.wc-stack-rule.is-gap {
+  height: 2px;
+  background: var(--accent);
+}
+
+.wc-row-asset {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wc-asset-marker {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.wc-asset-marker[data-held="true"] {
+  background: var(--accent);
+  box-shadow: 0 0 0 1.5px #fff inset;
+}
+
+.wc-asset-marker[data-held="false"] {
+  background: transparent;
+  border: 2px solid #c9c9ce;
+  box-sizing: border-box;
+}
+
+.wc-asset-marker.is-visible {
+  opacity: 1;
+}
+
+.wc-asset-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--secondary);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.wc-asset-tag.is-visible {
+  opacity: 1;
+}
+
+.wc-gap-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.wc-gap-label.is-visible {
+  opacity: 1;
+}
+
+.wc-closing {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  padding-top: 4px;
+}
+
+.wc-closing-block {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 24.8px;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.wc-closing-block[data-side="right"] {
+  text-align: right;
+}
+
+/* ---------- screen 06 — the competitive map ---------- */
+
+.screen--competitive-map {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 14px;
+}
+
+.map-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.map-header-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.map-affordance {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--secondary);
+  white-space: nowrap;
+}
+
+.map-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 40px;
+}
+
+.map-wrap {
+  min-height: 0;
+}
+
+.map-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.map-axis {
+  stroke: #c9c9ce;
+  stroke-width: 1.5px;
+  fill: none;
+}
+
+.map-axis-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--secondary);
+}
+
+.map-convergence {
+  fill: rgba(255, 88, 0, 0.05);
+  stroke: var(--accent);
+  stroke-width: 1.5px;
+  stroke-dasharray: 6 5;
+  opacity: 0;
+}
+
+.map-convergence-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--accent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.map-convergence-label.is-visible {
+  opacity: 1;
+}
+
+.map-vector-line {
+  stroke: var(--secondary);
+  stroke-width: 2px;
+  fill: none;
+}
+
+.map-vector-head {
+  fill: var(--secondary);
+}
+
+.map-vector--kuka .map-vector-line,
+.map-vector--kuka .map-vector-head {
+  stroke: var(--accent);
+  fill: var(--accent);
+}
+
+.map-blob-shape {
+  fill: rgba(17, 17, 19, 0.05);
+  stroke: #c9c9ce;
+  stroke-width: 1px;
+  transition: stroke 0.2s, fill 0.2s, stroke-width 0.2s;
+}
+
+.map-blob-shape.is-active {
+  stroke: var(--accent);
+  stroke-width: 2px;
+  fill: rgba(255, 88, 0, 0.05);
+}
+
+.map-blob {
+  /* Always auto, even before reveal — a click here must be swallowed
+     (stopPropagation in JS) rather than fall through to the document-level
+     click-to-advance handler, which would otherwise read it as a click on
+     the underlying half of the screen and change slides. The JS click
+     handler itself no-ops for an unrevealed blob; only the cursor hints
+     that nothing will happen. */
+  pointer-events: auto;
+  cursor: default;
+}
+
+.map-blob.is-visible {
+  cursor: pointer;
+}
+
+.map-blob-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  fill: var(--ink);
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.map-kuka-marker {
+  fill: var(--accent);
+  stroke: #fff;
+  stroke-width: 2px;
+  cursor: pointer;
+  transition: stroke-width 0.2s;
+}
+
+.map-kuka-marker.is-active {
+  stroke-width: 3px;
+}
+
+.map-kuka-label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  fill: var(--ink);
+}
+
+.map-panel-stack {
+  display: grid;
+}
+
+.map-panel {
+  grid-area: 1 / 1;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-self: start;
+  transition: opacity 0.2s;
+}
+
+.map-panel-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 19.2px;
+  color: var(--ink);
+}
+
+.map-panel-rule {
+  height: 1px;
+  background: var(--border);
+}
+
+.map-panel-members {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--secondary);
+  line-height: 1.5;
+}
+
+.map-panel-relevance {
+  font-size: 0.9rem;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.map-epistemic {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--secondary);
+}
+
+/* ---------- screen 07 — the strategic posture ---------- */
+
+.screen--posture {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0;
+}
+
+.posture-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 26px;
+}
+
+.posture-cards {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.posture-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 26px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.posture-card-title {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--secondary);
+}
+
+.posture-card-subtitle {
+  font-size: 0.85rem;
+  color: var(--secondary);
+}
+
+.posture-card-rule {
+  height: 1px;
+  background: var(--border);
+  margin: 2px 0 4px;
+}
+
+.posture-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.posture-row {
+  display: grid;
+  grid-template-columns: 4.5em 1fr;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.posture-row-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--secondary);
+}
+
+.posture-row-content {
+  font-size: 15.2px;
+  color: var(--ink);
+}
+
+.posture-connectors {
+  flex: 1 1 auto;
+  min-height: 40px;
+  position: relative;
+}
+
+.posture-connector-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.posture-connector {
+  fill: none;
+  stroke: #c9c9ce;
+  stroke-width: 1.5px;
+}
+
+.posture-resolution {
+  flex: 0 0 auto;
+  position: relative;
+  background: var(--light-section);
+  border-radius: 12px;
+  padding: 28px 40px;
+  padding-left: calc(40px + 14px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.posture-edge-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  overflow: visible;
+}
+
+.posture-edge-rule {
+  stroke: var(--accent);
+  stroke-width: 3px;
+}
+
+.posture-resolution-title {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--secondary);
+}
+
+.posture-resolution-body {
+  font-size: 16px;
+  color: var(--ink);
+  max-width: 90ch;
+}
+
+.posture-closing {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 25.6px;
+  color: var(--accent);
+  line-height: 1.3;
+}
+
+/* ---------- screen 08 — the four corners ---------- */
+
+.screen--four-corners {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 18px;
+}
+
+.fc-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fc-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1.75fr 1fr;
+  gap: 44px;
+}
+
+.fc-quadrant-wrap {
+  min-height: 0;
+}
+
+.fc-quadrant-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.fc-frame {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1px;
+}
+
+.fc-divider {
+  stroke: var(--border);
+  stroke-width: 1px;
+}
+
+.fc-cell-label {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.09em;
+  fill: var(--secondary);
+}
+
+.fc-cell-desc {
+  font-family: var(--font-body);
+  font-size: 12px;
+  fill: var(--secondary);
+}
+
+.fc-shape {
+  fill: rgba(17, 17, 19, 0.1);
+  stroke: var(--secondary);
+  stroke-width: 1px;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.3s;
+}
+
+.fc-shape.is-active {
+  opacity: 1;
+}
+
+.fc-shape.is-ghost {
+  opacity: 0.18;
+}
+
+.fc-kuka-solid,
+.fc-kuka-dashed {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2px;
+  stroke-linecap: round;
+}
+
+/* The dash pattern is applied only after the draw-on completes — while
+   drawing, stroke-dasharray is doing double duty as the reveal mechanism. */
+.fc-kuka-dashed.is-drawn {
+  stroke-dasharray: 6 4 !important;
+  stroke-dashoffset: 0 !important;
+}
+
+.fc-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.fc-legend-heading {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.fc-legend-entry {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 10px;
+  align-items: start;
+  opacity: 0.28;
+  transition: opacity 0.3s;
+}
+
+.fc-legend-entry.is-lit {
+  opacity: 1;
+}
+
+.fc-legend-marker {
+  width: 11px;
+  height: 11px;
+  margin-top: 4px;
+  border-radius: 50%;
+  border: 2px solid #c9c9ce;
+  box-sizing: border-box;
+}
+
+.fc-legend-marker--kuka {
+  border: none;
+  background: var(--accent);
+  border-radius: 2px;
+  transform: rotate(45deg);
+  width: 12px;
+  height: 12px;
+}
+
+.fc-legend-name {
+  font-size: 16px;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.fc-legend-gap {
+  font-size: 14.08px;
+  color: var(--secondary);
+  line-height: 1.45;
+}
+
+.fc-closing {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fc-closing-line {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.25;
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.38s var(--ease-standard), transform 0.38s var(--ease-standard);
+}
+
+.fc-closing-line.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fc-closing-line[data-line="2"] {
+  color: var(--accent);
+}
+
+/* ---------- screen 09 — the paradox ---------- */
+
+.screen--paradox {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 16px;
+}
+
+.pdx-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pdx-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 0.34fr 1fr;
+  gap: 25.6px;
+}
+
+.pdx-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* Both panels must read as carrying equal weight, so the blocks share the
+   column's slack between them rather than bunching at the top. Growing the
+   blocks (rather than space-between on the panel) keeps each heading locked
+   to its hairline rule. */
+.pdx-block,
+.pdx-fact {
+  flex: 1 1 auto;
+}
+
+.pdx-panel-heading {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+
+.pdx-panel-rule {
+  height: 1px;
+  background: var(--border);
+}
+
+.pdx-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.38s var(--ease-standard), transform 0.38s var(--ease-standard);
+}
+
+.pdx-block.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pdx-figures {
+  font-family: var(--font-display);
+  font-weight: 600;
+  /* deliberately NOT orange — on this screen orange is reserved for
+     India's density bar and the surviving strand only */
+  color: var(--ink);
+  font-size: 28px;
+  line-height: 1.1;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pdx-sep {
+  color: var(--secondary);
+  font-size: 0.55em;
+}
+
+.pdx-figure-caption {
+  font-size: 14.72px;
+  color: var(--ink);
+}
+
+.pdx-sub-heading {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.09em;
+  color: var(--secondary);
+}
+
+.pdx-density-svg {
+  width: 100%;
+  height: auto;
+  max-height: 198px; /* 22% of the 900px canvas */
+  overflow: visible;
+}
+
+.pdx-bar-label,
+.pdx-bar-value {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  fill: var(--secondary);
+}
+
+.pdx-bar-value {
+  font-variant-numeric: tabular-nums;
+}
+
+.pdx-bar {
+  stroke: #c9c9ce;
+  stroke-width: 14px;
+  stroke-linecap: round;
+}
+
+.pdx-bar--india {
+  stroke: var(--accent);
+}
+
+.pdx-sectors {
+  font-size: 14.72px;
+  color: var(--ink);
+}
+
+.pdx-ambition-claim {
+  font-size: 14.4px;
+  color: var(--secondary);
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s, transform 0.35s;
+}
+
+.pdx-ambition-claim.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- the broken flow channel --- */
+
+.pdx-channel {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.pdx-channel-svg {
+  width: 100%;
+  /* The channel is this screen's whole argument, so it carries the column's
+     full height rather than sitting as a small bundle in the middle of it.
+     preserveAspectRatio="none" means the strands spread to whatever height
+     they are given. */
+  height: 88%;
+  overflow: visible;
+}
+
+.pdx-strand {
+  fill: none;
+  stroke: #e5e5e8;
+  stroke-width: 2px;
+}
+
+/* base: the intact channel — full strands shown, broken parts hidden */
+.pdx-strand--main,
+.pdx-strand--fray {
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.pdx-strand--full {
+  opacity: 1;
+  transition: opacity 0.4s;
+}
+
+.pdx-channel-svg.is-broken .pdx-strand--full {
+  opacity: 0;
+}
+
+.pdx-channel-svg.is-broken .pdx-strand--main,
+.pdx-channel-svg.is-broken .pdx-strand--fray {
+  opacity: 1;
+}
+
+.pdx-strand--main {
+  stroke: #c9c9ce;
+  stroke-width: 2px;
+  /* Near-solid with one long travelling gap. A short dash here (e.g. 30 4)
+     makes every strand look broken along its whole length, which destroys
+     the step-5 reveal — the break has to be the ONLY discontinuity. */
+  stroke-dasharray: 74 5;
+}
+
+.pdx-strand--fray {
+  stroke: #c9c9ce;
+  stroke-width: 2px;
+  stroke-dasharray: 3 5;
+}
+
+.pdx-strand--survivor {
+  stroke: #e5e5e8;
+  stroke-width: 1.5px;
+  transition: stroke 0.4s, stroke-width 0.4s;
+}
+
+.pdx-channel-svg.is-broken .pdx-strand--survivor {
+  stroke: var(--accent);
+  stroke-width: 1.5px;
+  stroke-dasharray: 74 5;
+}
+
+/* --- entity panel: deliberately inert --- */
+
+.pdx-panel--entity {
+  gap: 13px;
+}
+
+.pdx-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s, transform 0.35s;
+}
+
+.pdx-fact.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pdx-fact-text {
+  font-size: 15.36px;
+  color: var(--ink);
+}
+
+/* --- the gap statement, under the channel --- */
+
+/* Page-centred so it sits directly beneath the channel column, but the type
+   inside stays left-aligned like every other block in the deck. Ink and
+   secondary only: orange on this screen belongs to India's density bar and
+   the surviving strand. */
+.pdx-gap {
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pdx-gap-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--secondary);
+}
+
+.pdx-gap-line {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 21.6px;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.pdx-gap-detail {
+  font-size: 14.4px;
+  line-height: 1.5;
+  color: var(--secondary);
+}
+
+/* The verdict, now a highlight box at the foot of the entity column instead of
+   a line under the whole screen. Emphasis comes from the raised panel, NOT from
+   colour — this screen reserves orange for India's density bar and the single
+   surviving strand, per its task file. */
+.pdx-closing {
+  flex: 0 0 auto;
+  margin-top: 4px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  padding: 15px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.38s var(--ease-standard), transform 0.38s var(--ease-standard);
+}
+
+.pdx-closing-line {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.pdx-closing.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- screen 10 — the three-way comparison ---------- */
+
+.screen--comparison {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 20px;
+}
+
+.cmp-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* No column-gap: horizontal separation comes from cell padding instead, so
+   the KUKA column's background wash forms one continuous block down the
+   column and the row rules run unbroken across the whole matrix. */
+.cmp-matrix {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(96px, 0.15fr) 1fr 1fr 1fr;
+  align-content: start;
+}
+
+.cmp-head {
+  font-family: var(--font-mono);
+  font-size: 12.48px;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  padding: 0 18px 8px;
+  border-bottom: 1px solid var(--border);
+  align-self: end;
+}
+
+.cmp-head--corner {
+  padding-left: 0;
+}
+
+/* The KUKA column marks the SUBJECT of the deck, never the loser — a grey
+   wash and an orange column rule only, no red and no negative styling. */
+.cmp-head.is-kuka {
+  border-bottom: 2px solid var(--accent);
+  background: var(--light-section);
+  border-radius: 6px 6px 0 0;
+}
+
+.cmp-rowlabel {
+  font-family: var(--font-mono);
+  font-size: 11.84px;
+  letter-spacing: 0.11em;
+  color: var(--secondary);
+  padding: 26px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.cmp-cell {
+  padding: 26px 18px;
+  border-bottom: 1px solid var(--border);
+  min-width: 0;
+}
+
+.cmp-cell.is-kuka {
+  background: var(--light-section);
+}
+
+.cmp-matrix > .cmp-cell.is-kuka:last-child {
+  border-radius: 0 0 6px 6px;
+}
+
+.cmp-cell-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s var(--ease-standard), transform 0.35s var(--ease-standard);
+}
+
+.cmp-cell.is-visible .cmp-cell-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cmp-figure {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 24px;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.cmp-sup {
+  font-family: var(--font-mono);
+  font-size: 0.5em;
+  color: var(--secondary);
+  vertical-align: super;
+  margin-left: 1px;
+}
+
+.cmp-cell-text {
+  font-size: 14.72px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.cmp-parenthetical {
+  font-size: 13.44px;
+  color: var(--secondary);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.cmp-parenthetical.is-visible {
+  opacity: 1;
+}
+
+.cmp-insight {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cmp-insight-line {
+  font-size: 16.32px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.cmp-insight-line--lead {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 23.2px;
+  color: var(--accent);
+  line-height: 1.25;
+  margin-bottom: 2px;
+}
+
+/* Load-bearing: the derivation for the softest number in the deck. Never
+   truncate this — it is what makes the rigor screen credible. */
+.cmp-method {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 11.2px;
+  line-height: 1.55;
+  color: var(--secondary);
+  max-width: 118ch;
+}
+
+/* ---------- screen 11 — the structural diagnosis ---------- */
+
+.screen--diagnosis {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 34px;
+}
+
+.dgn-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dgn-rows {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.dgn-row {
+  border-top: 1px solid var(--border);
+  padding: 28px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dgn-row-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--secondary);
+}
+
+.dgn-row-body {
+  display: grid;
+  /* the ▸ gutter never disappears, even at 1440x900 */
+  grid-template-columns: 46fr 6fr 40fr;
+  align-items: start;
+  gap: 18px;
+}
+
+.dgn-cause {
+  font-size: 16px;
+  color: var(--secondary);
+  line-height: 1.5;
+}
+
+.dgn-marker {
+  color: var(--accent);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.dgn-consequence {
+  font-size: 16.8px;
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.dgn-closing {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dgn-closing-line {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 25.6px;
+  line-height: 1.28;
+  color: var(--ink);
+}
+
+/* ---------- screen 12 — two additive layers ---------- */
+
+.screen--two-layers {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 16px;
+}
+
+.tl-header { flex: 0 0 auto; display: flex; flex-direction: column; gap: 3px; }
+
+.tl-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 41.6px;
+}
+
+.tl-plot-wrap { min-height: 0; }
+.tl-plot-svg { width: 100%; height: 100%; overflow: visible; }
+
+.tl-axis { stroke: #c9c9ce; stroke-width: 1.5px; fill: none; }
+.tl-axis-label { font-family: var(--font-mono); font-size: 11px; fill: var(--secondary); }
+
+/* Layer 1 solid = established, measurable. Layer 2 dashed = frontier claim.
+   The grammar matches screens 03, 05, 06 and 08. */
+.tl-zone1 {
+  fill: var(--accent);
+  fill-opacity: 0;
+  stroke: var(--accent);
+  stroke-width: 1.5px;
+  stroke-opacity: 0;
+}
+
+.tl-zone2 {
+  fill: var(--accent);
+  fill-opacity: 0;
+  stroke: var(--accent);
+  stroke-width: 1.5px;
+  stroke-dasharray: 7 5;
+}
+
+.tl-zone-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--accent);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.tl-zone-label.is-visible { opacity: 1; }
+
+.tl-seg {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--secondary);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.tl-seg.is-visible { opacity: 1; }
+
+.tl-l2-segs { opacity: 0; transition: opacity 0.35s; }
+.tl-l2-segs.is-visible { opacity: 1; }
+.tl-l2-segs .tl-seg { opacity: 1; }
+
+.tl-kuka {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.35s;
+}
+.tl-kuka.is-visible { opacity: 1; }
+
+.tl-kuka-marker { fill: var(--accent); stroke: #fff; stroke-width: 2px; }
+.tl-kuka-label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 12px;
+  fill: var(--ink);
+}
+
+.tl-blocks {
+  display: flex;
+  flex-direction: column;
+  /* Tightened from 22px: the RaaS band now takes a share of the screen's
+     height, and this column was overflowing its grid row and letting the
+     band paint over the plot's x-axis label. */
+  gap: 12px;
+  min-width: 0;
+  justify-content: space-between;
+}
+
+.tl-block { display: flex; flex-direction: column; gap: 6px; }
+
+.tl-block-heading {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+.tl-block-rule { height: 1px; background: var(--border); }
+
+.tl-lead {
+  font-size: 14.4px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.tl-bullets { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+
+.tl-bullet {
+  position: relative;
+  padding-left: 14px;
+  font-size: 13.6px;
+  color: var(--secondary);
+  line-height: 1.42;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.tl-bullet::before { content: "·"; position: absolute; left: 4px; color: var(--secondary); }
+.tl-bullet.is-visible { opacity: 1; transform: translateY(0); }
+
+.tl-arithmetic { display: flex; flex-direction: column; gap: 4px; margin-top: 2px; }
+
+.tl-arithmetic-line {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16.8px;
+  color: var(--accent);
+  line-height: 1.35;
+}
+
+.tl-l2-lines { display: flex; flex-direction: column; gap: 4px; }
+
+.tl-l2-line {
+  font-size: 14.08px;
+  color: var(--ink);
+  line-height: 1.45;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.tl-l2-line.is-visible { opacity: 1; transform: translateY(0); }
+.tl-l2-lines .chip { opacity: 0; transition: opacity 0.3s; }
+.tl-l2-lines .chip.is-visible { opacity: 1; }
+
+/* --- the RaaS hinge band --- */
+
+/* Spans the full width beneath both layer blocks because it acts on both of
+   them. The left accent bar is the same device screen 07 uses for its
+   resolution panel, so the band reads as a synthesis rather than a fourth
+   bullet. */
+.tl-raas {
+  flex: 0 0 auto;
+  position: relative;
+  background: var(--light-section);
+  border-radius: 10px;
+  border-left: 3px solid var(--accent);
+  padding: 9px 20px 8px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tl-raas-heading {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--secondary);
+}
+
+.tl-raas-edges {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+}
+
+.tl-raas-edge {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.tl-raas-edge-label {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+
+/* "widens Layer 1" / "unlocks Layer 2" — names which layer each edge acts on,
+   which is what makes the dual function explicit rather than implied. */
+.tl-raas-serves {
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  text-transform: none;
+}
+
+.tl-raas-edge-body {
+  font-size: 13px;
+  line-height: 1.36;
+  color: var(--secondary);
+}
+
+/* The payoff. Hairline above so it reads as belonging to the whole band rather
+   than to the left-hand edge it happens to sit under. */
+.tl-raas-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+}
+
+.tl-raas-foot-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* Naming it an inference is the point: the two edges above are each ordinary,
+   and the value is in reading them as one instrument. Labelling it also keeps
+   the claim honest — it is reasoning, not a sourced fact. */
+.tl-raas-inference-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+}
+
+.tl-raas-inference {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.tl-closing {
+  flex: 0 0 auto;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 23.2px;
+  color: var(--ink);
+}
+
+/* ---------- screen 13 — the flywheel ---------- */
+
+.screen--flywheel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 14px;
+}
+
+.fw-header { flex: 0 0 auto; display: flex; flex-direction: column; gap: 3px; }
+
+.fw-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 38.4px;
+}
+
+.fw-left { display: flex; flex-direction: column; min-height: 0; gap: 6px; }
+.fw-wheel-wrap { flex: 1 1 auto; min-height: 0; }
+.fw-wheel-svg { width: 100%; height: 100%; overflow: visible; }
+
+.fw-node-box {
+  fill: #fff;
+  stroke: var(--border);
+  stroke-width: 1px;
+  transition: stroke 0.25s, stroke-width 0.25s;
+}
+
+/* node 3 closes screen 05's hollow ring — a marginally heavier border once
+   filled, a quiet callback rather than a highlight */
+.fw-node.is-filled .fw-node-box.is-key { stroke-width: 2px; stroke: var(--secondary); }
+
+.fw-node-edge { fill: var(--accent); opacity: 0; transition: opacity 0.25s; }
+.fw-node.is-filled .fw-node-edge { opacity: 1; }
+
+.fw-node { transform-box: fill-box; transform-origin: center; }
+
+.fw-node-label {
+  font-family: var(--font-mono);
+  /* viewBox units, not screen px: the wheel renders at ~0.70 scale, so 18.5
+     here lands at ~13px on the canvas. Was 10.5 -> ~9px, which was the
+     "too small to read" problem. */
+  font-size: 18.5px;
+  letter-spacing: 0.06em;
+  fill: var(--ink);
+}
+
+.fw-node-sub {
+  font-family: var(--font-body);
+  font-size: 18px;
+  fill: var(--secondary);
+}
+
+.fw-arrow-path {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 2px;
+  transition: stroke 0.3s;
+}
+.fw-arrow.is-drawn .fw-arrow-path { stroke: var(--accent); }
+
+.fw-arrow-head { fill: var(--accent); opacity: 0; }
+
+.fw-rotor { opacity: 0; transition: opacity 0.4s; }
+.fw-rotor.is-visible { opacity: 1; }
+.fw-rotor-arc { fill: none; stroke: var(--accent); stroke-width: 2px; stroke-linecap: round; }
+.fw-rotor-head { fill: var(--accent); }
+
+.fw-diagram-chip { flex: 0 0 auto; }
+
+.fw-replication { flex: 0 0 auto; display: flex; flex-direction: column; gap: 4px; }
+
+.fw-geos {
+  font-family: var(--font-mono);
+  font-size: 14.08px;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.fw-geo-marker { color: var(--accent); }
+.fw-geo { opacity: 0; transition: opacity 0.3s; }
+.fw-geo.is-visible { opacity: 1; }
+.fw-geo-sep { color: var(--secondary); }
+
+.fw-replication-line {
+  font-size: 13.44px;
+  color: var(--secondary);
+  line-height: 1.45;
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.fw-replication-line.is-visible { opacity: 1; }
+
+.fw-right { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.fw-block { display: flex; flex-direction: column; gap: 7px; }
+
+.fw-block-heading {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+.fw-block-rule { height: 1px; background: var(--border); }
+
+.fw-compound-line {
+  font-size: 14.72px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+/* the answered objection — visually distinct from the block above it, so it
+   reads as an inversion rather than a caveat */
+.fw-raas-inset {
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  background: var(--light-section);
+  padding: 18px;
+  font-size: 14.24px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+/* Now the closing highlight box at the foot of the right-hand column, not a
+   band under the whole screen. Reads as a raised card rather than an inset so
+   it stays distinct from .fw-raas-inset immediately above it — that one uses a
+   flush light-section panel with an orange left edge. */
+.fw-asymmetry {
+  flex: 0 0 auto;
+  margin-top: auto;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  padding: 15px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+.fw-asym-row {
+  display: grid;
+  /* Tighter label column than the old full-width band: this now sits inside the
+     right-hand column, which is ~650px rather than the full 1440px. */
+  grid-template-columns: 74px 1fr;
+  gap: 14px;
+  align-items: baseline;
+}
+
+.fw-asym-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--secondary);
+}
+
+.fw-asym-text {
+  font-size: 14.72px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.fw-asym-text--upside {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 23.2px;
+  color: var(--accent);
+  line-height: 1.2;
+}
+
+/* ---------- screen 14 — the ecosystem play ---------- */
+
+.screen--ecosystem {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 20px;
+}
+
+.eco-header { flex: 0 0 auto; display: flex; flex-direction: column; gap: 3px; }
+
+.eco-bands {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.eco-band {
+  border-top: 1px solid var(--border);
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.eco-band-head { display: flex; align-items: baseline; gap: 14px; }
+
+.eco-index {
+  font-family: var(--font-mono);
+  font-size: 21.6px;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.eco-title {
+  font-family: var(--font-mono);
+  font-size: 14.4px;
+  letter-spacing: 0.11em;
+  color: var(--ink);
+}
+
+.eco-band-body {
+  display: grid;
+  grid-template-columns: 1fr 0.4fr;
+  gap: 32px;
+  align-items: start;
+  padding-left: calc(21.6px + 14px);
+}
+
+.eco-body-col { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+
+.eco-body {
+  font-size: 15.04px;
+  color: var(--secondary);
+  line-height: 1.5;
+}
+
+.eco-illustrative {
+  font-family: var(--font-mono);
+  font-size: 12.16px;
+  color: var(--secondary);
+  line-height: 1.5;
+}
+
+.eco-unlocks {
+  font-family: var(--font-mono);
+  font-size: 12.48px;
+  color: var(--secondary);
+  line-height: 1.5;
+}
+.eco-unlocks-marker { color: var(--accent); }
+
+.eco-urgency {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 12px;
+}
+
+.eco-urgency-line {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.28;
+  color: var(--ink);
+}
+
+.eco-urgency-chip { margin-top: 4px; }
+
+/* ---------- screen 15 — the proposition (dark bookend) ---------- */
+
+/* The SVG fills the whole stage and its viewBox is 16:9, so `meet` fits by
+   WIDTH at both 1920x1080 and 1440x900 — no horizontal letterboxing, which
+   means the node x-positions and the HTML block columns below stay aligned
+   at both resolutions (only ~1% vertical drift). All the percentages here
+   are the SVG viewBox coordinates expressed as fractions of 1600 x 900. */
+.screen--proposition {
+  position: absolute;
+  inset: 0;
+  display: block;
+  max-width: none;
+  margin: 0;
+}
+
+.prop-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.prop-dot-grid { fill: url(#prop-dot-pattern); }
+.prop-dot-pattern circle { fill: rgba(255, 255, 255, 0.05); }
+
+.prop-cover-traj,
+.prop-ext-traj {
+  fill: none;
+  stroke: var(--accent);
+  stroke-linecap: round;
+  opacity: 0.85;
+}
+
+/* The cover's trajectory sits inside the scaled arm group and carries its own
+   stroke-width attribute, divided out by that scale, so it renders at the same
+   apparent weight as its extension. That must NOT be given a value here — a
+   stylesheet rule beats a presentation attribute and would flatten it back. */
+.prop-ext-traj {
+  stroke-width: 2px;
+}
+
+.prop-arrow { fill: var(--accent); opacity: 0; }
+
+.prop-glow-head { opacity: 0; pointer-events: none; }
+
+.prop-node {
+  fill: #4a4a52;
+  stroke: var(--dark-base-top);
+  stroke-width: 1.5px;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: fill 0.25s, transform 0.2s;
+}
+
+.prop-node.is-lit {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 7px rgba(255, 88, 0, 0.55));
+}
+
+.prop-statement {
+  position: absolute;
+  left: 55%;
+  right: 3.5%;
+  top: 9%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.prop-closing {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.prop-closing-line {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 35.2px;
+  line-height: 1.2;
+  color: var(--dark-ink);
+}
+
+.prop-rule-line { stroke: var(--dark-hairline); stroke-width: 1.5; }
+
+.prop-recommendation {
+  font-size: 16.8px;
+  line-height: 1.5;
+  color: var(--dark-secondary);
+  max-width: 44ch;
+}
+
+/* Four 14%-wide columns whose LEFT edges land at 40% / 54% / 68% / 82% of
+   width — exactly the four node positions on the spine, so each node anchors
+   the block beneath it. */
+.prop-blocks {
+  position: absolute;
+  left: 40%;
+  right: 4%;
+  top: 65%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  /* zero gap: a gap pulls each column's centre inward and breaks the
+     alignment with its node on the spine. Spacing comes from block padding. */
+  gap: 0;
+  align-items: start;
+}
+
+.prop-block {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  padding-right: 25.6px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.38s var(--ease-standard), transform 0.38s var(--ease-standard);
+}
+
+.prop-block.is-visible { opacity: 1; transform: translateY(0); }
+
+.prop-verb {
+  font-family: var(--font-mono);
+  font-size: 16.8px;
+  letter-spacing: 0.11em;
+  color: var(--accent);
+}
+
+.prop-object {
+  font-family: var(--font-mono);
+  font-size: 12.48px;
+  color: var(--dark-secondary);
+  margin-bottom: 4px;
+}
+
+.prop-body {
+  font-size: 12.8px;
+  line-height: 1.5;
+  color: var(--dark-secondary);
+}
+
+/* The lower-left quadrant, empty once the arm's trajectory has flattened into
+   the spine. The right edge stops short of .prop-blocks (which begins at 40%)
+   and the top sits level with them, so the two read as one row: the synthesis
+   on the left, the four moves to its right. */
+.prop-left {
+  position: absolute;
+  left: 4.4%;
+  width: 34%;
+  top: 64%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.prop-left-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  /* Under the 35.2px main statement so the hierarchy stays unambiguous, and
+     sized to keep this line unwrapped at the block's 544px width. */
+  font-size: 30px;
+  line-height: 1.2;
+  color: var(--accent);
+}
+
+.prop-left-sub {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--dark-secondary);
+}
+
+.prop-footer {
+  position: absolute;
+  left: 4.4%;
+  right: 3.5%;
+  bottom: 7.5%;
+  display: flex;
+  align-items: baseline;
+  /* The signature is the only thing left in the footer and belongs on the
+     right — space-between would park it against the left edge. */
+  justify-content: flex-end;
+  gap: 48px;
+}
+
+/* The name appears ALONE — no credential line, no role claim, no ask. */
+.prop-signature {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16.32px;
+  color: var(--dark-secondary);
+  white-space: nowrap;
+}
+
+/* ---------- act dividers (screens 03, 07, 11, 15) ---------- */
+
+/* Section grey, full-bleed. The negative insets cancel #screen-mount's
+   padding so the tint reaches every canvas edge — that edge-to-edge field is
+   the whole signal, since every content screen sits on white and the dark
+   palette is reserved for the bookends. */
+.screen--act-divider {
+  position: relative;
+  z-index: 0;
+  justify-content: center;
+  gap: 0;
+}
+
+.screen--act-divider::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  right: -80px;
+  bottom: -76px;
+  left: -80px;
+  background: var(--light-section);
+  z-index: -1;
+}
+
+/* The act numeral as a watermark, not a headline: it sits behind the copy,
+   bled off the right edge, and is the only element on the screen that carries
+   no information the type doesn't already carry.
+   Mono, not display: Space Grotesk draws a bare stem for `I`, so `ACT III`
+   set in it reads as three rectangles rather than a numeral. JetBrains Mono
+   serifs the capital I, which is the difference between a chapter mark and a
+   stray shape. */
+.ad-numeral {
+  position: absolute;
+  right: -16px;
+  top: 50%;
+  transform: translateY(-56%);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 300px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: rgba(255, 88, 0, 0.12);
+  user-select: none;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.ad-body {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 62%;
+}
+
+.ad-lead {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ad-lead-rule {
+  width: 56px;
+  height: 2px;
+  flex: none;
+  background: var(--accent);
+}
+
+.ad-title {
+  max-width: 14em;
+}
+
+.ad-subtitle {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.35;
+  color: var(--secondary);
+  max-width: 24em;
+}
+
+/* Four columns, the same grammar as screen 02's roadmap — the divider is a
+   position report against that roadmap, so it must read as the same object. */
+.ad-rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.ad-rail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  opacity: 0.4;
+}
+
+.ad-rail-item.is-current {
+  opacity: 1;
+}
+
+.ad-rail-rule {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+}
+
+.ad-rail-item.is-current .ad-rail-rule {
+  height: 2px;
+  background: var(--accent);
+}
+
+.ad-rail-label {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 12px;
+  color: var(--secondary);
+}
+
+.ad-rail-item.is-current .ad-rail-label {
+  color: var(--accent);
+}
+
+.ad-rail-name {
+  font-family: var(--font-body);
+  font-size: 16.8px;
+  line-height: 1.3;
+  color: var(--secondary);
+}
+
+.ad-rail-item.is-current .ad-rail-name {
+  color: var(--ink);
+}
+
+/* ---------- reduced motion safety net ---------- */
+
+.reduced-motion .sig-sub,
+.reduced-motion .sig-sub > *,
+.reduced-motion .theme-wash,
+.reduced-motion .overview,
+.reduced-motion .key-hint,
+.reduced-motion .infl-window-label,
+.reduced-motion .infl-llm-label,
+.reduced-motion .infl-pai-label,
+.reduced-motion .infl-milestone,
+.reduced-motion .infl-contrast-row,
+.reduced-motion .wc-zone1,
+.reduced-motion .wc-zone1-label,
+.reduced-motion .wc-zone2-label,
+.reduced-motion .wc-mechanism,
+.reduced-motion .wc-row-text,
+.reduced-motion .wc-asset-marker,
+.reduced-motion .wc-asset-tag,
+.reduced-motion .wc-gap-label,
+.reduced-motion .wc-stack-rule,
+.reduced-motion .wc-dot,
+.reduced-motion .map-convergence-label,
+.reduced-motion .map-panel,
+.reduced-motion .fc-shape,
+.reduced-motion .fc-legend-entry,
+.reduced-motion .fc-closing-line,
+.reduced-motion .pdx-block,
+.reduced-motion .pdx-ambition-claim,
+.reduced-motion .pdx-fact,
+.reduced-motion .pdx-closing,
+.reduced-motion .pdx-strand,
+.reduced-motion .pdx-strand--full,
+.reduced-motion .pdx-strand--main,
+.reduced-motion .pdx-strand--fray,
+.reduced-motion .pdx-strand--survivor,
+.reduced-motion .cmp-cell-inner,
+.reduced-motion .cmp-parenthetical,
+.reduced-motion .tl-zone-label,
+.reduced-motion .tl-seg,
+.reduced-motion .tl-l2-segs,
+.reduced-motion .tl-kuka,
+.reduced-motion .tl-bullet,
+.reduced-motion .tl-l2-line,
+.reduced-motion .tl-l2-lines .chip,
+.reduced-motion .fw-node-box,
+.reduced-motion .fw-node-edge,
+.reduced-motion .fw-arrow-path,
+.reduced-motion .fw-rotor,
+.reduced-motion .fw-geo,
+.reduced-motion .fw-replication-line,
+.reduced-motion .prop-node,
+.reduced-motion .prop-block {
+  transition: none !important;
+}

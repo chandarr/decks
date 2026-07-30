@@ -1,0 +1,3012 @@
+/* styles.css — design system (GLOBAL-INSTRUCTIONS.md §4)
+   Light middle (screens 2–15), dark bookends (screens 1, 16). One accent hue.
+*/
+
+/* ---------- tokens ---------- */
+
+:root {
+  --font-display: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+
+  --accent: #ff5800;
+
+  /* light palette */
+  --light-canvas: #ffffff;
+  --light-section: #f5f5f7;
+  --light-panel: #ffffff;
+  --light-border: #e5e5e8;
+  --light-ink: #111113;
+  --light-secondary: #6e6e76;
+
+  /* dark palette */
+  --dark-base-top: #0a0a0b;
+  --dark-base-bottom: #131316;
+  --dark-surface: rgba(255, 255, 255, 0.05);
+  --dark-hairline: rgba(255, 255, 255, 0.12);
+  --dark-ink: #f4f4f6;
+  --dark-secondary: #9a9aa4;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 30px -12px rgba(0, 0, 0, 0.16);
+  --glow-accent: 0 0 32px rgba(255, 88, 0, 0.35);
+
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* active theme surface, redeclared per theme class below */
+  --canvas: var(--light-canvas);
+  --panel: var(--light-panel);
+  --border: var(--light-border);
+  --ink: var(--light-ink);
+  --secondary: var(--light-secondary);
+}
+
+/* ---------- reset ---------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: var(--font-body);
+}
+h1, h2, h3, p, figure { margin: 0; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+svg { display: block; }
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* ---------- theme application ---------- */
+
+body.theme-light {
+  --canvas: var(--light-canvas);
+  --panel: var(--light-panel);
+  --border: var(--light-border);
+  --ink: var(--light-ink);
+  --secondary: var(--light-secondary);
+  background: var(--light-canvas);
+}
+
+body.theme-dark {
+  --canvas: var(--dark-base-top);
+  --panel: var(--dark-surface);
+  --border: var(--dark-hairline);
+  --ink: var(--dark-ink);
+  --secondary: var(--dark-secondary);
+  background: linear-gradient(180deg, var(--dark-base-top), var(--dark-base-bottom));
+}
+
+/* ---------- layout shell ---------- */
+
+#stage {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+#screen-mount {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(32px, 5vw, 96px) clamp(32px, 6vw, 120px);
+}
+
+.screen {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2vw, 26px);
+}
+
+.screen--stub-dark,
+.screen--stub-light {
+  align-items: flex-start;
+}
+
+/* ---------- typography ---------- */
+
+.kicker {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: clamp(0.7rem, 0.62rem + 0.25vw, 0.85rem);
+  color: var(--secondary);
+}
+
+.theme-dark .kicker { color: var(--accent); }
+
+.display-1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.75rem, 1.8rem + 3.6vw, 5.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.display-2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.25rem, 1.7rem + 2.2vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.4rem);
+  color: var(--secondary);
+  max-width: 46em;
+}
+
+.body {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.15rem);
+  line-height: 1.5;
+  max-width: 46em;
+}
+
+.num, .figure {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.figure {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 1.8rem + 3vw, 4.5rem);
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1;
+}
+
+/* ---------- evidence chips ---------- */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  color: var(--secondary);
+}
+
+.chip::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.chip--confirmed::before { background: var(--accent); }
+.chip--estimate::before { background: var(--secondary); }
+.chip--frontier::before { background: transparent; border: 1px solid var(--secondary); }
+
+/* ---------- cards / panels ---------- */
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: clamp(18px, 2vw, 28px);
+  box-shadow: var(--shadow-sm);
+}
+
+.theme-dark .card {
+  box-shadow: none;
+}
+
+/* ---------- step reveal system ---------- */
+
+.step {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.38s var(--ease-standard), transform 0.38s var(--ease-standard);
+}
+
+.step.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.step.scale-in {
+  transform: scale(0.97);
+}
+
+.step.scale-in.is-visible {
+  transform: scale(1);
+  box-shadow: var(--shadow-lg);
+}
+
+.reduced-motion .step {
+  transition: none !important;
+}
+
+/* ---------- reveal (JS-only fadeUp, not engine step-gated) ---------- */
+/* Same visual language as .step, for content whose visibility is driven
+   entirely by a page's own onEnter/onStep choreography (a timed base
+   sequence, a two-phase reveal) rather than the engine's step counter. */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.38s var(--ease-standard), transform 0.38s var(--ease-standard);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reduced-motion .reveal {
+  transition: none !important;
+}
+
+/* ---------- arm motif shared rule (screens 01, 16 — also exercised by the
+   Stage 0 stub) ----------
+   jointStagger rotates `.joint` elements directly via WAAPI; pin the pivot
+   to the element's own local origin rather than the CSS default bbox
+   centre, so a joint rotates about where it attaches, not about itself. */
+
+.joint {
+  transform-box: view-box;
+  transform-origin: 0 0;
+}
+
+/* ---------- Stage 0 stub-only visuals ---------- */
+
+.stub-joints {
+  display: flex;
+  gap: 16px;
+}
+
+.stub-joint {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: var(--glow-accent);
+  opacity: 0;
+}
+
+.stub-path path {
+  filter: drop-shadow(0 0 6px rgba(255, 88, 0, 0.4));
+}
+
+/* ---------- master nav button ---------- */
+
+.master-nav-btn {
+  position: fixed;
+  top: clamp(16px, 2vw, 28px);
+  right: clamp(20px, 3vw, 40px);
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.theme-dark .master-nav-btn {
+  background: var(--dark-surface);
+  border-color: var(--dark-hairline);
+  backdrop-filter: blur(6px);
+}
+
+.master-nav-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+.master-nav-btn__grid {
+  width: 12px;
+  height: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+}
+
+.master-nav-btn__grid::before,
+.master-nav-btn__grid::after {
+  content: "";
+  background: currentColor;
+  border-radius: 1px;
+  box-shadow: 6px 0 0 currentColor, 0 6px 0 currentColor, 6px 6px 0 currentColor;
+}
+
+/* ---------- progress rail ---------- */
+
+.progress-rail {
+  position: fixed;
+  bottom: clamp(16px, 2.5vw, 28px);
+  right: clamp(20px, 3vw, 40px);
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.theme-dark .progress-rail {
+  background: var(--dark-surface);
+  border-color: var(--dark-hairline);
+  backdrop-filter: blur(6px);
+}
+
+.progress-segs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.progress-seg {
+  width: 20px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--border);
+  transition: background-color 0.2s;
+}
+
+.theme-dark .progress-seg { background: var(--dark-hairline); }
+
+.progress-seg.is-active { background: var(--accent); }
+
+.progress-counter {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--secondary);
+  white-space: nowrap;
+}
+
+/* ---------- overview grid ---------- */
+
+.overview {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(10, 10, 11, 0.94);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.overview.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(160px, 1fr));
+  gap: 14px;
+  max-width: 1400px;
+  width: 90vw;
+  padding: 40px;
+}
+
+.overview-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid var(--dark-hairline);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--dark-ink);
+  text-align: left;
+  transition: border-color 0.15s, background-color 0.15s, transform 0.15s;
+}
+
+.overview-tile:hover {
+  border-color: var(--accent);
+  background: rgba(255, 88, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.overview-tile.is-current {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent) inset;
+}
+
+.overview-num {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.overview-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+/* ---------- theme wash ---------- */
+
+.theme-wash {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.theme-wash.is-active {
+  opacity: 1;
+}
+
+/* ---------- keyboard hint ---------- */
+/* Visibility/transition comes from `.step` (or `.reveal`) — this class only
+   supplies the static pill styling, so the two don't fight over `opacity`
+   and `transition`. Always pair `.key-hint` with one of those. */
+
+.key-hint {
+  position: fixed;
+  left: clamp(20px, 3vw, 40px);
+  bottom: clamp(16px, 2.5vw, 28px);
+  z-index: 44;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--dark-secondary);
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--dark-hairline);
+  background: rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+}
+
+.key-hint kbd {
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+
+/* ---------- screen 01 — cover ---------- */
+
+.screen--cover {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  align-items: center;
+  gap: clamp(20px, 2.5vw, 44px);
+  height: 100%;
+  min-height: 0;
+}
+
+/* The arm owns the full left column, floor to ceiling — it is the first
+   thing on screen and carries the thesis before a word is read. */
+.cover-arm-wrap {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  justify-self: stretch;
+  align-self: stretch;
+}
+
+.cover-arm-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.cover-dot-grid {
+  fill: url(#cover-dot-pattern);
+}
+
+.cover-dot-pattern circle {
+  fill: rgba(255, 255, 255, 0.05);
+}
+
+.arm-plinth {
+  fill: rgba(255, 88, 0, 0.14);
+  stroke: none;
+}
+
+.arm-link {
+  stroke: var(--accent);
+  stroke-width: 3.5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  /* dark-screen glow allowance — restrained, so the links read as lit
+     filament rather than neon */
+  filter: drop-shadow(0 0 7px rgba(255, 88, 0, 0.32));
+}
+
+.joint-dot {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 9px rgba(255, 88, 0, 0.65));
+}
+
+.end-effector-dot {
+  filter: drop-shadow(0 0 14px rgba(255, 88, 0, 0.85));
+}
+
+.cover-trajectory {
+  stroke: var(--accent);
+  stroke-width: 2px;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.85;
+}
+
+.traj-glow-head {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cover-pulse {
+  fill: var(--accent);
+  opacity: 0;
+  /* scale about the endpoint itself, not the viewBox origin */
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.cover-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2vw, 24px);
+  align-items: flex-start;
+}
+
+.cover-title {
+  max-width: 14ch;
+}
+
+.cover-credential {
+  margin-top: clamp(6px, 1vw, 14px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cred-rule {
+  overflow: visible;
+}
+
+.cred-rule line {
+  stroke: var(--dark-hairline);
+  stroke-width: 1;
+}
+
+.cover-credential-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cover-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1rem + 0.3vw, 1.3rem);
+  font-weight: 600;
+}
+
+.cover-credential-line {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--dark-secondary);
+  max-width: 42ch;
+}
+
+/* ---------- screen 02 — four acts ---------- */
+
+.screen--four-acts {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: clamp(6px, 1vw, 16px);
+}
+
+.fa-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fa-path-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.fa-path-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.fa-ghost {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2px;
+  opacity: 0.15;
+}
+
+.fa-connector {
+  stroke: #e5e5e8;
+  stroke-width: 1px;
+}
+
+.fa-seg {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2px;
+  stroke-linecap: round;
+}
+
+.fa-node {
+  fill: #c9c9ce;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.fa-node-ring {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.5px;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.fa-pulse-ring {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5px;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.fa-columns {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(16px, 2vw, 32px);
+}
+
+.fa-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.fa-col-rule {
+  width: 100%;
+  max-width: 56px;
+  height: 1px;
+  background: var(--border);
+}
+
+.fa-col-label {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  color: var(--secondary);
+}
+
+.fa-col-beat {
+  font-family: var(--font-body);
+  font-size: clamp(0.92rem, 0.8rem + 0.4vw, 1.05rem);
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+/* ---------- screen 03 — the inflection ---------- */
+
+.screen--inflection {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: clamp(6px, 1vw, 14px);
+}
+
+.infl-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 62ch;
+}
+
+.infl-plot-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.infl-plot-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.infl-axis-label,
+.infl-tick,
+.infl-now-label,
+.infl-threshold-label,
+.infl-llm-label,
+.infl-pai-label,
+.infl-milestone-label,
+.infl-window-label {
+  font-family: var(--font-mono);
+  fill: var(--secondary);
+}
+
+.infl-axis-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.infl-tick,
+.infl-now-label {
+  font-size: 11px;
+}
+
+.infl-now-label {
+  fill: var(--accent);
+}
+
+.infl-axis {
+  stroke: #c9c9ce;
+  stroke-width: 1.5px;
+  fill: none;
+}
+
+.infl-now-line {
+  stroke: var(--accent);
+  stroke-width: 1px;
+  stroke-dasharray: 3 3;
+  opacity: 0.6;
+}
+
+.infl-threshold {
+  stroke: var(--secondary);
+  stroke-width: 1.5px;
+  stroke-dasharray: 6 4;
+}
+
+.infl-threshold-label {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.infl-window-band {
+  fill: rgba(255, 88, 0, 0.08);
+  opacity: 0;
+}
+
+.infl-window-label {
+  font-size: 11px;
+  fill: var(--accent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.infl-window-label.is-visible {
+  opacity: 1;
+}
+
+.infl-llm-curve {
+  fill: none;
+  stroke: #c9c9ce;
+  stroke-width: 2px;
+  stroke-dasharray: 2 3;
+  opacity: 0.55;
+}
+
+.infl-llm-label {
+  font-size: 11px;
+  font-style: normal;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.infl-llm-label.is-visible {
+  opacity: 0.7;
+}
+
+.infl-pai-curve {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5px;
+}
+
+.infl-pai-projection {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5px;
+  stroke-dasharray: 5 4;
+  opacity: 0.5;
+}
+
+.infl-pai-label {
+  font-size: 11.5px;
+  fill: var(--accent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.infl-pai-label.is-visible {
+  opacity: 1;
+}
+
+.infl-milestone {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.2s;
+}
+
+.infl-milestone.is-visible {
+  opacity: 1;
+}
+
+.infl-milestone-dot {
+  fill: var(--accent);
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.infl-milestone-label {
+  font-size: 11px;
+}
+
+.infl-footer {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: clamp(20px, 3vw, 48px);
+  padding-top: 4px;
+}
+
+.infl-contrast-header,
+.infl-contrast-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.infl-contrast-header {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--secondary);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.infl-contrast-row {
+  opacity: 0.28;
+  transition: opacity 0.35s;
+  padding: 4px 0;
+  font-size: clamp(0.85rem, 0.78rem + 0.3vw, 0.95rem);
+}
+
+.infl-contrast-row.is-visible {
+  opacity: 1;
+}
+
+.infl-contrast-left {
+  text-align: right;
+  color: var(--ink);
+}
+
+.infl-contrast-right {
+  color: var(--ink);
+}
+
+.infl-contrast-arrow {
+  color: var(--secondary);
+}
+
+.infl-evidence {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.infl-evidence-heading {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--secondary);
+  margin-bottom: 8px;
+}
+
+.infl-evidence-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.infl-evidence-line {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--secondary);
+}
+
+.infl-ev-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.infl-ev-dot--confirmed {
+  background: var(--accent);
+}
+
+.infl-ev-dot--frontier {
+  background: transparent;
+  border: 1px solid var(--secondary);
+}
+
+/* ---------- screen 04 — the signals ---------- */
+
+.screen--signals {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: clamp(14px, 2vw, 26px);
+}
+
+.sig-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sig-cards {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(14px, 2vw, 26px);
+}
+
+.sig-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: clamp(16px, 2vw, 26px);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sig-card-figure {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.7rem, 1.3rem + 2vw, 2.7rem);
+  color: var(--ink);
+  line-height: 1;
+}
+
+.sig-card-rule {
+  height: 1px;
+  background: var(--border);
+}
+
+.sig-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sig-card-label {
+  font-size: clamp(0.92rem, 0.84rem + 0.3vw, 1.02rem);
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.sig-card-consequence {
+  font-size: clamp(0.88rem, 0.8rem + 0.25vw, 0.98rem);
+  color: var(--secondary);
+}
+
+.sig-pivot {
+  flex: 0 0 auto;
+  position: relative;
+  background: var(--light-section);
+  border-radius: 12px;
+  padding: clamp(18px, 2.2vw, 30px) clamp(24px, 3vw, 40px);
+  padding-left: calc(clamp(24px, 3vw, 40px) + 14px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sig-pivot-edge-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  overflow: visible;
+}
+
+.sig-pivot-rule {
+  stroke: var(--accent);
+  stroke-width: 3px;
+}
+
+.sig-pivot-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sig-pivot-figures {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.7rem, 1.3rem + 2.2vw, 2.9rem);
+  color: var(--accent);
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.sig-pivot-sep {
+  color: var(--secondary);
+  font-size: 0.55em;
+}
+
+.sig-pivot-label {
+  font-size: clamp(0.95rem, 0.87rem + 0.3vw, 1.08rem);
+  color: var(--ink);
+}
+
+.sig-pivot-arrow {
+  position: absolute;
+  right: clamp(18px, 2.5vw, 32px);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.6rem;
+  color: var(--accent);
+}
+
+.sig-closing {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--secondary);
+}
+
+/* ---------- screen 05 — what changes ---------- */
+
+.screen--what-changes {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: clamp(8px, 1.2vw, 16px);
+}
+
+.wc-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.wc-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(24px, 3vw, 48px);
+}
+
+.wc-plot-col {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: 8px;
+}
+
+.wc-plot-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.wc-plot-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.wc-axis {
+  stroke: #c9c9ce;
+  stroke-width: 1.5px;
+  fill: none;
+}
+
+.wc-axis-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--secondary);
+}
+
+.wc-axis-label--y {
+  text-anchor: start;
+}
+
+.wc-dot {
+  fill: #c9c9ce;
+  transition: fill 0.3s;
+}
+
+.wc-dot.is-darkened {
+  fill: #8a8a92;
+}
+
+.wc-zone1 {
+  fill: rgba(17, 17, 19, 0.08);
+  stroke: var(--secondary);
+  stroke-width: 1px;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.35s;
+}
+
+.wc-zone1.is-visible {
+  opacity: 1;
+}
+
+.wc-zone1-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  fill: var(--secondary);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+.wc-zone1-label.is-visible {
+  opacity: 1;
+}
+
+.wc-zone2 {
+  fill: var(--accent);
+  fill-opacity: 0;
+  stroke: var(--accent);
+  stroke-width: 1.5px;
+  stroke-dasharray: 7 5;
+}
+
+.wc-zone2-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--accent);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+.wc-zone2-label.is-visible {
+  opacity: 1;
+}
+
+.wc-mechanisms {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wc-mechanism {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s, transform 0.35s;
+}
+
+.wc-mechanism.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.wc-mechanism-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1rem, 0.9rem + 0.4vw, 1.2rem);
+  color: var(--ink);
+}
+
+.wc-mechanism-sub {
+  font-size: 0.85rem;
+  color: var(--secondary);
+  max-width: 52ch;
+}
+
+.wc-stack {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: clamp(10px, 1.5vw, 18px);
+}
+
+.wc-stack-heading {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.wc-stack-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wc-row-text {
+  font-size: clamp(0.88rem, 0.8rem + 0.3vw, 1rem);
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.wc-row-text.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.wc-stack-rule {
+  height: 1px;
+  background: var(--border);
+  transition: background-color 0.25s, height 0.25s;
+}
+
+.wc-stack-rule.is-gap {
+  height: 2px;
+  background: var(--accent);
+}
+
+.wc-row-asset {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wc-asset-marker {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.wc-asset-marker[data-held="true"] {
+  background: var(--accent);
+  box-shadow: 0 0 0 1.5px #fff inset;
+}
+
+.wc-asset-marker[data-held="false"] {
+  background: transparent;
+  border: 2px solid #c9c9ce;
+  box-sizing: border-box;
+}
+
+.wc-asset-marker.is-visible {
+  opacity: 1;
+}
+
+.wc-asset-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--secondary);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.wc-asset-tag.is-visible {
+  opacity: 1;
+}
+
+.wc-gap-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.wc-gap-label.is-visible {
+  opacity: 1;
+}
+
+.wc-closing {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(20px, 3vw, 48px);
+  padding-top: 4px;
+}
+
+.wc-closing-block {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.1rem, 0.95rem + 0.6vw, 1.55rem);
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.wc-closing-block[data-side="right"] {
+  text-align: right;
+}
+
+/* ---------- screen 06 — the competitive map ---------- */
+
+.screen--competitive-map {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: clamp(6px, 1vw, 14px);
+}
+
+.map-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.map-header-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.map-affordance {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--secondary);
+  white-space: nowrap;
+}
+
+.map-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: clamp(20px, 2.5vw, 40px);
+}
+
+.map-wrap {
+  min-height: 0;
+}
+
+.map-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.map-axis {
+  stroke: #c9c9ce;
+  stroke-width: 1.5px;
+  fill: none;
+}
+
+.map-axis-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--secondary);
+}
+
+.map-convergence {
+  fill: rgba(255, 88, 0, 0.05);
+  stroke: var(--accent);
+  stroke-width: 1.5px;
+  stroke-dasharray: 6 5;
+  opacity: 0;
+}
+
+.map-convergence-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--accent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.map-convergence-label.is-visible {
+  opacity: 1;
+}
+
+.map-vector-line {
+  stroke: var(--secondary);
+  stroke-width: 2px;
+  fill: none;
+}
+
+.map-vector-head {
+  fill: var(--secondary);
+}
+
+.map-vector--kuka .map-vector-line,
+.map-vector--kuka .map-vector-head {
+  stroke: var(--accent);
+  fill: var(--accent);
+}
+
+.map-blob-shape {
+  fill: rgba(17, 17, 19, 0.05);
+  stroke: #c9c9ce;
+  stroke-width: 1px;
+  transition: stroke 0.2s, fill 0.2s, stroke-width 0.2s;
+}
+
+.map-blob-shape.is-active {
+  stroke: var(--accent);
+  stroke-width: 2px;
+  fill: rgba(255, 88, 0, 0.05);
+}
+
+.map-blob {
+  /* Always auto, even before reveal — a click here must be swallowed
+     (stopPropagation in JS) rather than fall through to the document-level
+     click-to-advance handler, which would otherwise read it as a click on
+     the underlying half of the screen and change slides. The JS click
+     handler itself no-ops for an unrevealed blob; only the cursor hints
+     that nothing will happen. */
+  pointer-events: auto;
+  cursor: default;
+}
+
+.map-blob.is-visible {
+  cursor: pointer;
+}
+
+.map-blob-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  fill: var(--ink);
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.map-kuka-marker {
+  fill: var(--accent);
+  stroke: #fff;
+  stroke-width: 2px;
+  cursor: pointer;
+  transition: stroke-width 0.2s;
+}
+
+.map-kuka-marker.is-active {
+  stroke-width: 3px;
+}
+
+.map-kuka-label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  fill: var(--ink);
+}
+
+.map-panel-stack {
+  display: grid;
+}
+
+.map-panel {
+  grid-area: 1 / 1;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: clamp(16px, 2vw, 24px);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-self: start;
+  transition: opacity 0.2s;
+}
+
+.map-panel-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1rem, 0.9rem + 0.4vw, 1.2rem);
+  color: var(--ink);
+}
+
+.map-panel-rule {
+  height: 1px;
+  background: var(--border);
+}
+
+.map-panel-members {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--secondary);
+  line-height: 1.5;
+}
+
+.map-panel-relevance {
+  font-size: 0.9rem;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.map-epistemic {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--secondary);
+}
+
+/* ---------- screen 07 — the strategic posture ---------- */
+
+.screen--posture {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0;
+}
+
+.posture-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: clamp(14px, 2vw, 26px);
+}
+
+.posture-cards {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(20px, 2.5vw, 40px);
+}
+
+.posture-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: clamp(16px, 2vw, 26px);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.posture-card-title {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--secondary);
+}
+
+.posture-card-subtitle {
+  font-size: 0.85rem;
+  color: var(--secondary);
+}
+
+.posture-card-rule {
+  height: 1px;
+  background: var(--border);
+  margin: 2px 0 4px;
+}
+
+.posture-rows {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1vw, 10px);
+}
+
+.posture-row {
+  display: grid;
+  grid-template-columns: 4.5em 1fr;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.posture-row-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--secondary);
+}
+
+.posture-row-content {
+  font-size: clamp(0.85rem, 0.78rem + 0.25vw, 0.95rem);
+  color: var(--ink);
+}
+
+.posture-connectors {
+  flex: 1 1 auto;
+  min-height: 40px;
+  position: relative;
+}
+
+.posture-connector-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.posture-connector {
+  fill: none;
+  stroke: #c9c9ce;
+  stroke-width: 1.5px;
+}
+
+.posture-resolution {
+  flex: 0 0 auto;
+  position: relative;
+  background: var(--light-section);
+  border-radius: 12px;
+  padding: clamp(18px, 2.2vw, 28px) clamp(24px, 3vw, 40px);
+  padding-left: calc(clamp(24px, 3vw, 40px) + 14px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.posture-edge-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  overflow: visible;
+}
+
+.posture-edge-rule {
+  stroke: var(--accent);
+  stroke-width: 3px;
+}
+
+.posture-resolution-title {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--secondary);
+}
+
+.posture-resolution-body {
+  font-size: clamp(0.9rem, 0.85rem + 0.2vw, 1rem);
+  color: var(--ink);
+  max-width: 90ch;
+}
+
+.posture-closing {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.15rem, 1rem + 0.7vw, 1.6rem);
+  color: var(--accent);
+  line-height: 1.3;
+}
+
+/* ---------- screen 08 — the four corners ---------- */
+
+.screen--four-corners {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: clamp(8px, 1.2vw, 18px);
+}
+
+.fc-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fc-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1.75fr 1fr;
+  gap: clamp(20px, 3vw, 44px);
+}
+
+.fc-quadrant-wrap {
+  min-height: 0;
+}
+
+.fc-quadrant-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.fc-frame {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1px;
+}
+
+.fc-divider {
+  stroke: var(--border);
+  stroke-width: 1px;
+}
+
+.fc-cell-label {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.09em;
+  fill: var(--secondary);
+}
+
+.fc-cell-desc {
+  font-family: var(--font-body);
+  font-size: 12px;
+  fill: var(--secondary);
+}
+
+.fc-shape {
+  fill: rgba(17, 17, 19, 0.1);
+  stroke: var(--secondary);
+  stroke-width: 1px;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.3s;
+}
+
+.fc-shape.is-active {
+  opacity: 1;
+}
+
+.fc-shape.is-ghost {
+  opacity: 0.18;
+}
+
+.fc-kuka-solid,
+.fc-kuka-dashed {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2px;
+  stroke-linecap: round;
+}
+
+/* The dash pattern is applied only after the draw-on completes — while
+   drawing, stroke-dasharray is doing double duty as the reveal mechanism. */
+.fc-kuka-dashed.is-drawn {
+  stroke-dasharray: 6 4 !important;
+  stroke-dashoffset: 0 !important;
+}
+
+.fc-legend {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.4vw, 16px);
+  min-width: 0;
+}
+
+.fc-legend-heading {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.fc-legend-entry {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 10px;
+  align-items: start;
+  opacity: 0.28;
+  transition: opacity 0.3s;
+}
+
+.fc-legend-entry.is-lit {
+  opacity: 1;
+}
+
+.fc-legend-marker {
+  width: 11px;
+  height: 11px;
+  margin-top: 4px;
+  border-radius: 50%;
+  border: 2px solid #c9c9ce;
+  box-sizing: border-box;
+}
+
+.fc-legend-marker--kuka {
+  border: none;
+  background: var(--accent);
+  border-radius: 2px;
+  transform: rotate(45deg);
+  width: 12px;
+  height: 12px;
+}
+
+.fc-legend-name {
+  font-size: clamp(0.88rem, 0.8rem + 0.28vw, 1rem);
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.fc-legend-gap {
+  font-size: clamp(0.78rem, 0.72rem + 0.22vw, 0.88rem);
+  color: var(--secondary);
+  line-height: 1.45;
+}
+
+.fc-closing {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fc-closing-line {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 0.92rem + 0.6vw, 1.5rem);
+  line-height: 1.25;
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.38s var(--ease-standard), transform 0.38s var(--ease-standard);
+}
+
+.fc-closing-line.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fc-closing-line[data-line="2"] {
+  color: var(--accent);
+}
+
+/* ---------- screen 09 — the paradox ---------- */
+
+.screen--paradox {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: clamp(8px, 1.2vw, 16px);
+}
+
+.pdx-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pdx-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 0.34fr 1fr;
+  gap: clamp(12px, 1.6vw, 26px);
+}
+
+.pdx-panel {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.2vw, 14px);
+  min-width: 0;
+}
+
+.pdx-panel-heading {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+
+.pdx-panel-rule {
+  height: 1px;
+  background: var(--border);
+}
+
+.pdx-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.38s var(--ease-standard), transform 0.38s var(--ease-standard);
+}
+
+.pdx-block.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pdx-figures {
+  font-family: var(--font-display);
+  font-weight: 600;
+  /* deliberately NOT orange — on this screen orange is reserved for
+     India's density bar and the surviving strand only */
+  color: var(--ink);
+  font-size: clamp(1.15rem, 0.95rem + 0.9vw, 1.75rem);
+  line-height: 1.1;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pdx-sep {
+  color: var(--secondary);
+  font-size: 0.55em;
+}
+
+.pdx-figure-caption {
+  font-size: clamp(0.82rem, 0.76rem + 0.22vw, 0.92rem);
+  color: var(--ink);
+}
+
+.pdx-sub-heading {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.09em;
+  color: var(--secondary);
+}
+
+.pdx-density-svg {
+  width: 100%;
+  height: auto;
+  max-height: 22vh;
+  overflow: visible;
+}
+
+.pdx-bar-label,
+.pdx-bar-value {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  fill: var(--secondary);
+}
+
+.pdx-bar-value {
+  font-variant-numeric: tabular-nums;
+}
+
+.pdx-bar {
+  stroke: #c9c9ce;
+  stroke-width: 14px;
+  stroke-linecap: round;
+}
+
+.pdx-bar--india {
+  stroke: var(--accent);
+}
+
+.pdx-sectors {
+  font-size: clamp(0.82rem, 0.76rem + 0.22vw, 0.92rem);
+  color: var(--ink);
+}
+
+.pdx-ambition-claim {
+  font-size: clamp(0.8rem, 0.74rem + 0.22vw, 0.9rem);
+  color: var(--secondary);
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s, transform 0.35s;
+}
+
+.pdx-ambition-claim.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- the broken flow channel --- */
+
+.pdx-channel {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.pdx-channel-svg {
+  width: 100%;
+  /* Constrained and centred so the strands read as a tight bundle rather
+     than a few lines lost in a tall column. */
+  height: 58%;
+  overflow: visible;
+}
+
+.pdx-strand {
+  fill: none;
+  stroke: #e5e5e8;
+  stroke-width: 2px;
+}
+
+/* base: the intact channel — full strands shown, broken parts hidden */
+.pdx-strand--main,
+.pdx-strand--fray {
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.pdx-strand--full {
+  opacity: 1;
+  transition: opacity 0.4s;
+}
+
+.pdx-channel-svg.is-broken .pdx-strand--full {
+  opacity: 0;
+}
+
+.pdx-channel-svg.is-broken .pdx-strand--main,
+.pdx-channel-svg.is-broken .pdx-strand--fray {
+  opacity: 1;
+}
+
+.pdx-strand--main {
+  stroke: #c9c9ce;
+  stroke-width: 2px;
+  /* Near-solid with one long travelling gap. A short dash here (e.g. 30 4)
+     makes every strand look broken along its whole length, which destroys
+     the step-5 reveal — the break has to be the ONLY discontinuity. */
+  stroke-dasharray: 74 5;
+}
+
+.pdx-strand--fray {
+  stroke: #c9c9ce;
+  stroke-width: 2px;
+  stroke-dasharray: 3 5;
+}
+
+.pdx-strand--survivor {
+  stroke: #e5e5e8;
+  stroke-width: 1.5px;
+  transition: stroke 0.4s, stroke-width 0.4s;
+}
+
+.pdx-channel-svg.is-broken .pdx-strand--survivor {
+  stroke: var(--accent);
+  stroke-width: 1.5px;
+  stroke-dasharray: 74 5;
+}
+
+/* --- entity panel: deliberately inert --- */
+
+.pdx-panel--entity {
+  gap: clamp(8px, 1.1vw, 13px);
+}
+
+.pdx-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s, transform 0.35s;
+}
+
+.pdx-fact.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pdx-fact-text {
+  font-size: clamp(0.85rem, 0.78rem + 0.25vw, 0.96rem);
+  color: var(--ink);
+}
+
+.pdx-closing {
+  flex: 0 0 auto;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 0.92rem + 0.6vw, 1.45rem);
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.38s var(--ease-standard), transform 0.38s var(--ease-standard);
+}
+
+.pdx-closing.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- screen 10 — the three-way comparison ---------- */
+
+.screen--comparison {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: clamp(10px, 1.4vw, 20px);
+}
+
+.cmp-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* No column-gap: horizontal separation comes from cell padding instead, so
+   the KUKA column's background wash forms one continuous block down the
+   column and the row rules run unbroken across the whole matrix. */
+.cmp-matrix {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(96px, 0.15fr) 1fr 1fr 1fr;
+  align-content: start;
+}
+
+.cmp-head {
+  font-family: var(--font-mono);
+  font-size: clamp(0.68rem, 0.62rem + 0.2vw, 0.78rem);
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  padding: 0 clamp(10px, 1.3vw, 18px) 8px;
+  border-bottom: 1px solid var(--border);
+  align-self: end;
+}
+
+.cmp-head--corner {
+  padding-left: 0;
+}
+
+/* The KUKA column marks the SUBJECT of the deck, never the loser — a grey
+   wash and an orange column rule only, no red and no negative styling. */
+.cmp-head.is-kuka {
+  border-bottom: 2px solid var(--accent);
+  background: var(--light-section);
+  border-radius: 6px 6px 0 0;
+}
+
+.cmp-rowlabel {
+  font-family: var(--font-mono);
+  font-size: clamp(0.66rem, 0.6rem + 0.2vw, 0.74rem);
+  letter-spacing: 0.11em;
+  color: var(--secondary);
+  padding: clamp(12px, 1.7vw, 26px) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.cmp-cell {
+  padding: clamp(12px, 1.7vw, 26px) clamp(10px, 1.3vw, 18px);
+  border-bottom: 1px solid var(--border);
+  min-width: 0;
+}
+
+.cmp-cell.is-kuka {
+  background: var(--light-section);
+}
+
+.cmp-matrix > .cmp-cell.is-kuka:last-child {
+  border-radius: 0 0 6px 6px;
+}
+
+.cmp-cell-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s var(--ease-standard), transform 0.35s var(--ease-standard);
+}
+
+.cmp-cell.is-visible .cmp-cell-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cmp-figure {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 0.88rem + 0.7vw, 1.5rem);
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.cmp-sup {
+  font-family: var(--font-mono);
+  font-size: 0.5em;
+  color: var(--secondary);
+  vertical-align: super;
+  margin-left: 1px;
+}
+
+.cmp-cell-text {
+  font-size: clamp(0.8rem, 0.74rem + 0.24vw, 0.92rem);
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.cmp-parenthetical {
+  font-size: clamp(0.74rem, 0.7rem + 0.18vw, 0.84rem);
+  color: var(--secondary);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.cmp-parenthetical.is-visible {
+  opacity: 1;
+}
+
+.cmp-insight {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cmp-insight-line {
+  font-size: clamp(0.88rem, 0.8rem + 0.3vw, 1.02rem);
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.cmp-insight-line--lead {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 0.92rem + 0.6vw, 1.45rem);
+  color: var(--accent);
+  line-height: 1.25;
+  margin-bottom: 2px;
+}
+
+/* Load-bearing: the derivation for the softest number in the deck. Never
+   truncate this — it is what makes the rigor screen credible. */
+.cmp-method {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: clamp(0.62rem, 0.58rem + 0.16vw, 0.7rem);
+  line-height: 1.55;
+  color: var(--secondary);
+  max-width: 118ch;
+}
+
+/* ---------- screen 11 — the structural diagnosis ---------- */
+
+.screen--diagnosis {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: clamp(16px, 2.4vw, 34px);
+}
+
+.dgn-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dgn-rows {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.dgn-row {
+  border-top: 1px solid var(--border);
+  padding: clamp(14px, 2.2vw, 28px) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dgn-row-label {
+  font-family: var(--font-mono);
+  font-size: clamp(0.66rem, 0.6rem + 0.2vw, 0.75rem);
+  letter-spacing: 0.12em;
+  color: var(--secondary);
+}
+
+.dgn-row-body {
+  display: grid;
+  /* the ▸ gutter never disappears, even at 1440x900 */
+  grid-template-columns: 46fr 6fr 40fr;
+  align-items: start;
+  gap: clamp(8px, 1.2vw, 18px);
+}
+
+.dgn-cause {
+  font-size: clamp(0.86rem, 0.78rem + 0.3vw, 1rem);
+  color: var(--secondary);
+  line-height: 1.5;
+}
+
+.dgn-marker {
+  color: var(--accent);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.dgn-consequence {
+  font-size: clamp(0.88rem, 0.8rem + 0.32vw, 1.05rem);
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.dgn-closing {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dgn-closing-line {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.1rem, 0.95rem + 0.7vw, 1.6rem);
+  line-height: 1.28;
+  color: var(--ink);
+}
+
+/* ---------- screen 12 — two additive layers ---------- */
+
+.screen--two-layers {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: clamp(8px, 1.2vw, 16px);
+}
+
+.tl-header { flex: 0 0 auto; display: flex; flex-direction: column; gap: 3px; }
+
+.tl-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: clamp(20px, 2.6vw, 44px);
+}
+
+.tl-plot-wrap { min-height: 0; }
+.tl-plot-svg { width: 100%; height: 100%; overflow: visible; }
+
+.tl-axis { stroke: #c9c9ce; stroke-width: 1.5px; fill: none; }
+.tl-axis-label { font-family: var(--font-mono); font-size: 11px; fill: var(--secondary); }
+
+/* Layer 1 solid = established, measurable. Layer 2 dashed = frontier claim.
+   The grammar matches screens 03, 05, 06 and 08. */
+.tl-zone1 {
+  fill: var(--accent);
+  fill-opacity: 0;
+  stroke: var(--accent);
+  stroke-width: 1.5px;
+  stroke-opacity: 0;
+}
+
+.tl-zone2 {
+  fill: var(--accent);
+  fill-opacity: 0;
+  stroke: var(--accent);
+  stroke-width: 1.5px;
+  stroke-dasharray: 7 5;
+}
+
+.tl-zone-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--accent);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.tl-zone-label.is-visible { opacity: 1; }
+
+.tl-seg {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--secondary);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.tl-seg.is-visible { opacity: 1; }
+
+.tl-l2-segs { opacity: 0; transition: opacity 0.35s; }
+.tl-l2-segs.is-visible { opacity: 1; }
+.tl-l2-segs .tl-seg { opacity: 1; }
+
+.tl-kuka {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.35s;
+}
+.tl-kuka.is-visible { opacity: 1; }
+
+.tl-kuka-marker { fill: var(--accent); stroke: #fff; stroke-width: 2px; }
+.tl-kuka-label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 12px;
+  fill: var(--ink);
+}
+
+.tl-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.6vw, 22px);
+  min-width: 0;
+}
+
+.tl-block { display: flex; flex-direction: column; gap: 7px; }
+
+.tl-block-heading {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+.tl-block-rule { height: 1px; background: var(--border); }
+
+.tl-lead {
+  font-size: clamp(0.8rem, 0.74rem + 0.22vw, 0.9rem);
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.tl-bullets { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+
+.tl-bullet {
+  position: relative;
+  padding-left: 14px;
+  font-size: clamp(0.76rem, 0.71rem + 0.2vw, 0.85rem);
+  color: var(--secondary);
+  line-height: 1.42;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.tl-bullet::before { content: "·"; position: absolute; left: 4px; color: var(--secondary); }
+.tl-bullet.is-visible { opacity: 1; transform: translateY(0); }
+
+.tl-arithmetic { display: flex; flex-direction: column; gap: 4px; margin-top: 2px; }
+
+.tl-arithmetic-line {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(0.88rem, 0.8rem + 0.32vw, 1.05rem);
+  color: var(--accent);
+  line-height: 1.35;
+}
+
+.tl-l2-lines { display: flex; flex-direction: column; gap: 5px; }
+
+.tl-l2-line {
+  font-size: clamp(0.78rem, 0.72rem + 0.22vw, 0.88rem);
+  color: var(--ink);
+  line-height: 1.45;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.tl-l2-line.is-visible { opacity: 1; transform: translateY(0); }
+.tl-l2-lines .chip { opacity: 0; transition: opacity 0.3s; }
+.tl-l2-lines .chip.is-visible { opacity: 1; }
+
+.tl-closing {
+  flex: 0 0 auto;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 0.92rem + 0.6vw, 1.45rem);
+  color: var(--ink);
+}
+
+/* ---------- screen 13 — the flywheel ---------- */
+
+.screen--flywheel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: clamp(6px, 1vw, 14px);
+}
+
+.fw-header { flex: 0 0 auto; display: flex; flex-direction: column; gap: 3px; }
+
+.fw-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(18px, 2.4vw, 40px);
+}
+
+.fw-left { display: flex; flex-direction: column; min-height: 0; gap: 6px; }
+.fw-wheel-wrap { flex: 1 1 auto; min-height: 0; }
+.fw-wheel-svg { width: 100%; height: 100%; overflow: visible; }
+
+.fw-node-box {
+  fill: #fff;
+  stroke: var(--border);
+  stroke-width: 1px;
+  transition: stroke 0.25s, stroke-width 0.25s;
+}
+
+/* node 3 closes screen 05's hollow ring — a marginally heavier border once
+   filled, a quiet callback rather than a highlight */
+.fw-node.is-filled .fw-node-box.is-key { stroke-width: 2px; stroke: var(--secondary); }
+
+.fw-node-edge { fill: var(--accent); opacity: 0; transition: opacity 0.25s; }
+.fw-node.is-filled .fw-node-edge { opacity: 1; }
+
+.fw-node { transform-box: fill-box; transform-origin: center; }
+
+.fw-node-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  fill: var(--ink);
+}
+
+.fw-node-sub {
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  fill: var(--secondary);
+}
+
+.fw-arrow-path {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 2px;
+  transition: stroke 0.3s;
+}
+.fw-arrow.is-drawn .fw-arrow-path { stroke: var(--accent); }
+
+.fw-arrow-head { fill: var(--accent); opacity: 0; }
+
+.fw-rotor { opacity: 0; transition: opacity 0.4s; }
+.fw-rotor.is-visible { opacity: 1; }
+.fw-rotor-arc { fill: none; stroke: var(--accent); stroke-width: 2px; stroke-linecap: round; }
+.fw-rotor-head { fill: var(--accent); }
+
+.fw-diagram-chip { flex: 0 0 auto; }
+
+.fw-replication { flex: 0 0 auto; display: flex; flex-direction: column; gap: 4px; }
+
+.fw-geos {
+  font-family: var(--font-mono);
+  font-size: clamp(0.76rem, 0.7rem + 0.22vw, 0.88rem);
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.fw-geo-marker { color: var(--accent); }
+.fw-geo { opacity: 0; transition: opacity 0.3s; }
+.fw-geo.is-visible { opacity: 1; }
+.fw-geo-sep { color: var(--secondary); }
+
+.fw-replication-line {
+  font-size: clamp(0.74rem, 0.7rem + 0.2vw, 0.84rem);
+  color: var(--secondary);
+  line-height: 1.45;
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.fw-replication-line.is-visible { opacity: 1; }
+
+.fw-right { display: flex; flex-direction: column; gap: clamp(12px, 1.6vw, 22px); min-width: 0; }
+.fw-block { display: flex; flex-direction: column; gap: 7px; }
+
+.fw-block-heading {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+.fw-block-rule { height: 1px; background: var(--border); }
+
+.fw-compound-line {
+  font-size: clamp(0.8rem, 0.74rem + 0.24vw, 0.92rem);
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+/* the answered objection — visually distinct from the block above it, so it
+   reads as an inversion rather than a caveat */
+.fw-raas-inset {
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  background: var(--light-section);
+  padding: clamp(12px, 1.5vw, 18px);
+  font-size: clamp(0.78rem, 0.73rem + 0.22vw, 0.89rem);
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.fw-asymmetry {
+  flex: 0 0 auto;
+  border-top: 1px solid var(--border);
+  padding-top: clamp(8px, 1.2vw, 14px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fw-asym-row {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: clamp(10px, 1.4vw, 20px);
+  align-items: baseline;
+}
+
+.fw-asym-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--secondary);
+}
+
+.fw-asym-text {
+  font-size: clamp(0.8rem, 0.74rem + 0.24vw, 0.92rem);
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.fw-asym-text--upside {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 0.92rem + 0.6vw, 1.45rem);
+  color: var(--accent);
+  line-height: 1.2;
+}
+
+/* ---------- screen 14 — the ecosystem play ---------- */
+
+.screen--ecosystem {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: clamp(10px, 1.5vw, 20px);
+}
+
+.eco-header { flex: 0 0 auto; display: flex; flex-direction: column; gap: 3px; }
+
+.eco-bands {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.eco-band {
+  border-top: 1px solid var(--border);
+  padding: clamp(11px, 1.5vw, 20px) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.eco-band-head { display: flex; align-items: baseline; gap: 14px; }
+
+.eco-index {
+  font-family: var(--font-mono);
+  font-size: clamp(1.05rem, 0.92rem + 0.5vw, 1.35rem);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.eco-title {
+  font-family: var(--font-mono);
+  font-size: clamp(0.76rem, 0.7rem + 0.24vw, 0.9rem);
+  letter-spacing: 0.11em;
+  color: var(--ink);
+}
+
+.eco-band-body {
+  display: grid;
+  grid-template-columns: 1fr 0.4fr;
+  gap: clamp(14px, 2vw, 32px);
+  align-items: start;
+  padding-left: calc(clamp(1.05rem, 0.92rem + 0.5vw, 1.35rem) + 14px);
+}
+
+.eco-body-col { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+
+.eco-body {
+  font-size: clamp(0.8rem, 0.74rem + 0.26vw, 0.94rem);
+  color: var(--secondary);
+  line-height: 1.5;
+}
+
+.eco-illustrative {
+  font-family: var(--font-mono);
+  font-size: clamp(0.68rem, 0.64rem + 0.18vw, 0.76rem);
+  color: var(--secondary);
+  line-height: 1.5;
+}
+
+.eco-unlocks {
+  font-family: var(--font-mono);
+  font-size: clamp(0.68rem, 0.64rem + 0.18vw, 0.78rem);
+  color: var(--secondary);
+  line-height: 1.5;
+}
+.eco-unlocks-marker { color: var(--accent); }
+
+.eco-urgency {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: clamp(6px, 1vw, 12px);
+}
+
+.eco-urgency-line {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 0.92rem + 0.6vw, 1.5rem);
+  line-height: 1.28;
+  color: var(--ink);
+}
+
+.eco-urgency-chip { margin-top: 4px; }
+
+/* ---------- screen 15 — the proposition (dark bookend) ---------- */
+
+/* The SVG fills the whole stage and its viewBox is 16:9, so `meet` fits by
+   WIDTH at both 1920x1080 and 1440x900 — no horizontal letterboxing, which
+   means the node x-positions and the HTML block columns below stay aligned
+   at both resolutions (only ~1% vertical drift). All the percentages here
+   are the SVG viewBox coordinates expressed as fractions of 1600 x 900. */
+.screen--proposition {
+  position: absolute;
+  inset: 0;
+  display: block;
+  max-width: none;
+  margin: 0;
+}
+
+.prop-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.prop-dot-grid { fill: url(#prop-dot-pattern); }
+.prop-dot-pattern circle { fill: rgba(255, 255, 255, 0.05); }
+
+.prop-cover-traj,
+.prop-ext-traj {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2px;
+  stroke-linecap: round;
+  opacity: 0.85;
+}
+
+/* stroke-width is set inline, divided out by the group scale, so the cover's
+   trajectory renders at the same apparent weight as its extension */
+
+.prop-arrow { fill: var(--accent); opacity: 0; }
+
+.prop-glow-head { opacity: 0; pointer-events: none; }
+
+.prop-node {
+  fill: #4a4a52;
+  stroke: var(--dark-base-top);
+  stroke-width: 1.5px;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: fill 0.25s, transform 0.2s;
+}
+
+.prop-node.is-lit {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 7px rgba(255, 88, 0, 0.55));
+}
+
+.prop-statement {
+  position: absolute;
+  left: 55%;
+  right: 3.5%;
+  top: 9%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.4vw, 20px);
+  align-items: flex-start;
+}
+
+.prop-closing {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.prop-closing-line {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.35rem, 1.05rem + 1.15vw, 2.35rem);
+  line-height: 1.2;
+  color: var(--dark-ink);
+}
+
+.prop-rule-line { stroke: var(--dark-hairline); stroke-width: 1.5; }
+
+.prop-recommendation {
+  font-size: clamp(0.86rem, 0.78rem + 0.34vw, 1.05rem);
+  line-height: 1.5;
+  color: var(--dark-secondary);
+  max-width: 44ch;
+}
+
+/* Four 14%-wide columns whose LEFT edges land at 40% / 54% / 68% / 82% of
+   width — exactly the four node positions on the spine, so each node anchors
+   the block beneath it. */
+.prop-blocks {
+  position: absolute;
+  left: 40%;
+  right: 4%;
+  top: 65%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  /* zero gap: a gap pulls each column's centre inward and breaks the
+     alignment with its node on the spine. Spacing comes from block padding. */
+  gap: 0;
+  align-items: start;
+}
+
+.prop-block {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  padding-right: clamp(12px, 1.6vw, 28px);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.38s var(--ease-standard), transform 0.38s var(--ease-standard);
+}
+
+.prop-block.is-visible { opacity: 1; transform: translateY(0); }
+
+.prop-verb {
+  font-family: var(--font-mono);
+  font-size: clamp(0.82rem, 0.72rem + 0.4vw, 1.05rem);
+  letter-spacing: 0.11em;
+  color: var(--accent);
+}
+
+.prop-object {
+  font-family: var(--font-mono);
+  font-size: clamp(0.68rem, 0.63rem + 0.2vw, 0.78rem);
+  color: var(--dark-secondary);
+  margin-bottom: 4px;
+}
+
+.prop-body {
+  font-size: clamp(0.68rem, 0.63rem + 0.22vw, 0.8rem);
+  line-height: 1.5;
+  color: var(--dark-secondary);
+}
+
+.prop-footer {
+  position: absolute;
+  left: 4.4%;
+  right: 3.5%;
+  bottom: 7.5%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: clamp(20px, 3vw, 60px);
+}
+
+.prop-final {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 0.88rem + 0.7vw, 1.6rem);
+  line-height: 1.25;
+  color: var(--accent);
+}
+
+/* The name appears ALONE — no credential line, no role claim, no ask. */
+.prop-signature {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(0.86rem, 0.78rem + 0.3vw, 1.02rem);
+  color: var(--dark-secondary);
+  white-space: nowrap;
+}
+
+/* ---------- reduced motion safety net ---------- */
+
+.reduced-motion .theme-wash,
+.reduced-motion .overview,
+.reduced-motion .key-hint,
+.reduced-motion .infl-window-label,
+.reduced-motion .infl-llm-label,
+.reduced-motion .infl-pai-label,
+.reduced-motion .infl-milestone,
+.reduced-motion .infl-contrast-row,
+.reduced-motion .wc-zone1,
+.reduced-motion .wc-zone1-label,
+.reduced-motion .wc-zone2-label,
+.reduced-motion .wc-mechanism,
+.reduced-motion .wc-row-text,
+.reduced-motion .wc-asset-marker,
+.reduced-motion .wc-asset-tag,
+.reduced-motion .wc-gap-label,
+.reduced-motion .wc-stack-rule,
+.reduced-motion .wc-dot,
+.reduced-motion .map-convergence-label,
+.reduced-motion .map-panel,
+.reduced-motion .fc-shape,
+.reduced-motion .fc-legend-entry,
+.reduced-motion .fc-closing-line,
+.reduced-motion .pdx-block,
+.reduced-motion .pdx-ambition-claim,
+.reduced-motion .pdx-fact,
+.reduced-motion .pdx-closing,
+.reduced-motion .pdx-strand,
+.reduced-motion .pdx-strand--full,
+.reduced-motion .pdx-strand--main,
+.reduced-motion .pdx-strand--fray,
+.reduced-motion .pdx-strand--survivor,
+.reduced-motion .cmp-cell-inner,
+.reduced-motion .cmp-parenthetical,
+.reduced-motion .tl-zone-label,
+.reduced-motion .tl-seg,
+.reduced-motion .tl-l2-segs,
+.reduced-motion .tl-kuka,
+.reduced-motion .tl-bullet,
+.reduced-motion .tl-l2-line,
+.reduced-motion .tl-l2-lines .chip,
+.reduced-motion .fw-node-box,
+.reduced-motion .fw-node-edge,
+.reduced-motion .fw-arrow-path,
+.reduced-motion .fw-rotor,
+.reduced-motion .fw-geo,
+.reduced-motion .fw-replication-line,
+.reduced-motion .prop-node,
+.reduced-motion .prop-block {
+  transition: none !important;
+}

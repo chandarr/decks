@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KUKA at the Physical-AI Inflection</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+  rel="stylesheet"
+/>
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body class="theme-dark">
+  <div id="stage">
+    <main id="screen-mount" aria-live="polite"></main>
+
+    <div id="theme-wash" class="theme-wash" aria-hidden="true"></div>
+
+    <button id="master-nav-btn" class="master-nav-btn" type="button" aria-label="Open screen overview">
+      <span class="master-nav-btn__grid" aria-hidden="true"></span>
+      <span>Overview</span>
+    </button>
+
+    <nav class="progress-rail" aria-label="Screen progress">
+      <div class="progress-segs" id="progress-segs"></div>
+      <span class="progress-counter" id="progress-counter" aria-hidden="true"></span>
+    </nav>
+
+    <div id="overview" class="overview" role="dialog" aria-modal="true" aria-label="Screen overview">
+      <div class="overview-grid"></div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="anim.js"></script>
+  <script src="arm-geometry.js"></script>
+  <script src="engine.js"></script>
+
+  <script src="pages/01-cover.js"></script>
+  <script src="pages/02-four-acts.js"></script>
+  <script src="pages/03-inflection.js"></script>
+  <script src="pages/04-signals.js"></script>
+  <script src="pages/05-what-changes.js"></script>
+  <script src="pages/06-competitive-map.js"></script>
+  <script src="pages/07-three-responses.js"></script>
+  <script src="pages/08-four-corners.js"></script>
+  <script src="pages/09-paradox.js"></script>
+  <script src="pages/10-india-comparison.js"></script>
+  <script src="pages/11-diagnosis.js"></script>
+  <script src="pages/12-two-layers.js"></script>
+  <script src="pages/13-flywheel.js"></script>
+  <script src="pages/14-ecosystem.js"></script>
+  <script src="pages/15-proposition.js"></script>
+</body>
+</html>
