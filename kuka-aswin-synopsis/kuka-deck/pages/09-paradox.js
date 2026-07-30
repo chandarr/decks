@@ -18,8 +18,10 @@
  * short of a right-hand panel that is still empty, and the facts then
  * arrive as the account of what is (and is not) on that side.
  *
- * Orange is used on India's density bar and the surviving strand only —
- * the gap block added below the channel is ink and secondary, never accent.
+ * Orange is used on the kicker, India's density bar, the surviving strand
+ * and the closing statement. The demand figures and the gap block stay ink
+ * and secondary: colouring the figures would flatten the density bar, which
+ * is the one number on the left panel that has to be seen.
  */
 (function () {
   const D = window.DeckData;

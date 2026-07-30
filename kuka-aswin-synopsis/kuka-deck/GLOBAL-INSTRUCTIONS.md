@@ -54,6 +54,16 @@ accent       #FF5800        same orange, allowed to glow here only
 
 **Accent discipline:** KUKA orange is the *only* hue. Comparisons, SWOT quadrants and the competitive map use greyscale + position + orange-emphasis rather than a second colour. Never more than one accent ramp visible at once.
 
+**Where orange goes — the deck-wide rule.** The deck is text-dense, so orange is what gives a page of type a focal point. Every screen carries it in the same three roles, and no others:
+
+1. **The kicker.** Orange on every screen, light and dark. One per screen, top left — the constant accent anchor.
+2. **The payload line.** The one sentence a screen exists to deliver — the closing statement, the verdict, the punchline. Where a screen closes on two lines, only the *operative* one is orange; a concession and a verdict must never carry equal weight.
+3. **The figure or element that is the subject.** KUKA's marker, KUKA's column, the signal figures, the density bar, the surviving strand. On a comparison, only the column the reader should track — colouring every figure says nothing about which one matters.
+
+Everything else stays ink and secondary: body copy, block-level mono headings (`WHO HOLDS WHAT`, `THE DEMAND`, `THE MODELS`), competitor and neutral data, supporting lines. Three exceptions, where a mono label is itself the screen's subject or its only structural device: the ecosystem move indices, the diagnosis row labels, and the two direction titles on the posture screen (`COMING FROM THE BODY` / `COMING FROM THE BRAIN`) — that screen's whole argument is which side a competitor is arriving from.
+
+The test: **on any screen, you should be able to say in one sentence why each orange thing is orange.** If a screen has more than three or four orange elements, one of them is decoration — take it out.
+
 **Bookend transition:** ~500ms wash between dark and light, not a hard cut, so the switch reads as intentional.
 
 ### 4.2 Typography

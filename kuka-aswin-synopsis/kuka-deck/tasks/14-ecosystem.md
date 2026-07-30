@@ -46,7 +46,7 @@ The one idea: *KUKA already has the open platform. What it does not have is anyo
 │       largest such population in the world.                                    │
 │  ──────────────────────────────────────────────────────────────────────────    │
 │                                                                                │
-│  FANUC is already making move 03. Architecture without an ecosystem            │
+│  FANUC is already making move 04. Architecture without an ecosystem            │
 │  is engineering nobody builds on.                                   14 / 15    │
 └────────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -58,14 +58,16 @@ The one idea: *KUKA already has the open platform. What it does not have is anyo
 
 ## Steps (reveal order)
 
-**0 — Base:** kicker, headline, subtitle, the three hairline rules with their mono indices and move titles visible, all body text and `unlocks` notes hidden. The three moves are named before any is explained.
+**0 — Base:** kicker, headline, subtitle, the mandate block's label and frame, and the four hairline rules with their mono indices and move titles visible; all body text and `unlocks` notes hidden. The four moves are named before any is explained.
 
-**1 — Move 01:** body `fadeUp`, then its `unlocks ▸` note ~200ms later.
-**2 — Move 02:** body `fadeUp`, then the illustrative partner list ~250ms later, then its `unlocks ▸` note.
-**3 — Move 03:** body `fadeUp`, then its `unlocks ▸` note.
-**4 — The urgency:** both closing lines `fadeUp` together, with a beat of separation from step 3.
+**1 — The mandate:** the mandate line `fadeUp`s, then the recruiting line ~220ms later. **This comes first because every move below assumes it.**
+**2 — Move 01:** body `fadeUp`, then its `unlocks ▸` note ~200ms later.
+**3 — Move 02:** body `fadeUp`, then its `unlocks ▸` note.
+**4 — Move 03:** body `fadeUp`, then the illustrative partner list ~250ms later, then its `unlocks ▸` note.
+**5 — Move 04:** body `fadeUp`, then its `unlocks ▸` note.
+**6 — The urgency:** both closing lines `fadeUp` together, with a beat of separation from step 5.
 
-*(5 beats. Back reverses one at a time. `R` replays from base.)*
+*(7 beats. Back reverses one at a time. `R` replays from base.)*
 
 ## Copy
 
@@ -73,7 +75,14 @@ Exact text. Do not alter.
 
 - **Kicker:** `THE PLAY`
 - **Headline:** `The architecture is built. The ecosystem is not.`
-- **Subtitle:** `Three moves, in the order they can happen.`
+- **Subtitle:** `One mandate change, then four moves in the order they can happen.`
+
+**The mandate block** (above the moves, `#F5F5F7` field with a 3px `#FF5800` left edge)
+- Label: `THE MANDATE THIS RESTS ON`
+- Line (display weight, orange): `From a trade-and-service entity to a Global Capability Centre — R&D, sales and support under one mandate.`
+- Sub (body, secondary): `It is also the recruiting pitch. Engineers join a company that builds in India, not one that resells into it — and none of the four moves below survive without the people that changed mandate attracts.`
+
+`trade-and-service` is the term the paradox and diagnosis screens use for the entity's registry classification — keep all three identical.
 
 **Move 01**
 - Index: `01`
@@ -83,19 +92,25 @@ Exact text. Do not alter.
 
 **Move 02**
 - Index: `02`
+- Title: `ONBOARD THE WIDER MARKET WITH RaaS`
+- Body: `Lead with RaaS rather than capex. It turns a capital decision into an operating line, which opens the MSME and Tier-2/Tier-3 base that cannot buy a cell outright — and every cell placed that way is an instrumented node from the day it is switched on. Revenue while the engineering base is still being built, and the data starts accruing to KUKA at the same time.`
+- Unlocks: `revenue now, and the data engine from day one`
+
+**Move 03**
+- Index: `03`
 - Title: `PARTNER FOR THE BRAIN, NOT AGAINST IT`
 - Body: `India's software-first robotics companies are complementary, not competing. They hold vision and manipulation intelligence and lack a certified body, a safety case and an installed base. KUKA holds exactly those, plus an operating system already built as an open platform.`
 - Illustrative line: `Illustrative of the category — CynLr · Ati Motors · Addverb · Physical Intelligence · Skild · NVIDIA Isaac`
 - Unlocks: `frontier perception without hiring it`
 
-**Move 03**
-- Index: `03`
+**Move 04**
+- Index: `04`
 - Title: `OPEN iiQKA.OS TO INDIAN DEVELOPERS`
-- Body: `The cheapest of the three moves and the one that compounds longest. iiQKA.OS was rewritten from scratch as a modular open platform. India has the largest population of software engineers in the world. Those two facts have never been put together.`
+- Body: `The cheapest of the four moves and the one that compounds longest. iiQKA.OS was rewritten from scratch as a modular open platform. India has the largest population of software engineers in the world. Those two facts have never been put together.`
 - Unlocks: `the longest compounding tail`
 
 **Urgency line (display, two lines):**
-`FANUC is already making move 03.`
+`FANUC is already making move 04.`
 `Architecture without an ecosystem is engineering nobody builds on.`
 
 - **Counter:** `14 / 15`
@@ -146,7 +161,7 @@ None — all native CSS/type. No company logos.
 - **The illustrative partner list is unmistakably framed as illustrative** — the phrase `Illustrative of the category` must be present and legible. This is a content rule, not a style preference.
 - **No headcount, budget, or timeline figure appears anywhere on this screen**
 - The urgency line lands as its own beat and is the most prominent text after the headline
-- Only KUKA orange; used on the move indices, the `▸` markers, and nowhere else
+- Only KUKA orange; used on the kicker, the move indices, the `▸` markers and the closing-window statement
 - Reduced-motion version complete
 - Copy matches this file character for character
 - No console errors
@@ -157,6 +172,8 @@ None — all native CSS/type. No company logos.
 - **Move 01 carries no headcount and no budget deliberately.** This is a screening synopsis; scale and cost belong in the live conversation. The GCC framing sets the scale reference without committing to a number — hundreds of multinationals run substantial engineering centres in India, and the reader supplies the magnitude himself.
 - **Move 02's framing is "complementary, not competing."** This matters: several of these companies appeared on screen 06 as clusters in the competitive field. The characterisation must stay consistent — the physical-AI software cluster was described there as `the cluster to partner with, not to race`. This screen is that line paid off.
 - **The urgency line is the screen's payload.** It converts the proposition from "worth doing" to "worth doing now", and it does so with a competitor fact rather than an assertion. Do not soften it, and do not move it into the body of move 03 — it needs the separation.
+- **Why the mandate block leads.** The moves were originally three, with no statement of the mandate they depend on — which left the screen reading as a list of initiatives rather than a reorganisation. The block states the change once (trade-and-service entity → Global Capability Centre: R&D, sales and support) and carries the talent point with it, because the changed mandate is what makes the company worth joining. It is the prescription for the mandate diagnosed on the diagnosis screen, which deliberately stated the problem without prescribing.
+- **Move 02 states RaaS as execution, not as mechanism.** *How* RaaS works — capex into an operating line, fleet ownership making every cell an instrumented node — is explained on the two-layers and flywheel screens. Here it is the commercial move that can start before the engineering base exists: onboard wider, and the data starts accruing from day one. Keep the wording consistent with those two screens and do not re-explain the mechanism.
 - **Cross-screen dependencies:**
   - Move 01 is the fix for the location gap diagnosed on **screen 11**. That screen deliberately stated the gap without prescribing; this is where the prescription lands.
   - Move 02 pays off the physical-AI cluster characterisation from **screen 06**.

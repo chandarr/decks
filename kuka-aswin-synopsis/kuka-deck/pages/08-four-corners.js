@@ -18,6 +18,11 @@
  * Spanning shapes are derived from each holder's `holds` / `claims` cell ids
  * in data.js, never hardcoded, so changing which corners a group holds moves
  * its shape automatically.
+ *
+ * The conclusion block sits under the legend and names the four corners as
+ * one combination — the screen's "so what". It reveals one step BEFORE the
+ * closing statement so the screen still ends on the corner that is not yet
+ * built; see revealStep.
  */
 (function () {
   const CORNERS = window.DeckData.CORNERS;
@@ -160,6 +165,12 @@
           <div class="fc-legend">
             <p class="fc-legend-heading">WHO HOLDS WHAT</p>
             ${legend}
+
+            <div class="fc-conclusion reveal">
+              <p class="fc-conclusion-heading">THE STRENGTH TO HARNESS</p>
+              <p class="fc-conclusion-line">Hardware scale from China. Precision and certification from Germany. Development scale from India. Deployment proven worldwide.</p>
+              <p class="fc-conclusion-claim">No competitor can assemble that combination. KUKA is the only company positioned to.</p>
+            </div>
           </div>
         </div>
 
@@ -233,7 +244,14 @@
   function revealStep(root, n) {
     if (n >= 1 && n <= 4) revealCompetitor(root, n);
     if (n === 5) revealKuka(root);
+    // The conclusion lands BEFORE the closing statement, never after: the
+    // screen has to end on the corner that is not yet built, which is what
+    // sets up Act III. A summary of KUKA's strengths after that line would
+    // resolve tension the next act depends on.
     if (n === 6) {
+      controllers.push(window.Anim.fadeUp(root.querySelector(".fc-conclusion"), { reduced: isReduced }));
+    }
+    if (n === 7) {
       const l1 = root.querySelector('.fc-closing-line[data-line="1"]');
       const l2 = root.querySelector('.fc-closing-line[data-line="2"]');
       controllers.push(window.Anim.fadeUp(l1, { reduced: isReduced }));
@@ -262,6 +280,9 @@
       root.querySelector('.fc-legend-entry[data-holder="kuka"]').classList.remove("is-lit");
     }
     if (n === 6) {
+      root.querySelector(".fc-conclusion").classList.remove("is-visible");
+    }
+    if (n === 7) {
       root.querySelectorAll(".fc-closing-line").forEach((l) => l.classList.remove("is-visible"));
     }
   }
@@ -270,7 +291,7 @@
     id: "08-four-corners",
     title: "Four corners. No competitor can reach all of them.",
     theme: "light",
-    steps: 6,
+    steps: 7,
     render,
     onEnter: (root, ctx) => {
       clearAll();

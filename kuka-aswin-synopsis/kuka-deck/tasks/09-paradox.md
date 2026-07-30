@@ -167,7 +167,7 @@ None — all native SVG/CSS.
 - Headcount and FY24 figures carry `estimate` chips, visibly distinct from `confirmed`
 - The gap statement names the break without narrating the graphic — the two panels themselves stay uncommented
 - The gap statement sits under the channel and clears both panels at 1920×1080 and 1440×900
-- Only KUKA orange; used on India's density bar, the surviving strand, and nowhere else
+- Only KUKA orange; used on the kicker, India's density bar, the surviving strand and the closing statement. **The demand figures stay ink** — colouring them would flatten the density bar, which is the one figure on the left panel that has to be seen
 - Reduced-motion version preserves the break and the density gap
 - Copy matches this file character for character
 - No console errors

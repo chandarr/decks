@@ -179,7 +179,7 @@ None — all native CSS/type.
 - The derived-insight statement is present and its first line is visually emphasised
 - Every figure resolves from `data.js`; no number is hardcoded
 - No bar chart or graph anywhere on this screen
-- Only KUKA orange; used on the KUKA column rule and the emphasised insight line only
+- Only KUKA orange; used on the kicker, the KUKA column rule, **the KUKA column's figures**, and the emphasised insight line. ABB's and FANUC's figures stay ink — on a comparison, colouring every column says nothing about which one to track
 - Reduced-motion version complete
 - Copy matches this file character for character
 - No console errors

@@ -225,7 +225,7 @@ None — all native CSS/type.
 - Every figure resolves from `data.js`; no number is hardcoded in markup
 - **The evidence block reads as one bounded object**, not four loose boxes with a caption
 - **The inference line is ink, not orange** — the headline is the only accent type on the screen
-- Only KUKA orange; on this screen it appears on the block headline and the `confirmed` chip dots alone — every card, box and figure is greyscale-and-ink
+- Only KUKA orange; on this screen it appears on the kicker, the three signal-card figures, the block headline and the `confirmed` chip dots. **The four sub-box figures stay ink** — that contrast is what keeps the evidence block subordinate to the signals above it
 - Figures legible from the back of a room; consequence lines legible on a laptop
 - Reduced-motion version complete and composed
 - Copy matches this file character for character

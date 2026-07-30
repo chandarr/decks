@@ -141,7 +141,7 @@ None — all native SVG/CSS. No company logos.
 - The connector paths visibly converge; both arrowheads land on the lower card
 - **The closing line lands as its own beat**, separated from the body text, and is the most prominent single line on the screen
 - The closing line carries no evidence chip
-- Only KUKA orange; used on the lower card's edge rule and closing line only — the two upper cards are greyscale-and-ink
+- Only KUKA orange; used on the kicker, the two direction titles (`COMING FROM THE BODY` / `COMING FROM THE BRAIN`), the lower card's edge rule and its closing line. Everything inside the two upper cards — the HOLD / NEED / MOVE / COST rows and their text — stays greyscale-and-ink
 - Reduced-motion version preserves the mirror-and-converge structure
 - Copy matches this file character for character
 - No console errors

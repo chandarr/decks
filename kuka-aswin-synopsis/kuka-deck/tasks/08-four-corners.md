@@ -12,7 +12,7 @@ Four capabilities are required to industrialise physical AI at scale. Every comp
 
 The screen ends on a deliberate tension: the corner KUKA needs most is the one it has not yet built. That hands directly into Act III.
 
-The one idea: *Four corners. No competitor can reach all of them. One of ours is not yet built.*
+The one idea: *Four corners. No competitor can reach all of them. One of KUKA's is not yet built.*
 
 ## Layout
 
@@ -42,13 +42,21 @@ The one idea: *Four corners. No competitor can reach all of them. One of ours is
 │   │ medical-grade cert    │ integration · trust   │    ★ KUKA — all four      │
 │   └───────────────────────┴───────────────────────┘      one still dashed     │
 │                                                                               │
+│   ┃ THE STRENGTH TO HARNESS                                    ┃              │
+│   ┃ Hardware scale from China. Precision and certification      ┃              │
+│   ┃ from Germany. Development scale from India. Deployment      ┃              │
+│   ┃ proven worldwide.                                           ┃              │
+│   ┃ No competitor can assemble that combination. KUKA is the    ┃              │
+│   ┃ only company positioned to.                                 ┃              │
+│                                                                               │
 │  Four corners. No competitor can reach all of them.                           │
-│  One of ours is not yet built.                                     08 / 16    │
+│  One of KUKA's is not yet built.                                   10 / 19    │
 └───────────────────────────────────────────────────────────────────────────────┘
 ```
 
 - **Left ~62%:** the quadrant. Four equal cells, hairline `#E5E5E8` dividers, each labelled with the corner name (mono, uppercase, wide tracking) and a short descriptor line (body, secondary). Spanning shapes are drawn as translucent overlays across cells.
 - **Right ~32%:** `WHO HOLDS WHAT` — five entries, one per competitor group plus KUKA. Each entry: a small marker, the group name, and a five-word gap statement. Entries illuminate in step with the reveals on the left.
+- **Foot of the right column:** the conclusion block, floated to the bottom of the legend column so it sits level with the quadrant's lower edge. `#F5F5F7` fill, 1px `#E5E5E8`, **3px `#FF5800` left edge** — orange means KUKA on this screen, and this is the KUKA statement. The type inside is ink: mono heading, the four-corner recap in body, the claim in display weight. No orange type, so it reads as a conclusion rather than a highlight.
 - **Bottom:** the two-line closing statement, display weight, left-aligned; counter right.
 - **Ratio adaptation:** at 1440×900 reduce quadrant height ~15% and descriptor line size ~10%. The legend never wraps to two columns; the quadrant never overlaps it.
 
@@ -61,9 +69,12 @@ The one idea: *Four corners. No competitor can reach all of them. One of ours is
 **3 — Humanoid companies:** shape covers development depth only. Legend entry 3 illuminates. Holds, then ghosts.
 **4 — Physical-AI software:** shape covers development depth only, offset slightly from the humanoid shape so both remain distinguishable as ghosts. Legend entry 4 illuminates. Holds, then ghosts.
 **5 — KUKA:** the orange shape draws and spans **all four corners**. Three corners render solid; the **development-depth corner renders dashed** (see Data/graphics). Legend entry 5 illuminates with the star marker. All four ghosts remain visible beneath for cumulative contrast.
-**6 — The finding:** the two-line closing statement `fadeUp`, with the second line — `One of ours is not yet built.` — appearing ~400ms after the first.
+**6 — The conclusion:** the block at the foot of the legend column `fadeUp`s — heading, the four-corner recap, then the claim.
+**7 — The finding:** the two-line closing statement `fadeUp`, with the second line — `One of KUKA's is not yet built.` — appearing ~400ms after the first.
 
-*(7 beats. Back reverses one at a time. `R` replays from base.)*
+*(8 beats. Back reverses one at a time. `R` replays from base.)*
+
+**The conclusion comes before the closing statement, never after.** The screen has to end on the corner that is not yet built — that downbeat is what Act III opens on. A summary of KUKA's strengths landing after it resolves tension the next act depends on, which is why the conclusion block claims the combination and stops short of claiming the missing corner.
 
 ## Copy
 
@@ -88,11 +99,20 @@ Exact text. Do not alter.
 - `Physical-AI software` → `The models. Not the body, the safety case, or the data.`
 - `KUKA` → `All four are reachable. One is not yet built.`
 
+**Conclusion block (foot of the legend column)**
+- Heading (mono, uppercase, wide tracking): `THE STRENGTH TO HARNESS`
+- Recap (body, ink): `Hardware scale from China. Precision and certification from Germany. Development scale from India. Deployment proven worldwide.`
+- Claim (display weight, ink): `No competitor can assemble that combination. KUKA is the only company positioned to.`
+
+The recap names the four corners in the order a reader meets them in the world, not the order of the quadrant cells — China, Germany, India, worldwide. Each clause maps to exactly one corner: manufacturing scale, precision/certification, development, proven deployment.
+
 **Closing statement (display, two lines):**
 `Four corners. No competitor can reach all of them.`
-`One of ours is not yet built.`
+`One of KUKA's is not yet built.`
 
-- **Counter:** `08 / 16`
+Second line reads `KUKA's`, not `ours` — the deck is written in an external voice throughout and never says *we*, *our* or *ours*.
+
+- **Counter:** `10 / 19` (running order; this file's screen numbering predates the act dividers)
 
 ## Data / graphics
 
@@ -153,6 +173,9 @@ None — all native SVG/CSS. No company logos.
 - **KUKA's shape spans all four corners**, and **the development-depth corner is unmistakably dashed while the other three are solid** — this is the screen's payload
 - The four competitor ghosts remain visible beneath KUKA's shape without muddying it
 - Legend entries illuminate in step with their shape
+- **The conclusion block sits level with the quadrant's lower edge** and never collides with the last legend entry or the closing statement
+- **The conclusion reveals before the closing statement** — the screen ends on the corner that is not yet built
+- **The conclusion block carries no orange type** — only its left edge is accent
 - Only KUKA orange; competitor shapes are greyscale
 - No glow
 - Reduced-motion version preserves both the partial-coverage contrast and the dashed corner

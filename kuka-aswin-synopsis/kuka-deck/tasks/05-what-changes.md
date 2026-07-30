@@ -153,7 +153,7 @@ None — all native SVG/CSS.
 - Neither axis carries numbers or ticks
 - Dots are unlabelled — no segment names anywhere on this screen
 - Asset tags resolve from `data.js`; nothing hardcoded
-- Only KUKA orange; no glow
+- Only KUKA orange; used on the kicker, the asset markers, the `GAP` label and rule, and the two closing statements; no glow
 - Reduced-motion version preserves the gap's visibility
 - Copy matches this file character for character
 - No console errors

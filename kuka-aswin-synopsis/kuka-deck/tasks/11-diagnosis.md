@@ -99,7 +99,7 @@ Row labels are mono, uppercase, wide tracking, secondary ink. Cause text is body
 
 **No chart, no diagram, no org chart.** The screen is typographic. An org diagram here would look like an internal restructuring proposal, which is not what this is — and it would break the lean pacing this screen exists to provide.
 
-- **The `▸` marker:** small, `#FF5800`, centred in the gutter, vertically aligned to the first line of the consequence text. It is the only orange element in the rows.
+- **The `▸` marker:** small, `#FF5800`, centred in the gutter, vertically aligned to the first line of the consequence text. With the row labels it is the only orange in the rows — cause and consequence text stay ink and secondary.
 - **Hairline rules:** 1px `#E5E5E8`, full content width, above each row and below the third.
 - **No glow** — light screen.
 
@@ -122,7 +122,8 @@ None.
 - Base state looks finished — three labelled, ruled rows framing a diagnosis before any content appears
 - **The screen reads as lean** — roughly 40% whitespace, unhurried, a clear tonal break from screen 10's matrix
 - Each row's consequence is visually distinguishable from its cause (weight and ink)
-- The `▸` markers are the only orange in the row area
+- In the row area, orange appears on the row labels and the `▸` markers only — never on the cause or consequence text
+- The verdict line is orange; the concession line above it stays ink, so the two do not carry equal weight
 - **No diagram, chart, or org chart anywhere on this screen**
 - No evidence chips (deliberate — see Data/graphics)
 - The closing statement is the most prominent text after the headline
