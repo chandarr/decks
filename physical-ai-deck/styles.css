@@ -241,6 +241,30 @@ body { cursor: default; }
   opacity: .3;
 }
 
+/* standing side mark — the deck's byline, set bottom-to-top in the left
+   gutter (content starts at x96, so it never competes for space). Muted on
+   purpose: it should register once and then disappear into the page.
+   pointer-events:none so a click on it still advances the deck. */
+#sidemark {
+  position: absolute;
+  left: calc(34 * var(--px));
+  top: 50%;
+  transform: translateY(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  z-index: 20;
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  /* was 12.5px @ .38 opacity — ~10px on screen and barely legible. Bigger,
+     darker, and with tighter tracking: wide letter-spacing costs more
+     readability than it buys at this size, especially set vertically. */
+  font-size: clamp(14px, calc(20 * var(--px)), 22px);
+  letter-spacing: .14em;
+  color: var(--fg2);
+  opacity: .8;
+  white-space: nowrap;
+}
+
 #dots {
   position: absolute;
   right: var(--pad-x);
@@ -2009,6 +2033,25 @@ body { cursor: default; }
 }
 .s01-mission b { font-weight: 600; color: var(--fg); }
 
+/* The reach clause arrives on the last beat inside an already-full
+   paragraph, so it needs to read as *new* rather than as more of the same:
+   a mild --panel highlight behind it, matching the boxed lines on 12/19.
+   box-decoration-break keeps the padding and rounding on every line
+   fragment when the clause wraps. */
+.s01-mission-tail {
+  /* Amber-green highlighter tint. --panel on --canvas is a 2-value difference
+     and read as nothing at projector distance, so this steps outside the §4.1
+     ramp on purpose (founder call). One hue, two alphas — change the two rgba
+     triples together to retune. */
+  background: rgba(169, 160, 50, .28);
+  box-shadow: 0 0 0 1px rgba(169, 160, 50, .5);
+  border-radius: calc(6 * var(--px));
+  padding: calc(3 * var(--px)) calc(9 * var(--px));
+  color: var(--fg);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
 .s01-spine { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .s01-spine-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 
@@ -2031,7 +2074,7 @@ body { cursor: default; }
 }
 
 .s01-domains {
-  position: absolute; left: calc(96 * var(--px)); right: calc(96 * var(--px)); top: calc(786 * var(--px));
+  position: absolute; left: calc(96 * var(--px)); right: calc(96 * var(--px)); top: calc(886 * var(--px));
   text-align: center; text-transform: uppercase; letter-spacing: .2em;
   font-size: 16px; color: var(--fg2);
 }
@@ -2044,33 +2087,56 @@ body { cursor: default; }
   font-size: 15px; letter-spacing: .1em; color: var(--fg2);
 }
 .s02-title {
-  position: absolute; left: calc(160 * var(--px)); right: calc(160 * var(--px)); top: calc(120 * var(--px));
+  position: absolute; left: calc(160 * var(--px)); right: calc(160 * var(--px)); top: calc(100 * var(--px));
   margin: 0; text-align: center;
+  /* smaller than the shared .title clamp: this title balances onto two
+     lines, and the top satellite (ring top ≈ y196) needs the title's block
+     to clear y200 with room — see tasks/02-end-goal.md acceptance criteria */
+  font-size: clamp(30px, calc(3.1 * var(--vw)), 48px);
 }
 
 .s02-diagram { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .s02-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 
+/* orbit ring — static from base, present the whole time (§ rebuild note 2) */
+.s02-ring { fill: none; stroke: var(--hairline); stroke-width: 1.5; }
+
+/* centre glyph — static from base, no entrance tween (rebuild note 1) */
 .s02-glyph-head { fill: var(--ink); }
 .s02-glyph-body { fill: var(--ink); }
 .s02-centerlbl {
   font-size: 17px; letter-spacing: .24em; text-transform: uppercase; fill: var(--fg2);
 }
 
-.s02-connector { stroke: var(--ink); stroke-width: 1.5; opacity: .55; }
+.s02-connector { stroke: var(--ink); stroke-width: 1.6; opacity: .55; }
 .s02-node { fill: var(--ink); }
 .s02-satlbl {
-  font-family: var(--font-display); font-weight: 700; font-size: 23px; fill: var(--ink);
+  font-family: var(--font-display); font-weight: 700; font-size: 22px; fill: var(--ink);
 }
 .s02-satsub {
-  font-family: var(--font-body); font-size: 17px; fill: var(--fg2);
+  font-family: var(--font-body); font-size: 16px; fill: var(--fg2);
 }
 
-.s02-takeaway {
-  position: absolute; left: calc(200 * var(--px)); right: calc(200 * var(--px)); top: calc(742 * var(--px));
+/* boxed takeaway — bordered --panel highlight, pulled down with a clear gap
+   above it from the satellites (rebuild note 3) */
+/* The box's chrome is gated on its own content: only the .carry-punch inside
+   is .step-gated, so painting the fill and border unconditionally left an
+   empty highlight bar sitting on the page from step 0. Border stays in the
+   layout as `transparent` so nothing shifts when it lands. */
+.s02-takeaway-box {
+  position: absolute; left: calc(260 * var(--px)); right: calc(260 * var(--px)); top: calc(836 * var(--px));
+  background: transparent;
+  border: 1.5px solid transparent;
+  border-radius: calc(8 * var(--px));
+  padding: calc(20 * var(--px)) calc(30 * var(--px));
   text-align: center;
+  transition: background-color .5s var(--ease-out), border-color .5s var(--ease-out);
 }
-.s02-takeaway .carry-punch { text-align: center; }
+.s02-takeaway-box:has(.carry-punch.is-shown) {
+  background: var(--panel);
+  border-color: var(--ink);
+}
+.s02-takeaway-box .carry-punch { text-align: center; margin: 0; }
 
 /* --- Page 03 — Current state & projected future ---------------------------- */
 /* Base = today: three named clouds (models left, bodies right, compute bottom)
@@ -2092,70 +2158,77 @@ body { cursor: default; }
   display: flex; justify-content: center; align-items: center; gap: calc(14 * var(--px));
   font-size: 15px; letter-spacing: .18em;
 }
-.s03-marker-cur, .s03-marker-fut { color: var(--fg2); opacity: .4; transition: color .35s, opacity .35s; }
+.s03-marker-cur, .s03-marker-fut { color: var(--fg2); opacity: .4; transition: color .6s var(--ease-out), opacity .6s var(--ease-out); }
 .s03-marker-cur.is-active, .s03-marker-fut.is-active { color: var(--ink); opacity: 1; }
 .s03-marker-arrow { color: var(--fg2); opacity: .55; font-size: 13px; }
 
 .s03-diagram { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .s03-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 
-/* --- current state: the three clouds --- */
+/* --- current state: the three clouds (one per advance beat) --- */
 
-.s03-cloud {
-  transform-box: fill-box; transform-origin: center;
-  transition: opacity .5s var(--ease-io), transform .55s var(--ease-io);
-}
-/* beat 1: the pole tightens a touch as it takes on gravity */
-.s03-cloud.is-lit { transform: scale(.97); }
-/* beat 3: it withdraws into the feeder box that replaces it */
+.s03-cloud { transform-box: fill-box; transform-origin: center; }
+/* named with .step, or .step[data-motion="none"]'s `transition: none` outranks
+   this and the clouds snap out of existence instead of withdrawing */
+.s03-cloud.step { transition: opacity .75s var(--ease-io), transform .85s var(--ease-io); }
+/* the resolve: each cloud withdraws into the feeder box that replaces it.
+   Ordered after the .step rules above so it outranks .step.is-shown. */
 .s03-clouds.is-gone .s03-cloud { opacity: 0; transform: scale(.74); }
 
-.s03-hull { fill: var(--hairline); opacity: .14; transition: opacity .45s var(--ease-out); }
-.s03-cloud.is-lit .s03-hull { opacity: .3; }
+/* each pole carries its own tinted field, so the three read as distinct
+   territories rather than one grey wash (model slate · bodies bronze ·
+   compute graphite — GLOBAL §4.1's two accent ramps plus structural ink) */
+.s03-hull { fill: var(--hairline); opacity: .16; }
+.s03-cloud[data-key="model"] .s03-hull { fill: var(--accent-b); opacity: .1; }
+.s03-cloud[data-key="embodiment"] .s03-hull { fill: var(--accent-a); opacity: .1; }
+.s03-cloud[data-key="compute"] .s03-hull { fill: var(--secondary); opacity: .12; }
 
 .s03-polelbl {
   font-family: var(--font-display); font-weight: 700; font-size: 21px; letter-spacing: .06em;
-  fill: var(--fg2); transition: fill .4s var(--ease-out);
+  fill: var(--fg2);
 }
-.s03-cloud[data-key="model"].is-lit .s03-polelbl { fill: var(--accent-b); }
-.s03-cloud[data-key="embodiment"].is-lit .s03-polelbl { fill: var(--accent-a); }
-.s03-cloud[data-key="compute"].is-lit .s03-polelbl { fill: var(--fg); }
+.s03-cloud[data-key="model"] .s03-polelbl { fill: var(--accent-b); }
+.s03-cloud[data-key="embodiment"] .s03-polelbl { fill: var(--accent-a); }
+.s03-cloud[data-key="compute"] .s03-polelbl { fill: var(--fg); }
 
 .s03-polesub {
   font-family: var(--font-mono); font-size: 14px; letter-spacing: .1em;
-  fill: var(--fg2); opacity: 0; transition: opacity .45s var(--ease-out);
+  fill: var(--fg2); opacity: .85;
 }
-.s03-cloud.is-lit .s03-polesub { opacity: .85; }
 
 .s03-node--model { fill: var(--accent-b); }
 .s03-node--embodiment { fill: var(--accent-a); }
 .s03-node--compute { fill: var(--fg2); }
 .s03-nodelbl { font-family: var(--font-mono); font-size: 14px; fill: var(--fg2); }
 
-.s03-ast {
-  font-family: var(--font-mono); font-size: 13px; fill: var(--fg2); opacity: .7;
-}
+/* the asterisk is itself a .step, so its resting opacity has to be scoped to
+   .is-shown — a bare `opacity` here sits later in the file than .step's and
+   would keep it visible before its beat */
+.s03-ast { font-family: var(--font-mono); font-size: 13px; fill: var(--fg2); }
+.s03-ast.is-shown { opacity: .7; }
 
 /* --- current state: the scramble in the middle (HTML layer) --- */
 
 .s03-scramble {
   position: absolute; inset: 0; pointer-events: none;
   transform-origin: 50% 43.5185%;   /* (960, 470) — the orchestrator's seat */
-  transition: transform .5s var(--ease-io), opacity .45s var(--ease-out);
 }
+/* named with .step so the transition survives .step[data-motion="none"]'s
+   `transition: none` — the layer still has to animate its compression */
+.s03-scramble.step { transition: transform .75s var(--ease-io), opacity .65s var(--ease-out); }
 .s03-scramble.is-compressed { transform: scale(.12); opacity: 0; }
 
 .s03-sc { position: absolute; display: flex; align-items: center; gap: calc(8 * var(--px)); white-space: nowrap; }
 .s03-dot {
   display: block; border-radius: 50%; background: var(--fg2); opacity: .55;
   width: calc(6 * var(--px)); height: calc(6 * var(--px));
-  transition: background .4s var(--ease-out), opacity .4s var(--ease-out);
+  transition: background .7s var(--ease-out), opacity .7s var(--ease-out);
 }
 .s03-dot--m { width: calc(10 * var(--px)); height: calc(10 * var(--px)); }
 .s03-dot--l { width: calc(14 * var(--px)); height: calc(14 * var(--px)); }
 .s03-sclbl {
   font-family: var(--font-mono); font-size: 13px; color: var(--fg2); opacity: .8;
-  transition: color .4s var(--ease-out), opacity .4s var(--ease-out);
+  transition: color .7s var(--ease-out), opacity .7s var(--ease-out);
 }
 .s03-scramble.is-ink .s03-dot { background: var(--ink); opacity: 1; }
 .s03-scramble.is-ink .s03-sclbl { color: var(--ink); opacity: 1; }
@@ -2189,18 +2262,33 @@ body { cursor: default; }
 
 /* --- bottom: tagline crossfading to the takeaway --- */
 
+/* The scramble's verdict, as a card lifted off the diagram rather than a
+   caption lost in it. Panel on ink with the deck's lift shadow — the
+   authoritative highlight in an off-white/ink system; --alert stays reserved
+   for the weak-joint pages (GLOBAL §4.1). */
 .s03-midcap {
-  position: absolute; left: calc(360 * var(--px)); right: calc(360 * var(--px)); top: calc(574 * var(--px));
-  text-align: center; font-size: 17px; color: var(--fg2);
+  position: absolute; left: 0; right: 0; top: calc(512 * var(--px));
+  text-align: center;
 }
-/* beat 3 retires the beat-2 caption; .step wins the specificity race with the
-   generic .step[data-motion="none"] transition reset, so name it here too */
-.s03-midcap.step { transition: opacity .3s var(--ease-out); }
+.s03-midcap p {
+  /* held to the middle corridor so the card never sits on a pole cloud */
+  display: inline-block; margin: 0; max-width: calc(660 * var(--px));
+  padding: calc(16 * var(--px)) calc(30 * var(--px));
+  line-height: 1.4;
+  background: var(--panel);
+  border: 2px solid var(--ink);
+  border-radius: calc(9 * var(--px));
+  box-shadow: var(--shadow-lg);
+  font-size: clamp(16px, calc(1.06 * var(--vw)), 20px);
+  font-weight: 500; color: var(--fg);
+}
+/* named with .step so it outranks the generic .step[data-motion="none"] reset */
+.s03-midcap.step { transition: opacity .45s var(--ease-out); }
 .s03-midcap.is-gone { opacity: 0; }
 
 .s03-bottom {
-  position: absolute; left: calc(300 * var(--px)); right: calc(300 * var(--px)); top: calc(772 * var(--px));
-  height: calc(76 * var(--px));
+  position: absolute; left: calc(300 * var(--px)); right: calc(300 * var(--px)); top: calc(880 * var(--px));
+  height: calc(72 * var(--px));
 }
 .s03-bottom > * {
   position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
@@ -2209,7 +2297,7 @@ body { cursor: default; }
 .s03-tagline {
   font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em;
   font-size: clamp(21px, calc(1.56 * var(--vw)), 30px); color: var(--fg);
-  transition: opacity .3s var(--ease-out);
+  transition: opacity .5s var(--ease-out);
 }
 .s03-tagline.is-gone { opacity: 0; }
 .s03-takeaway .carry-punch {
@@ -2237,7 +2325,7 @@ body { cursor: default; }
 .s04-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 
 .s04-heading {
-  font-family: var(--font-mono); font-weight: 500; font-size: 18px; letter-spacing: .2em;
+  font-family: var(--font-mono); font-weight: 500; font-size: 22px; letter-spacing: .2em;
 }
 
 .s04-line { stroke-width: 1.6; stroke-dasharray: 2 8; opacity: .5; }
@@ -2245,13 +2333,19 @@ body { cursor: default; }
 .s04-line--out.s04-line--right { stroke: var(--accent-a); }
 .s04-line--return { stroke: var(--ink); }
 
+/* the shared spine each side's stubs feed into — static, no dash flow */
+.s04-trunk, .s04-link { stroke-width: 1.6; opacity: .32; transition: opacity .4s ease; }
+.s04-trunk--left, .s04-link--left { stroke: var(--accent-b); }
+.s04-trunk--right, .s04-link--right { stroke: var(--accent-a); }
+.s04-fan.is-active .s04-trunk, .s04-fan.is-active .s04-link { opacity: .75; }
+
 .s04-arrow { display: none; }
 .s04-arrow--left { fill: var(--accent-b); }
 .s04-arrow--right { fill: var(--accent-a); }
 line.s04-line--return + .s04-arrow { fill: var(--ink); }
 
 .s04-lbl {
-  font-family: var(--font-body); font-size: 17px; fill: var(--fg2); opacity: .45;
+  font-family: var(--font-body); font-size: 23px; fill: var(--fg2); opacity: .45;
   transition: opacity .4s ease, fill .4s ease;
 }
 .s04-fan.is-active .s04-lbl { opacity: 1; }
@@ -2262,11 +2356,11 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 
 .s04-hub { fill: var(--ink); }
 .s04-hublbl {
-  font-size: 16px; letter-spacing: .16em; fill: var(--fg2);
+  font-size: 18px; letter-spacing: .16em; fill: var(--fg2);
 }
 
 .s04-takeaway {
-  position: absolute; left: calc(240 * var(--px)); right: calc(240 * var(--px)); top: calc(716 * var(--px));
+  position: absolute; left: calc(240 * var(--px)); right: calc(240 * var(--px)); top: calc(860 * var(--px));
   text-align: center;
 }
 .s04-takeaway .carry-punch { text-align: center; }
@@ -2287,16 +2381,31 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 .s05-chain { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .s05-chain-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 
-.s05-seg { stroke: var(--secondary); stroke-width: 1.6; stroke-dasharray: 2 8; opacity: .6; transition: stroke .2s ease; }
-.s05-seg.is-broken { stroke: var(--alert); stroke-dasharray: 0 22; opacity: 1; }
-.s05-node { fill: var(--secondary); }
-.s05-node--end { fill: var(--ink); }
-.s05-nodelbl { font-size: 14px; fill: var(--fg2); text-transform: uppercase; letter-spacing: .1em; }
-.s05-dropped {
-  font-size: 13px; fill: var(--alert); letter-spacing: .12em; text-transform: uppercase;
-  opacity: 0; transition: opacity .2s ease;
+/* The chain carries the whole argument, so it is drawn to be read from the
+   back of a room: heavier dotted links, nodes that punch out of the line with
+   a canvas-coloured rim, and a break that is a *snapped link* — a real gap in
+   the line with an --alert ✕ in it — rather than a segment quietly turned
+   invisible (the previous `stroke-dasharray: 0 22` erased it instead). */
+.s05-seg {
+  stroke: var(--secondary); stroke-width: 2.6; stroke-dasharray: 3 9; opacity: .8;
+  transition: stroke .25s ease, opacity .25s ease, stroke-width .25s ease;
 }
-.s05-dropped.is-shown { opacity: 1; }
+.s05-seg-grp.is-broken .s05-seg { stroke: var(--alert); stroke-width: 3.2; opacity: 1; }
+
+.s05-node { fill: var(--secondary); stroke: var(--canvas); stroke-width: 3; }
+.s05-node--end { fill: var(--ink); }
+.s05-nodelbl { font-size: 15px; fill: var(--fg2); text-transform: uppercase; letter-spacing: .1em; }
+.s05-nodelbl--end { fill: var(--ink); font-weight: 500; letter-spacing: .14em; }
+
+/* break marker — rides the midpoint of whichever link is currently snapped */
+.s05-break { opacity: 0; transition: opacity .25s ease; }
+.s05-seg-grp.is-broken .s05-break { opacity: 1; }
+.s05-break-gap { fill: var(--canvas); }
+.s05-break-x { fill: none; stroke: var(--alert); stroke-width: 3.4; stroke-linecap: round; }
+.s05-dropped {
+  font-size: 14px; fill: var(--alert); letter-spacing: .14em;
+  text-transform: uppercase; font-weight: 500;
+}
 
 .s05-oneliners {
   position: absolute; left: calc(96 * var(--px)); right: calc(96 * var(--px)); top: calc(360 * var(--px));
@@ -2307,7 +2416,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 .s05-oneliner b { color: var(--ink); font-weight: 600; }
 
 .s05-cards {
-  position: absolute; left: calc(96 * var(--px)); right: calc(96 * var(--px)); top: calc(432 * var(--px));
+  position: absolute; left: calc(96 * var(--px)); right: calc(96 * var(--px)); top: calc(460 * var(--px));
   display: flex; gap: calc(28 * var(--px));
 }
 .s05-card { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; text-align: center; padding: calc(22 * var(--px)) calc(24 * var(--px)); }
@@ -2327,59 +2436,147 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 .s05-tray { fill: none; stroke: var(--ink); stroke-width: 2; }
 
 .s05-takeaway {
-  position: absolute; left: calc(220 * var(--px)); right: calc(220 * var(--px)); top: calc(752 * var(--px));
+  position: absolute; left: calc(220 * var(--px)); right: calc(220 * var(--px)); top: calc(880 * var(--px));
   text-align: center;
 }
 .s05-takeaway .carry-punch { text-align: center; }
 
-/* --- Page 06 — Adaptation · our approach ------------------------------------ */
+/* --- Page 06 — Adaptation · our approach ------------------------------------
+   REBUILT to tasks/06-adaptation-approach.md hard bands, now with the
+   conductor orchestration strip. Bands never touch:
+     title 100-185 · cards 210-470 · strip heading ~494, bars 525-745 ·
+     takeaway 790-835.
+   The formula sentence stays deleted (the two + glyphs carry that idea).
+   ------------------------------------------------------------------------- */
 
-.s06-kicker { position: absolute; left: calc(96 * var(--px)); top: calc(70 * var(--px)); }
+.s06-kicker { position: absolute; left: calc(140 * var(--px)); top: calc(70 * var(--px)); }
 .s06-slideno {
-  position: absolute; right: calc(96 * var(--px)); top: calc(70 * var(--px));
+  position: absolute; right: calc(140 * var(--px)); top: calc(70 * var(--px));
   font-size: 15px; letter-spacing: .1em; color: var(--fg2);
 }
-.s06-title { position: absolute; left: calc(96 * var(--px)); right: calc(96 * var(--px)); top: calc(104 * var(--px)); margin: 0; }
+.s06-title { position: absolute; left: calc(140 * var(--px)); right: calc(140 * var(--px)); top: calc(110 * var(--px)); margin: 0; }
 
+/* card band — owns y210-470, compacted to make room for the strip below */
 .s06-cards {
-  position: absolute; left: calc(96 * var(--px)); right: calc(96 * var(--px)); top: calc(432 * var(--px));
-  display: flex; align-items: stretch; gap: calc(14 * var(--px));
+  position: absolute; left: calc(140 * var(--px)); right: calc(140 * var(--px));
+  top: calc(210 * var(--px)); height: calc(260 * var(--px));
+  display: flex; align-items: stretch; gap: 0;
 }
-.s06-card { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; text-align: center; padding: calc(22 * var(--px)) calc(24 * var(--px)); transition: transform .5s ease; }
-.s06-cards.is-nudged .s06-card:first-child { transform: translateX(calc(6 * var(--px))); }
-.s06-cards.is-nudged .s06-card:last-child { transform: translateX(calc(-6 * var(--px))); }
+.s06-card {
+  flex: 1 1 0; min-width: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  padding: calc(18 * var(--px)) calc(24 * var(--px));
+  border: 1px solid var(--line); border-radius: calc(10 * var(--px));
+  background: transparent; opacity: .45;
+  transition: opacity .5s var(--ease-out), background-color .5s var(--ease-out), box-shadow .5s var(--ease-out);
+}
+/* a card lands when its own title reveals — base state is a faint empty frame */
+.s06-card:has(.s06-card-title.is-shown) {
+  opacity: 1; background: var(--panel); box-shadow: var(--panel-shadow);
+}
 
+/* the operator — a real, visible glyph in the inter-card gutter, centred on
+   the compact card row's mid-height, never a faint hairline */
 .s06-plus {
-  flex: 0 0 auto; align-self: center;
-  font-family: var(--font-mono); font-size: 26px; color: var(--ink); opacity: .8;
+  flex: 0 0 calc(52 * var(--px)); align-self: center;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(28px, calc(2.1 * var(--vw)), 40px);
+  line-height: 1; color: var(--ink);
 }
 
-.s06-icon { width: 100px; height: 100px; }
+.s06-icon { width: calc(90 * var(--px)); height: calc(90 * var(--px)); }
 .s06-icon-svg { width: 100%; height: 100%; overflow: visible; }
-.s06-card-title { font-family: var(--font-display); font-weight: 700; font-size: 23px; margin-top: calc(10 * var(--px)); }
-.s06-card-body { margin: calc(8 * var(--px)) 0 0; color: var(--fg2); font-size: 17px; line-height: 1.45; }
+.s06-card-title {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(16px, calc(1.15 * var(--vw)), 21px);
+  margin-top: calc(10 * var(--px)); color: var(--ink);
+}
+/* compact card: one short line only (the strip below carries the depth) */
+.s06-card-body {
+  margin: calc(6 * var(--px)) 0 0; color: var(--fg2);
+  font-size: clamp(12.5px, calc(.86 * var(--vw)), 15px); line-height: 1.35;
+}
 
-.s06-arc { fill: none; stroke: var(--ink); stroke-linecap: round; }
+/* resolved icon line-work — ink only, no --alert on the solution slide */
+.s06-arc { fill: none; stroke: var(--ink); stroke-linecap: round; stroke-width: 2; }
 .s06-arc--2 { stroke: var(--secondary); }
 .s06-hub { fill: var(--ink); }
 
 .s06-device { fill: none; stroke: var(--ink); stroke-width: 2; }
 .s06-blob { fill: var(--panel); stroke: var(--ink); stroke-width: 1.6; }
 
-.s06-funnel { fill: none; stroke: var(--secondary); stroke-width: 1.6; }
+.s06-frame { fill: none; stroke: var(--secondary); stroke-width: 1.6; }
+.s06-funnel { fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linejoin: round; }
 .s06-stream { stroke: var(--ink); stroke-width: 2; stroke-dasharray: 3 6; }
 .s06-token { fill: var(--ink); }
 
-.s06-equals {
-  position: absolute; left: calc(96 * var(--px)); right: calc(96 * var(--px)); top: calc(700 * var(--px));
-  text-align: center; font-size: 16px; color: var(--ink); letter-spacing: .01em;
+/* --- the conductor orchestration strip (y ~508-784) ---------------------
+   A wider gap now separates the card row (bottom y470) from the strip
+   (heading starts y508 — a 38px gutter, up from the original ~16px) per
+   founder feedback. Bar label/phrase/frequency text moved from hand-placed
+   SVG to a centred HTML flex row per bar — bigger, reliably centred, and
+   the rail/flow-segment SVG columns (x1590/x1614) sit safely outside the
+   centred content zone (x170-1560) regardless of text length. */
+
+.s06-strip-heading {
+  position: absolute; left: calc(140 * var(--px)); right: calc(140 * var(--px)); top: calc(508 * var(--px));
+  margin: 0; text-transform: uppercase; letter-spacing: .04em;
+  font-size: clamp(14px, calc(.98 * var(--vw)), 17px); color: var(--fg2);
 }
 
+.s06-bars { position: absolute; inset: 0; pointer-events: none; }
+.s06-bar {
+  position: absolute; left: calc(140 * var(--px)); right: calc(140 * var(--px));
+  border: 1px solid var(--hairline); border-radius: calc(6 * var(--px));
+  display: flex; align-items: center; justify-content: center;
+}
+/* the centred trio: bold label — phrase — boxed frequency chip. A normal
+   (non-absolute) flex child of .s06-bar, so its parent's justify-content:
+   center actually centers it — typical content width (~600-700px) stays
+   well clear of the rail (x~146-170) and flow columns (x1590/1614) either
+   side of the bar's full 140-1780 width regardless. */
+.s06-bar-content {
+  display: flex; align-items: baseline; justify-content: center;
+  gap: calc(26 * var(--px));
+}
+.s06-bar-label {
+  font-weight: 600; letter-spacing: .04em; color: var(--ink);
+  font-size: clamp(19px, calc(1.4 * var(--vw)), 25px);
+  white-space: nowrap;
+}
+.s06-bar-phrase {
+  color: var(--fg2); white-space: nowrap;
+  font-size: clamp(16px, calc(1.15 * var(--vw)), 20px);
+}
+.s06-freq-chip {
+  border: 1.5px solid var(--ink); border-radius: 999px;
+  padding: calc(6 * var(--px)) calc(18 * var(--px));
+  letter-spacing: .05em; color: var(--ink); white-space: nowrap;
+  font-size: clamp(15px, calc(1.05 * var(--vw)), 18px);
+}
+
+.s06-strip { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.s06-strip-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+.s06-rail { stroke: var(--ink); stroke-width: 4; stroke-linecap: round; }
+.s06-rail-label { font-size: 13px; letter-spacing: .22em; fill: var(--fg2); }
+
+/* per-bar down/up flow segments — each ticks at that layer's own tempo
+   (reasoning slow, reactive medium, reflex fast); dasharray required by
+   Anim.flow. */
+.s06-flow { fill: none; stroke: var(--ink); stroke-width: 2; stroke-dasharray: 3 7; opacity: .7; }
+.s06-flow-lbl { font-size: 13px; letter-spacing: .06em; fill: var(--fg2); }
+.s06-arrowhead { fill: var(--ink); }
+
+/* takeaway — lands after the strip, with its own clear gap below y784 */
 .s06-takeaway {
-  position: absolute; left: calc(220 * var(--px)); right: calc(220 * var(--px)); top: calc(752 * var(--px));
+  position: absolute; left: calc(220 * var(--px)); right: calc(220 * var(--px));
+  top: calc(806 * var(--px));
   text-align: center;
 }
-.s06-takeaway .carry-punch { text-align: center; }
+.s06-takeaway .carry-punch { text-align: center; font-size: clamp(19px, calc(1.3 * var(--vw)), 25px); }
 
 /* --- Page 07 — Autonomy = Competence ----------------------------------------- */
 
@@ -2390,34 +2587,26 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 }
 .s07-title { position: absolute; left: calc(96 * var(--px)); right: calc(96 * var(--px)); top: calc(104 * var(--px)); margin: 0; }
 
-.s07-track { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.s07-track-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.s07-ring-wrap { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.s07-ring-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 
-.s07-foil { transition: opacity .6s ease; }
-.s07-foil.is-dim { opacity: .38; }
-.s07-foil-lbl { font-size: 14px; letter-spacing: .14em; fill: var(--fg2); }
-.s07-firehose { stroke: var(--secondary); stroke-width: 1.6; stroke-dasharray: 2 7; }
-.s07-foil-model { fill: var(--panel); stroke: var(--secondary); stroke-width: 1.6; }
-.s07-fumble { font-size: 14px; letter-spacing: .04em; fill: var(--alert); }
+/* the track the four stages sit on — always present, circulates from step 4 */
+.s07-ring { fill: none; stroke: var(--hairline); stroke-width: 2; stroke-dasharray: 2 8; }
+.s07-node-ghost { fill: none; stroke: var(--hairline); stroke-width: 1.6; }
+.s07-node { fill: var(--ink); }
+.s07-arc { stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; }
+.s07-arrowhead { fill: var(--ink); }
 
-.s07-baseline { stroke: var(--hairline); stroke-width: 2; }
-.s07-stationdot { fill: var(--ink); }
-.s07-loop { fill: none; stroke: var(--ink); stroke-width: 2; stroke-dasharray: 2 8; }
-
-.s07-stationlbl { font-family: var(--font-display); font-weight: 700; font-size: 21px; fill: var(--ink); }
-.s07-stationsub { font-family: var(--font-body); font-size: 15px; fill: var(--fg2); }
-.s07-policy { font-size: 14px; letter-spacing: .12em; fill: var(--ink); }
-
+/* the central hub a correction lands in */
+.s07-hub { fill: none; stroke: var(--hairline); stroke-width: 1.5; }
+.s07-policy { font-size: 16px; letter-spacing: .18em; fill: var(--fg2); }
 .s07-pulse { fill: var(--ink); opacity: 0; }
-.s07-outtick { opacity: 0; transition: opacity .3s ease; }
-.s07-outtick.is-fixed { opacity: 1; }
-.s07-tick-wobble { stroke: var(--alert); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; opacity: 1; transition: opacity .3s ease; }
-.s07-tick-straight { stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; opacity: 0; transition: opacity .3s ease .25s; }
-.s07-outtick.is-fixed .s07-tick-wobble { opacity: 0; }
-.s07-outtick.is-fixed .s07-tick-straight { opacity: 1; }
+
+.s07-stationlbl { font-family: var(--font-display); font-weight: 700; font-size: 23px; fill: var(--ink); }
+.s07-stationsub { font-family: var(--font-body); font-size: 16px; fill: var(--fg2); }
 
 .s07-takeaway {
-  position: absolute; left: calc(220 * var(--px)); right: calc(220 * var(--px)); top: calc(736 * var(--px));
+  position: absolute; left: calc(220 * var(--px)); right: calc(220 * var(--px)); top: calc(880 * var(--px));
   text-align: center;
 }
 .s07-takeaway .carry-punch { text-align: center; }
@@ -2455,7 +2644,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 .s08-version { font-size: 15px; letter-spacing: .12em; fill: var(--fg2); }
 
 .s08-consequence-wrap {
-  position: absolute; left: calc(300 * var(--px)); right: calc(300 * var(--px)); top: calc(622 * var(--px));
+  position: absolute; left: calc(300 * var(--px)); right: calc(300 * var(--px)); top: calc(700 * var(--px));
   display: flex; flex-direction: column; gap: calc(10 * var(--px)); text-align: center;
 }
 .s08-consequence { margin: 0; font-size: 18px; color: var(--fg); }
@@ -2464,7 +2653,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 .s08-mandate { margin: 0; font-size: 18px; color: var(--ink); font-weight: 500; }
 
 .s08-takeaway {
-  position: absolute; left: calc(220 * var(--px)); right: calc(220 * var(--px)); top: calc(756 * var(--px));
+  position: absolute; left: calc(220 * var(--px)); right: calc(220 * var(--px)); top: calc(880 * var(--px));
   text-align: center;
 }
 .s08-takeaway .carry-punch { text-align: center; }
@@ -2496,7 +2685,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 .s09-version { font-size: 15px; letter-spacing: .1em; fill: var(--fg2); }
 
 .s09-delivs {
-  position: absolute; left: calc(1000 * var(--px)); right: calc(96 * var(--px)); top: calc(322 * var(--px));
+  position: absolute; left: calc(1000 * var(--px)); right: calc(96 * var(--px)); top: calc(340 * var(--px));
   display: flex; flex-direction: column; gap: calc(20 * var(--px));
 }
 .s09-deliv-head { display: flex; align-items: baseline; gap: calc(12 * var(--px)); flex-wrap: wrap; }
@@ -2504,12 +2693,17 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 .s09-deliv-body { margin: calc(4 * var(--px)) 0 0; color: var(--fg2); font-size: 15px; line-height: 1.4; }
 
 .s09-takeaway {
-  position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(742 * var(--px));
+  position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(880 * var(--px));
   text-align: center;
 }
 .s09-takeaway .carry-punch { text-align: center; font-size: clamp(19px, calc(1.35 * var(--vw)), 26px); }
 
-/* --- Page 10 — Superhuman ----------------------------------------------------- */
+/* --- Page 10 — Superhuman -----------------------------------------------------
+   FULL REDESIGN (tasks/10-superhuman.md). Every text element sits in a real
+   box laid out by flex — no absolute-positioned SVG text. The only SVG is the
+   decorative merge connector between the two flex columns; it carries no text.
+   Bands: title 104-200 · row 1 250-560 · row 2 600-720 · takeaway 770.
+   ------------------------------------------------------------------------- */
 
 .s10-kicker { position: absolute; left: calc(96 * var(--px)); top: calc(70 * var(--px)); }
 .s10-slideno {
@@ -2518,43 +2712,121 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 }
 .s10-title { position: absolute; left: calc(96 * var(--px)); right: calc(96 * var(--px)); top: calc(104 * var(--px)); margin: 0; }
 
-.s10-diagram { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.s10-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-
-.s10-stream-dot { fill: var(--ink); }
-.s10-stream-lbl { font-family: var(--font-mono); font-size: 16px; letter-spacing: .04em; fill: var(--fg2); }
-
-.s10-integrated {
-  fill: var(--ink); opacity: .3; transition: opacity .5s ease, transform .5s ease;
-  transform-box: fill-box; transform-origin: center;
+/* --- row 1: pillars -> merge -> goal ------------------------------------- */
+.s10-row1 {
+  position: absolute; left: calc(200 * var(--px)); right: calc(200 * var(--px));
+  top: calc(250 * var(--px)); height: calc(310 * var(--px));
+  display: flex; align-items: center; justify-content: space-between;
+  gap: calc(24 * var(--px));
 }
-.s10-integrated.is-active { opacity: 1; transform: scale(1.15); }
-.s10-together { font-size: 16px; fill: var(--fg2); font-style: italic; }
 
-.s10-arrow { stroke: var(--ink); stroke-width: 2; }
-.s10-goalvalue { font-size: 16px; fill: var(--fg2); }
-
-.s10-goal { fill: var(--ink); opacity: .3; transition: opacity .5s ease; }
-.s10-goal.is-active { opacity: 1; }
-.s10-goal-super { font-size: 19px; letter-spacing: .2em; fill: var(--ink); }
-.s10-goal-sub { font-size: 15px; fill: var(--fg2); }
-
-.s10-chain-word { font-size: 15px; letter-spacing: .04em; fill: var(--ink); text-transform: uppercase; }
-.s10-chain-arrow { font-size: 15px; fill: var(--fg2); }
-
-.s10-tieline { stroke: var(--secondary); stroke-width: 1.4; stroke-dasharray: 2 7; opacity: .45; }
-
-.s10-beachhead-wrap {
-  position: absolute; left: calc(300 * var(--px)); right: calc(300 * var(--px)); top: calc(686 * var(--px));
-  display: flex; justify-content: center;
+.s10-pillars { display: flex; flex-direction: column; gap: calc(16 * var(--px)); }
+.s10-pillar {
+  width: calc(400 * var(--px)); height: calc(76 * var(--px));
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: calc(8 * var(--px));
+  padding: 0 calc(24 * var(--px));
+  display: flex; align-items: center; gap: calc(12 * var(--px));
 }
-.s10-beachhead { margin: 0; text-align: center; color: var(--fg2); font-size: 17px; line-height: 1.4; }
+.s10-pillar b {
+  font-family: var(--font-display); font-weight: 800; letter-spacing: -.005em;
+  font-size: clamp(16px, calc(1.15 * var(--vw)), 21px); color: var(--ink);
+}
+.s10-pillar i {
+  font-style: normal; color: var(--fg2);
+  font-size: clamp(14px, calc(1 * var(--vw)), 18px);
+}
+.s10-pillar-sep { color: var(--line); }
+
+/* merge connector — decorative only, no text inside the svg */
+.s10-merge {
+  flex: 0 0 calc(300 * var(--px));
+  display: flex; flex-direction: column; align-items: center; gap: calc(10 * var(--px));
+}
+.s10-merge-label {
+  font-size: clamp(11px, calc(.78 * var(--vw)), 14px);
+  letter-spacing: .12em; text-transform: uppercase; color: var(--fg2);
+  text-align: center; white-space: nowrap;
+}
+.s10-merge-svg { width: calc(300 * var(--px)); height: calc(260 * var(--px)); overflow: visible; }
+.s10-merge-line {
+  fill: none; stroke: var(--ink); stroke-width: 2; opacity: .28;
+  transition: opacity .45s var(--ease-out);
+}
+.s10-merge-head { fill: var(--ink); opacity: .28; transition: opacity .45s var(--ease-out); }
+/* step 1 lights the connector up — the "not a sequence" beat */
+.s10-merge:has(.s10-merge-label.is-shown) .s10-merge-line,
+.s10-merge:has(.s10-merge-label.is-shown) .s10-merge-head { opacity: 1; }
+
+/* the goal box — heaviest element on the page */
+.s10-goal {
+  flex: 0 0 calc(520 * var(--px)); height: calc(200 * var(--px));
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: calc(10 * var(--px));
+  padding: calc(24 * var(--px)) calc(28 * var(--px));
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: calc(8 * var(--px));
+  transition: border-color .5s var(--ease-out), box-shadow .5s var(--ease-out);
+}
+/* base = outline only; step 2 fills it and thickens the border to ink */
+.s10-goal:has(.s10-goal-word.is-shown) {
+  border: 2.5px solid var(--ink);
+  box-shadow: var(--shadow-lg);
+}
+.s10-goal-word {
+  font-family: var(--font-display); font-weight: 800; letter-spacing: -.015em;
+  font-size: clamp(30px, calc(2.7 * var(--vw)), 46px); color: var(--ink);
+  line-height: 1;
+}
+.s10-goal-sub {
+  color: var(--fg2); text-align: center;
+  font-size: clamp(14px, calc(1.05 * var(--vw)), 19px);
+}
+.s10-goal-chip {
+  margin-top: calc(6 * var(--px));
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: calc(5 * var(--px)) calc(14 * var(--px));
+  font-size: clamp(10px, calc(.72 * var(--vw)), 12.5px);
+  letter-spacing: .08em; text-transform: uppercase; color: var(--fg2);
+  white-space: nowrap;
+}
+
+/* --- row 2: the reasoning chain ------------------------------------------ */
+.s10-chainband {
+  position: absolute; left: calc(140 * var(--px)); right: calc(140 * var(--px));
+  top: calc(600 * var(--px)); min-height: calc(120 * var(--px));
+  display: flex; align-items: center; justify-content: center;
+  gap: calc(34 * var(--px));
+}
+.s10-chain-label {
+  flex: 0 0 auto; max-width: calc(430 * var(--px)); text-align: left;
+  font-size: clamp(11.5px, calc(.82 * var(--vw)), 14px); line-height: 1.4;
+  letter-spacing: .09em; text-transform: uppercase; color: var(--fg2);
+}
+.s10-chain { display: flex; align-items: center; gap: calc(14 * var(--px)); }
+.s10-chain-box {
+  border: 1px solid var(--line); border-radius: calc(7 * var(--px));
+  background: var(--panel);
+  padding: calc(13 * var(--px)) calc(22 * var(--px));
+  font-size: clamp(12px, calc(.88 * var(--vw)), 15px);
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ink);
+  white-space: nowrap;
+}
+/* the chain's destination reads as the payoff — ink, never --alert */
+.s10-chain-box--end { border-color: var(--ink); border-width: 2px; font-weight: 500; }
+.s10-chain-arrow {
+  font-size: clamp(15px, calc(1.1 * var(--vw)), 20px); color: var(--ink);
+  line-height: 1;
+}
 
 .s10-takeaway {
-  position: absolute; left: calc(220 * var(--px)); right: calc(220 * var(--px)); top: calc(748 * var(--px));
+  position: absolute; left: calc(220 * var(--px)); right: calc(220 * var(--px));
+  top: calc(770 * var(--px));
   text-align: center;
 }
 .s10-takeaway .carry-punch { text-align: center; }
+.s10-takeaway .carry-line { text-align: center; }
 
 /* --- Page 11 — The advantage of the hardest --------------------------------- */
 
@@ -2600,8 +2872,8 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
   margin: 0; color: var(--fg); font-family: var(--font-body);
   font-size: clamp(15px, calc(1.02 * var(--vw)), 18px); line-height: 1.4;
 }
-.s11-line-prove { top: calc(648 * var(--px)); }
-.s11-line-cascade { top: calc(686 * var(--px)); }
+.s11-line-prove { top: calc(720 * var(--px)); }
+.s11-line-cascade { top: calc(758 * var(--px)); }
 
 /* advantages, right column, roughly parallel to the ladder rows */
 .s11-advantages {
@@ -2616,7 +2888,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 .s11-adv b { color: var(--ink); font-weight: 700; }
 
 .s11-takeaway {
-  position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(748 * var(--px));
+  position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(870 * var(--px));
   text-align: center;
 }
 .s11-takeaway .carry-punch { text-align: center; font-size: clamp(19px, calc(1.35 * var(--vw)), 26px); }
@@ -2633,8 +2905,8 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
   font-size: 15px; letter-spacing: .1em; color: var(--fg2);
 }
 .s12-context {
-  position: absolute; right: calc(96 * var(--px)); top: calc(100 * var(--px));
-  max-width: calc(430 * var(--px));
+  position: absolute; right: calc(96 * var(--px)); top: calc(104 * var(--px));
+  max-width: calc(760 * var(--px));
   font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
   text-align: right; color: var(--fg2); opacity: .55;
 }
@@ -2653,17 +2925,43 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
   font-size: 19px; text-transform: uppercase;
 }
 
-/* lab nodes: dot + bold label + secondary charter, revealed one at a time */
+/* lab nodes: just the ink disc — name and charter live in the card below */
 .s12-lab-node { fill: var(--ink); transform-box: fill-box; transform-origin: center; }
-.s12-lab-label { font-family: var(--font-display); font-weight: 700; font-size: 22px; fill: var(--ink); }
-.s12-lab-charter { font-family: var(--font-body); font-size: 14.5px; line-height: 1.4; fill: var(--secondary); }
+
+/* charter cards — one per lab, on the side of its node that faces open
+   space, so the ring stays clear. A mild --panel box: hairline border and
+   the small token shadow, nothing louder. */
+.s12-card {
+  position: absolute;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: calc(10 * var(--px));
+  box-shadow: var(--shadow-sm);
+  padding: calc(14 * var(--px)) calc(20 * var(--px));
+}
+.s12-card[data-align="center"] { text-align: center; }
+.s12-card[data-align="left"]   { text-align: left; }
+.s12-card[data-align="right"]  { text-align: right; }
+
+.s12-card-label {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(15px, calc(1.15 * var(--vw)), 22px);
+  color: var(--fg); line-height: 1.1;
+}
+.s12-card-charter {
+  margin: calc(5 * var(--px)) 0 0;
+  /* low floor on purpose: the clamp minimum is what forces the wrap that
+     used to push this card into the ring */
+  font-size: clamp(12px, calc(.94 * var(--vw)), 17px);
+  line-height: 1.4; color: var(--fg2);
+}
 
 /* flywheel cycle — drawn + flowed together on the payoff beat only */
 .s12-arrow { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 2 9; }
 .s12-arrow--emph { stroke-width: 5; }
 
 .s12-takeaway {
-  position: absolute; left: calc(200 * var(--px)); right: calc(200 * var(--px)); top: calc(802 * var(--px));
+  position: absolute; left: calc(200 * var(--px)); right: calc(200 * var(--px)); top: calc(845 * var(--px));
   text-align: center;
 }
 .s12-takeaway .carry { align-items: center; }
@@ -2734,7 +3032,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 
 .s13-cost {
   position: absolute;
-  left: calc(650 * var(--px)); width: calc(520 * var(--px));
+  left: calc(630 * var(--px)); width: calc(600 * var(--px));
   top: calc(584 * var(--px));
   text-align: center;
 }
@@ -2762,7 +3060,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 
 .s13-cap-academy {
   position: absolute;
-  left: calc(1220 * var(--px)); width: calc(600 * var(--px));
+  left: calc(1244 * var(--px)); width: calc(580 * var(--px));
   top: calc(600 * var(--px));
   text-align: left;
   margin: 0;
@@ -2779,7 +3077,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 .s13-geo {
   position: absolute;
   left: calc(300 * var(--px)); right: calc(300 * var(--px));
-  top: calc(700 * var(--px));
+  top: calc(780 * var(--px));
   margin: 0;
   text-align: center;
   text-transform: uppercase;
@@ -2794,7 +3092,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 .s13-geo-india { color: var(--accent-b); font-weight: 500; }
 .s13-geo-us { color: var(--accent-a); font-weight: 500; }
 
-.s13-takeaway { position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(750 * var(--px)); text-align: center; }
+.s13-takeaway { position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(880 * var(--px)); text-align: center; }
 .s13-takeaway .carry-punch { text-align: center; font-size: clamp(19px, calc(1.35 * var(--vw)), 26px); }
 
 /* --- Page 14 — Agentic execution --------------------------------- */
@@ -2852,17 +3150,24 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
   fill: var(--fg2);
 }
 
-/* lit station labels (full weight, revealed per step) */
-.s14-lit-label {
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  fill: var(--ink);
+/* A station's label is drawn once, by the skeleton layer. When that station's
+   .step group lights up, the skeleton group comes to full strength instead of
+   a second copy of the same text being painted over the faint one (which read
+   as bolded, doubled type at every station). Transition matches .step. */
+.s14-skel-station { transition: opacity 500ms var(--ease-out); }
+.s14-flow-svg:has(.s14-station-lit--humans.is-shown) .s14-skel-station[data-k="humans"],
+.s14-flow-svg:has(.s14-station-lit--agents.is-shown) .s14-skel-station[data-k="agents"],
+.s14-flow-svg:has(.s14-station-lit--gate.is-shown)   .s14-skel-station[data-k="gate"],
+.s14-flow-svg:has(.s14-station-lit--ship.is-shown)   .s14-skel-station[data-k="ship"] {
+  opacity: 1;
 }
-.s14-lit-sub {
-  font-size: 13px;
-  fill: var(--fg2);
+/* the lit group supplies the filled node art only; its faint skeleton circle
+   would otherwise show through the solid node underneath it. */
+.s14-flow-svg:has(.s14-station-lit--humans.is-shown) .s14-skel-station[data-k="humans"] .s14-skel-shape,
+.s14-flow-svg:has(.s14-station-lit--agents.is-shown) .s14-skel-station[data-k="agents"] .s14-skel-shape,
+.s14-flow-svg:has(.s14-station-lit--gate.is-shown)   .s14-skel-station[data-k="gate"] .s14-skel-shape,
+.s14-flow-svg:has(.s14-station-lit--ship.is-shown)   .s14-skel-station[data-k="ship"] .s14-skel-shape {
+  opacity: 0;
 }
 
 .s14-node--humans { fill: var(--ink); }
@@ -2901,7 +3206,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 
 .s14-captions {
   position: absolute;
-  top: calc(600 * var(--px));
+  top: calc(660 * var(--px));
 }
 .s14-caption {
   position: absolute;
@@ -2919,7 +3224,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 
 /* --- takeaway (central band, never bottom-anchored) --- */
 
-.s14-takeaway { position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(750 * var(--px)); text-align: center; }
+.s14-takeaway { position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(880 * var(--px)); text-align: center; }
 .s14-takeaway .carry-punch { text-align: center; font-size: clamp(19px, calc(1.35 * var(--vw)), 26px); }
 
 /* --- Page 15 — IP strategy --------------------------------- */
@@ -2932,7 +3237,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
   position: absolute;
   left: calc(210 * var(--px));
   right: calc(210 * var(--px));
-  top: calc(320 * var(--px));
+  top: calc(340 * var(--px));
   height: calc(300 * var(--px));
   display: flex;
   gap: calc(60 * var(--px));
@@ -3007,7 +3312,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
   position: absolute;
   left: calc(210 * var(--px));
   right: calc(210 * var(--px));
-  top: calc(660 * var(--px));
+  top: calc(760 * var(--px));
   text-align: center;
   font-family: var(--font-body);
   font-size: clamp(16px, calc(1.05 * var(--vw)), 19px);
@@ -3015,7 +3320,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
   margin: 0;
 }
 
-.s15-takeaway { position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(730 * var(--px)); text-align: center; }
+.s15-takeaway { position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(870 * var(--px)); text-align: center; }
 .s15-takeaway .carry-punch { text-align: center; font-size: clamp(19px, calc(1.35 * var(--vw)), 26px); }
 
 /* --- Page 16 — Roadmap --------------------------------- */
@@ -3043,23 +3348,32 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
    shared `.step[data-motion="none"]{transform:none}` rule outranks a page's
    own single-class transform by specificity and silently wins. */
 .s16-stage-label {
-  position: absolute; top: calc(348 * var(--px)); width: calc(320 * var(--px));
+  position: absolute; top: calc(300 * var(--px)); width: calc(320 * var(--px));
   text-align: center;
   font-family: var(--font-display); font-weight: 700; letter-spacing: -.01em;
   font-size: clamp(20px, calc(1.55 * var(--vw)), 27px); color: var(--fg); margin: 0;
 }
+/* one flowing column per stage — the three lines stack with real gaps, so a
+   two-line deliverable pushes the proof line and chip down instead of being
+   overprinted by them. */
+.s16-stage-body {
+  position: absolute; top: calc(540 * var(--px)); width: calc(300 * var(--px));
+  display: flex; flex-direction: column; align-items: center;
+  gap: calc(9 * var(--px));
+}
+/* min-heights reserve the worst-case wrap (deliverable 2 lines, proof 3) so
+   every stage's chip lands on one common baseline across the timeline. */
 .s16-stage-deliverable {
-  position: absolute; top: calc(504 * var(--px)); width: calc(300 * var(--px));
-  text-align: center;
+  width: 100%; text-align: center; min-height: calc(2 * 1.36em);
   font-size: clamp(14.5px, calc(1.02 * var(--vw)), 18px); line-height: 1.36; color: var(--fg); margin: 0;
 }
 .s16-stage-proof {
-  position: absolute; top: calc(548 * var(--px)); width: calc(300 * var(--px));
-  text-align: center; font-style: italic;
+  width: 100%; text-align: center; font-style: italic; line-height: 1.36;
+  min-height: calc(3 * 1.36em);
   font-size: clamp(12.5px, calc(.9 * var(--vw)), 15px); color: var(--fg2); margin: 0;
 }
 .s16-chip {
-  position: absolute; top: calc(586 * var(--px)); width: calc(160 * var(--px));
+  width: calc(160 * var(--px));
   border: 1px solid var(--hairline); border-radius: calc(20 * var(--px));
   padding: calc(4 * var(--px)) calc(8 * var(--px));
   font-size: clamp(10.5px, calc(.72 * var(--vw)), 12px); letter-spacing: .06em;
@@ -3067,7 +3381,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
   text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-.s16-takeaway { position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(720 * var(--px)); text-align: center; }
+.s16-takeaway { position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(860 * var(--px)); text-align: center; }
 .s16-takeaway .carry-punch { text-align: center; font-size: clamp(19px, calc(1.35 * var(--vw)), 26px); }
 
 /* --- Page 17 — What breaks this --------------------------------- */
@@ -3087,7 +3401,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 
 .s17-rows {
   position: absolute;
-  left: calc(96 * var(--px)); right: calc(96 * var(--px)); top: calc(302 * var(--px));
+  left: calc(96 * var(--px)); right: calc(96 * var(--px)); top: calc(330 * var(--px));
   display: flex;
   flex-direction: column;
 }
@@ -3122,7 +3436,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
   color: var(--ink);
 }
 
-.s17-takeaway { position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(750 * var(--px)); text-align: center; }
+.s17-takeaway { position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(870 * var(--px)); text-align: center; }
 .s17-takeaway .carry-punch { text-align: center; font-size: clamp(19px, calc(1.35 * var(--vw)), 26px); }
 
 /* --- Page 18 — Beyond a single robot --------------------------------- */
@@ -3147,11 +3461,11 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 }
 .s18-core.is-orchestrating { transform: scale(1.12); }
 
-.s18-corelbl { font-size: 17px; letter-spacing: .12em; fill: var(--ink); }
+.s18-corelbl { font-size: 20px; letter-spacing: .12em; fill: var(--ink); }
 
 /* environment nodes — smaller, lighter, appear on reveal */
 .s18-envdot { fill: var(--panel); stroke: var(--ink); stroke-width: 1.8; }
-.s18-envlbl { font-family: var(--font-body); font-size: 14px; fill: var(--secondary); }
+.s18-envlbl { font-family: var(--font-body); font-size: 21px; fill: var(--secondary); }
 
 /* orchestration links — ink, drawn on then set flowing (payoff, last).
    stroke-opacity (not opacity) so this never competes with the engine's own
@@ -3164,13 +3478,13 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 
 /* environment examples row */
 .s18-examples {
-  position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(700 * var(--px));
+  position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(800 * var(--px));
   text-align: center; text-transform: uppercase;
   letter-spacing: .14em; color: var(--secondary);
   font-size: clamp(13px, calc(.95 * var(--vw)), 16px);
 }
 
-.s18-takeaway { position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(750 * var(--px)); text-align: center; }
+.s18-takeaway { position: absolute; left: calc(180 * var(--px)); right: calc(180 * var(--px)); top: calc(880 * var(--px)); text-align: center; }
 .s18-takeaway .carry-punch { text-align: center; font-size: clamp(19px, calc(1.35 * var(--vw)), 26px); }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3205,7 +3519,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
    fill:'both' and would otherwise permanently clobber it). */
 .s19-punch-wrap {
   position: absolute; left: calc(220 * var(--px)); right: calc(220 * var(--px));
-  top: calc(670 * var(--px)); transform: translateY(-50%);
+  top: calc(492 * var(--px)); transform: translateY(-50%);
   z-index: 1;
 }
 .s19-punch {
@@ -3218,7 +3532,7 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
 
 .s19-lines {
   position: absolute; left: calc(96 * var(--px)); right: calc(96 * var(--px));
-  top: calc(740 * var(--px));
+  top: calc(562 * var(--px));
   display: flex; flex-direction: column; align-items: center;
   gap: calc(22 * var(--px));
   z-index: 1;
@@ -3231,10 +3545,211 @@ line.s04-line--return + .s04-arrow { fill: var(--ink); }
   color: var(--fg2);
 }
 
+/* the timing line — a subtle --panel box under the mission line, the same
+   mild highlight treatment as the slide-12 charter cards */
+.s19-timing {
+  margin: 0; text-align: center;
+  padding: calc(15 * var(--px)) calc(30 * var(--px));
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: calc(10 * var(--px));
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em;
+  font-size: clamp(17px, calc(1.2 * var(--vw)), 23px);
+  color: var(--fg);
+}
+
 .s19-closer {
   margin: 0; text-align: center;
   font-size: clamp(16px, calc(1.05 * var(--vw)), 20px);
   color: var(--fg2);
 }
 .s19-closer em { font-style: italic; font-weight: 400; }
+
+/* --- Page 04a — The three pillars (opens Act II) ---------------------------
+   Ink/graphite only — no bronze/slate (those are model/embodiment on 03/04).
+   ------------------------------------------------------------------------- */
+
+.s04a-kicker { position: absolute; left: calc(96 * var(--px)); top: calc(70 * var(--px)); }
+.s04a-slideno {
+  position: absolute; right: calc(96 * var(--px)); top: calc(70 * var(--px));
+  font-size: 15px; letter-spacing: .1em; color: var(--fg2);
+}
+.s04a-title {
+  position: absolute; left: calc(140 * var(--px)); right: calc(140 * var(--px)); top: calc(104 * var(--px));
+  margin: 0; text-align: center;
+}
+.s04a-framing {
+  position: absolute; left: calc(300 * var(--px)); right: calc(300 * var(--px)); top: calc(272 * var(--px));
+  margin: 0; text-align: center; color: var(--fg2);
+  font-size: clamp(15px, calc(1.05 * var(--vw)), 19px);
+}
+
+.s04a-cards { position: absolute; inset: 0; }
+.s04a-card {
+  position: absolute; top: calc(348 * var(--px));
+  width: calc(440 * var(--px)); height: calc(380 * var(--px));
+  background: var(--panel); border: 1px solid var(--hairline);
+  border-radius: calc(10 * var(--px));
+  padding: calc(28 * var(--px)) calc(26 * var(--px));
+}
+.s04a-num {
+  color: var(--fg2); opacity: .45; font-family: var(--font-mono);
+  font-size: 14px; letter-spacing: .12em;
+  margin-bottom: calc(14 * var(--px));
+}
+.s04a-word {
+  font-family: var(--font-display); font-weight: 800; letter-spacing: -.01em;
+  font-size: clamp(24px, calc(2 * var(--vw)), 34px); color: var(--ink);
+}
+.s04a-underline {
+  width: calc(46 * var(--px)); height: 2px; background: var(--ink);
+  margin: calc(14 * var(--px)) 0 calc(16 * var(--px));
+}
+.s04a-chip {
+  color: var(--fg2); font-family: var(--font-mono);
+  font-size: 14px; letter-spacing: .1em; text-transform: uppercase;
+  margin-bottom: calc(18 * var(--px));
+}
+.s04a-bullets {
+  margin: 0; padding: 0; list-style: none;
+  display: flex; flex-direction: column; gap: calc(10 * var(--px));
+}
+.s04a-bullets li {
+  font-size: clamp(14px, calc(.98 * var(--vw)), 17px); color: var(--fg); line-height: 1.35;
+}
+
+.s04a-carry {
+  position: absolute; left: calc(220 * var(--px)); right: calc(220 * var(--px)); top: calc(870 * var(--px));
+  text-align: center;
+}
+.s04a-carry .carry-punch { text-align: center; }
+
+/* --- Page 04b — Section divider, Pillar 1: Adaptation (divider template) ---
+   06a / 07a reuse this exact rule set with their own s06a-/s07a- prefix —
+   keep the three blocks byte-identical apart from the prefix and copy.
+   ------------------------------------------------------------------------- */
+
+.s04b-kicker { position: absolute; left: calc(96 * var(--px)); top: calc(70 * var(--px)); }
+.s04b-slideno {
+  position: absolute; right: calc(96 * var(--px)); top: calc(70 * var(--px));
+  font-size: 15px; letter-spacing: .1em; color: var(--fg2);
+}
+
+.s04b-locator {
+  position: absolute; left: 0; right: 0; top: calc(351 * var(--px));
+  text-align: center;
+  font-size: clamp(15px, calc(1.05 * var(--vw)), 19px);
+  letter-spacing: .18em;
+  color: var(--fg2);
+}
+.s04b-loc-token { opacity: .35; }
+.s04b-loc-token.is-active { opacity: 1; color: var(--ink); font-weight: 500; }
+.s04b-loc-sep { margin: 0 calc(14 * var(--px)); opacity: .5; }
+
+.s04b-pillarword {
+  position: absolute; left: 0; right: 0; top: calc(471 * var(--px));
+  text-align: center;
+  font-family: var(--font-display); font-weight: 800; letter-spacing: -.01em;
+  font-size: clamp(64px, calc(7 * var(--vw)), 118px);
+  color: var(--ink);
+}
+.s04b-delivers {
+  position: absolute; left: 0; right: 0; top: calc(617 * var(--px));
+  text-align: center;
+  font-size: clamp(17px, calc(1.25 * var(--vw)), 22px);
+  letter-spacing: .12em;
+  color: var(--fg2);
+}
+.s04b-whatitis {
+  position: absolute; left: calc(360 * var(--px)); right: calc(360 * var(--px)); top: calc(697 * var(--px));
+  margin: 0; text-align: center;
+  color: var(--fg2);
+  font-size: clamp(16px, calc(1.15 * var(--vw)), 20px);
+  line-height: 1.4;
+}
+
+/* --- Page 06a — Section divider, Pillar 2: Autonomy ------------------------
+   Byte-identical to the 04b block above, s06a- prefix. --------------------- */
+
+.s06a-kicker { position: absolute; left: calc(96 * var(--px)); top: calc(70 * var(--px)); }
+.s06a-slideno {
+  position: absolute; right: calc(96 * var(--px)); top: calc(70 * var(--px));
+  font-size: 15px; letter-spacing: .1em; color: var(--fg2);
+}
+
+.s06a-locator {
+  position: absolute; left: 0; right: 0; top: calc(351 * var(--px));
+  text-align: center;
+  font-size: clamp(15px, calc(1.05 * var(--vw)), 19px);
+  letter-spacing: .18em;
+  color: var(--fg2);
+}
+.s06a-loc-token { opacity: .35; }
+.s06a-loc-token.is-active { opacity: 1; color: var(--ink); font-weight: 500; }
+.s06a-loc-sep { margin: 0 calc(14 * var(--px)); opacity: .5; }
+
+.s06a-pillarword {
+  position: absolute; left: 0; right: 0; top: calc(471 * var(--px));
+  text-align: center;
+  font-family: var(--font-display); font-weight: 800; letter-spacing: -.01em;
+  font-size: clamp(64px, calc(7 * var(--vw)), 118px);
+  color: var(--ink);
+}
+.s06a-delivers {
+  position: absolute; left: 0; right: 0; top: calc(617 * var(--px));
+  text-align: center;
+  font-size: clamp(17px, calc(1.25 * var(--vw)), 22px);
+  letter-spacing: .12em;
+  color: var(--fg2);
+}
+.s06a-whatitis {
+  position: absolute; left: calc(360 * var(--px)); right: calc(360 * var(--px)); top: calc(697 * var(--px));
+  margin: 0; text-align: center;
+  color: var(--fg2);
+  font-size: clamp(16px, calc(1.15 * var(--vw)), 20px);
+  line-height: 1.4;
+}
+
+/* --- Page 07a — Section divider, Pillar 3: Assurance ------------------------
+   Byte-identical to the 04b block above, s07a- prefix. --------------------- */
+
+.s07a-kicker { position: absolute; left: calc(96 * var(--px)); top: calc(70 * var(--px)); }
+.s07a-slideno {
+  position: absolute; right: calc(96 * var(--px)); top: calc(70 * var(--px));
+  font-size: 15px; letter-spacing: .1em; color: var(--fg2);
+}
+
+.s07a-locator {
+  position: absolute; left: 0; right: 0; top: calc(351 * var(--px));
+  text-align: center;
+  font-size: clamp(15px, calc(1.05 * var(--vw)), 19px);
+  letter-spacing: .18em;
+  color: var(--fg2);
+}
+.s07a-loc-token { opacity: .35; }
+.s07a-loc-token.is-active { opacity: 1; color: var(--ink); font-weight: 500; }
+.s07a-loc-sep { margin: 0 calc(14 * var(--px)); opacity: .5; }
+
+.s07a-pillarword {
+  position: absolute; left: 0; right: 0; top: calc(471 * var(--px));
+  text-align: center;
+  font-family: var(--font-display); font-weight: 800; letter-spacing: -.01em;
+  font-size: clamp(64px, calc(7 * var(--vw)), 118px);
+  color: var(--ink);
+}
+.s07a-delivers {
+  position: absolute; left: 0; right: 0; top: calc(617 * var(--px));
+  text-align: center;
+  font-size: clamp(17px, calc(1.25 * var(--vw)), 22px);
+  letter-spacing: .12em;
+  color: var(--fg2);
+}
+.s07a-whatitis {
+  position: absolute; left: calc(360 * var(--px)); right: calc(360 * var(--px)); top: calc(697 * var(--px));
+  margin: 0; text-align: center;
+  color: var(--fg2);
+  font-size: clamp(16px, calc(1.15 * var(--vw)), 20px);
+  line-height: 1.4;
+}
 

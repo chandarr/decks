@@ -1,44 +1,71 @@
 /* ==========================================================================
-   Page 10 — Superhuman (tasks/10-superhuman.md). Act III opener.
+   Page 10 — Superhuman · "Three capabilities, one superhuman goal."
+   (tasks/10-superhuman.md — FULL REDESIGN.)
 
-   Steps: 0 base (three A-streams + faint integrated/goal nodes) · 1 together
-   (streams converge into the integrated node — the hero) · 2 toward a goal
-   (arrow draws to GOAL) · 3 superhuman + reasoning transfer (chain draws in)
-   · 4 needs all three + beachhead (tie-back pulse) + takeaway.
+   The previous build hand-placed SVG text at scattered fixed coordinates and
+   animated invisible dots, so it rendered as disconnected fragments in mostly
+   empty space. This is a boxed HTML/flexbox layout: every text element lives
+   inside a real box positioned by flex, never by hand-computed x/y. The one
+   piece of SVG is the decorative merge connector between the two flex columns
+   of row 1 — it carries no text.
+
+   Steps: 0 base (pillars + faint connector + empty outlined goal box) ·
+   1 the connector draws and the "all three, at once" label lands ·
+   2 the goal box fills · 3 the reasoning chain builds left->right ·
+   4 the takeaway.
    ========================================================================== */
 
 (function () {
   'use strict';
 
-  var STREAM_X = 300;
-  var STREAMS = [
-    { y: 380, label: 'Adaptation &middot; Edge' },
-    { y: 500, label: 'Autonomy &middot; Competence' },
-    { y: 620, label: 'Assurance &middot; Confidence' }
+  var PILLARS = [
+    { word: 'ADAPTATION', need: 'Edge' },
+    { word: 'AUTONOMY',   need: 'Competence' },
+    { word: 'ASSURANCE',  need: 'Confidence' }
   ];
-  var INTEGRATED = { x: 820, y: 500 };
-  var GOAL = { x: 1300, y: 500 };
-  var CHAIN = ['language', 'physics', 'planning', 'unseen task &#10003;'];
 
-  function streamsSvg() {
-    return STREAMS.map(function (s, i) {
-      return '' +
-        '<g class="s10-stream" data-i="' + i + '">' +
-          '<circle class="s10-stream-dot" cx="' + STREAM_X + '" cy="' + s.y + '" r="7"/>' +
-          '<text class="s10-stream-lbl" x="' + (STREAM_X + 20) + '" y="' + (s.y + 5) + '" text-anchor="start">' + s.label + '</text>' +
-        '</g>';
-    }).join('');
+  var CHAIN = ['LANGUAGE', 'PHYSICS', 'PLANNING'];
+
+  /* Merge connector. viewBox height 260 matches the pillar stack exactly
+     (3 boxes x 76 + 2 gaps x 16), so each line leaves its own box's centre. */
+  var MERGE_VB_W = 300, MERGE_VB_H = 260;
+  var PILLAR_CY = [38, 130, 222];
+  var JOIN_X = 168, JOIN_Y = 130, TIP_X = 258;
+
+  function pillarBox(p) {
+    return '' +
+      '<div class="s10-pillar">' +
+        '<b>' + p.word + '</b>' +
+        '<span class="s10-pillar-sep">&middot;</span>' +
+        '<i>' + p.need + '</i>' +
+      '</div>';
   }
 
-  function chainSvg() {
-    var y = GOAL.y + 120;
-    var startX = GOAL.x - 240;
-    var gap = 170;
-    return CHAIN.map(function (word, i) {
-      var x = startX + i * gap;
-      var arrow = i > 0 ? '<text class="s10-chain-arrow mono" x="' + (x - gap / 2) + '" y="' + y + '" text-anchor="middle">&rarr;</text>' : '';
-      return arrow + '<text class="s10-chain-word mono" x="' + x + '" y="' + y + '" text-anchor="middle">' + word + '</text>';
+  function mergeSvg() {
+    var lines = PILLAR_CY.map(function (cy) {
+      return '<path class="s10-merge-line" d="M0,' + cy + ' L' + JOIN_X + ',' + JOIN_Y + '"/>';
     }).join('');
+    return '' +
+      '<svg class="s10-merge-svg" viewBox="0 0 ' + MERGE_VB_W + ' ' + MERGE_VB_H + '" ' +
+           'preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
+        lines +
+        '<path class="s10-merge-line" d="M' + JOIN_X + ',' + JOIN_Y + ' L' + TIP_X + ',' + JOIN_Y + '"/>' +
+        '<path class="s10-merge-head" d="M' + TIP_X + ',' + (JOIN_Y - 9) +
+              ' L' + (TIP_X + 18) + ',' + JOIN_Y +
+              ' L' + TIP_X + ',' + (JOIN_Y + 9) + ' Z"/>' +
+      '</svg>';
+  }
+
+  function chainMarkup() {
+    var out = CHAIN.map(function (w) {
+      return '<div class="s10-chain-box mono step" data-step="3" data-motion="none">' + w + '</div>' +
+             '<span class="s10-chain-arrow step" data-step="3" data-motion="none">&rarr;</span>';
+    }).join('');
+    // the destination box — ink tick, never --alert (it's a capability)
+    return out +
+      '<div class="s10-chain-box s10-chain-box--end mono step" data-step="3" data-motion="none">' +
+        'UNSEEN TASK &#10003;' +
+      '</div>';
   }
 
   function render() {
@@ -48,84 +75,80 @@
 
       '<h1 class="title s10-title">Three capabilities, one superhuman goal.</h1>' +
 
-      '<div class="s10-diagram">' +
-        '<svg class="s10-svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
+      '<div class="s10-row1">' +
+        '<div class="s10-pillars">' + PILLARS.map(pillarBox).join('') + '</div>' +
 
-          '<g class="s10-tieback step" data-step="4" data-motion="none">' +
-            STREAMS.map(function (s) {
-              return '<line class="s10-tieline" x1="' + GOAL.x + '" y1="' + GOAL.y + '" x2="' + (STREAM_X + 14) + '" y2="' + s.y + '"/>';
-            }).join('') +
-          '</g>' +
+        '<div class="s10-merge">' +
+          '<div class="s10-merge-label mono step" data-step="1" data-motion="none">all three, at once</div>' +
+          mergeSvg() +
+        '</div>' +
 
-          streamsSvg() +
-
-          '<circle class="s10-integrated" cx="' + INTEGRATED.x + '" cy="' + INTEGRATED.y + '" r="15"/>' +
-          '<text class="s10-together step" data-step="1" data-motion="none" x="' + ((STREAM_X + INTEGRATED.x) / 2) + '" y="' + (INTEGRATED.y - 60) + '" text-anchor="middle">Not one after another &mdash; all three, at once.</text>' +
-
-          '<line class="s10-arrow step" data-step="2" data-motion="none" x1="' + (INTEGRATED.x + 20) + '" y1="' + GOAL.y + '" x2="' + (GOAL.x - 18) + '" y2="' + GOAL.y + '"/>' +
-          '<text class="s10-goalvalue step" data-step="2" data-motion="none" x="' + ((INTEGRATED.x + GOAL.x) / 2) + '" y="' + (GOAL.y + 58) + '" text-anchor="middle">A goal gives direction, a tangible output, and something to monetize.</text>' +
-
-          '<circle class="s10-goal" cx="' + GOAL.x + '" cy="' + GOAL.y + '" r="12"/>' +
-          '<g class="s10-goallbl step" data-step="3" data-motion="none">' +
-            '<text class="s10-goal-super mono" x="' + GOAL.x + '" y="' + (GOAL.y - 32) + '" text-anchor="middle">SUPERHUMAN</text>' +
-            '<text class="s10-goal-sub" x="' + GOAL.x + '" y="' + (GOAL.y - 10) + '" text-anchor="middle">a task humans can&rsquo;t do.</text>' +
-          '</g>' +
-          '<g class="s10-chain step" data-step="3" data-motion="none">' + chainSvg() + '</g>' +
-        '</svg>' +
+        '<div class="s10-goal">' +
+          '<div class="s10-goal-word step" data-step="2" data-motion="none">SUPERHUMAN</div>' +
+          '<div class="s10-goal-sub step" data-step="2" data-motion="none">a task humans can&rsquo;t do.</div>' +
+          '<div class="s10-goal-chip mono step" data-step="2" data-motion="none">' +
+            'direction &middot; tangible output &middot; monetizable' +
+          '</div>' +
+        '</div>' +
       '</div>' +
 
-      '<div class="s10-beachhead-wrap">' +
-        '<p class="s10-beachhead step" data-step="4" data-motion="none">A superhuman task has no slack &mdash; it needs the edge, the competence, and the confidence, together. And it&rsquo;s a beachhead we can sell.</p>' +
+      '<div class="s10-chainband">' +
+        '<div class="s10-chain-label mono step" data-step="3" data-motion="none">' +
+          'Reachable by reasoning transfer &mdash; not imitation:' +
+        '</div>' +
+        '<div class="s10-chain">' + chainMarkup() + '</div>' +
       '</div>' +
 
       '<div class="s10-takeaway">' +
-        Shared.carry({ step: 4, punchHtml: 'Aim at what humans can&rsquo;t do, and the three come together &mdash; with a proof you can sell.' }) +
+        Shared.carry({
+          step: 4,
+          punchHtml: 'Aim at what humans can&rsquo;t do, and the three fire together.',
+          lineHtml: 'Prove the hardest &mdash; the rest is believed.'
+        }) +
       '</div>';
   }
 
-  function onEnter(el) { el._s10stops = []; }
+  function onEnter() {}
 
   function onStep(el, i, o) {
     if (i === 1) {
-      var dots = el.querySelectorAll('.s10-stream-dot');
-      Anim.converge(dots, INTEGRATED, { duration: Anim.dur(o, 750), stagger: Anim.dur(o, 90) });
-
-      setTimeout(function () {
-        if (el.isConnected) el.querySelector('.s10-integrated').classList.add('is-active');
-      }, o && o.static ? 0 : 600);
-      Anim.fadeUp(el.querySelector('.s10-together'), { delay: Anim.dur(o, 750), duration: Anim.dur(o, 450) });
+      // the three merge lines draw toward the arrow, then the label lands
+      Anim.drawPath(el.querySelectorAll('.s10-merge-line'), {
+        duration: Anim.dur(o, 460), stagger: Anim.dur(o, 70)
+      });
+      Anim.fadeUp(el.querySelector('.s10-merge-label'), {
+        duration: Anim.dur(o, 420), delay: Anim.dur(o, 160)
+      });
     }
 
     if (i === 2) {
-      Anim.drawPath(el.querySelector('.s10-arrow'), { duration: Anim.dur(o, 550) });
-      el.querySelector('.s10-goal').classList.add('is-active');
-      Anim.fadeUp(el.querySelector('.s10-goalvalue'), { delay: Anim.dur(o, 250), duration: Anim.dur(o, 450) });
+      Anim.fadeUp(el.querySelectorAll('.s10-goal-word, .s10-goal-sub, .s10-goal-chip'), {
+        duration: Anim.dur(o, 460), stagger: Anim.dur(o, 90)
+      });
     }
 
     if (i === 3) {
-      Anim.fadeUp(el.querySelector('.s10-goallbl'), { duration: Anim.dur(o, 450) });
-      Anim.fadeUp(el.querySelectorAll('.s10-chain-word, .s10-chain-arrow'), { delay: Anim.dur(o, 250), stagger: Anim.dur(o, 120), duration: Anim.dur(o, 350) });
+      Anim.fadeUp(el.querySelector('.s10-chain-label'), { duration: Anim.dur(o, 400) });
+      // left -> right along the chain, boxes and arrows in document order
+      Anim.fadeUp(el.querySelectorAll('.s10-chain-box, .s10-chain-arrow'), {
+        duration: Anim.dur(o, 380), delay: Anim.dur(o, 140), stagger: Anim.dur(o, 70)
+      });
     }
 
     if (i === 4) {
-      var lines = el.querySelectorAll('.s10-tieline');
-      Anim.fadeUp(lines, { stagger: Anim.dur(o, 70), duration: Anim.dur(o, 400) });
-
-      Anim.fadeUp(el.querySelector('.s10-beachhead'), { delay: Anim.dur(o, 300), duration: Anim.dur(o, 450) });
-
-      var punch = el.querySelector('.carry-punch');
-      Anim.fadeUp(punch, { delay: Anim.dur(o, 500), duration: Anim.dur(o, 550) });
+      // both carry lines are step-gated with data-motion="none", so the
+      // subtitle needs its own fadeUp or it pops in with no transition
+      Anim.fadeUp([el.querySelector('.carry-punch'), el.querySelector('.carry-line')], {
+        duration: Anim.dur(o, 500), delay: Anim.dur(o, 120), stagger: Anim.dur(o, 140)
+      });
     }
   }
 
-  function onLeave(el) {
-    (el._s10stops || []).forEach(function (stop) { stop(); });
-    el._s10stops = [];
-  }
+  function onLeave() {}
 
   page({
     id: '10-superhuman',
-    title: 'Superhuman',
+    title: 'Three capabilities, one superhuman goal',
     theme: 'light',
     steps: 4,
     render: render,

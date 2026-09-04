@@ -3,7 +3,8 @@
 
    Steps: 0 base (kicker, title, framing line, five faint empty row slots)
    · 1-5 each Q&A row reveals in turn (question mono + alert marker, then
-   answer, tiny internal stagger) · 6 the takeaway lands.
+   answer, tiny internal stagger). The row set is the whole page — the
+   carried takeaway line was cut, so the last row is the last beat.
    ========================================================================== */
 
 (function () {
@@ -48,14 +49,10 @@
       Shared.kicker('What breaks this', 's17-kicker') +
       '<div class="s17-slideno mono">17</div>' +
 
-      '<h1 class="title s17-title">I&rsquo;ve already found the weak joints.</h1>' +
+      '<h1 class="title s17-title">Potential threats and questions</h1>' +
       '<p class="s17-framing">The sharp questions &mdash; answered before you ask them.</p>' +
 
-      '<div class="s17-rows">' + rows + '</div>' +
-
-      '<div class="s17-takeaway">' +
-        Shared.carry({ step: 6, punchHtml: 'A leader is judged by the questions they&rsquo;ve already asked themselves.' }) +
-      '</div>';
+      '<div class="s17-rows">' + rows + '</div>';
   }
 
   function onStep(el, i, o) {
@@ -63,17 +60,13 @@
       var parts = el.querySelectorAll('.s17-rows [data-step="' + i + '"]');
       Anim.fadeUp(parts, { stagger: Anim.dur(o, 150), duration: Anim.dur(o, 450) });
     }
-    if (i === 6) {
-      var punch = el.querySelector('.carry-punch');
-      Anim.fadeUp(punch, { duration: Anim.dur(o, 550) });
-    }
   }
 
   page({
     id: '17-what-breaks-this',
     title: 'What breaks this',
     theme: 'light',
-    steps: 6,
+    steps: 5,
     render: render,
     onStep: onStep
   });

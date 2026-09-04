@@ -16,13 +16,17 @@
 <!-- CLAUDE.md / BUILD-ORDER.md: zero-based page indexes where Acts II–V
      begin (0-based page 4 = page 5 = Act II, etc.). engine.js reads this. -->
 <script>
-  window.deckConfig = { actMarkers: [4, 9, 11, 16] };
+  window.deckConfig = { actMarkers: [4, 13, 14, 19] };
 </script>
 
 <!-- 16:9 stage; every page mounts inside #frame -->
 <div id="stage">
   <div id="frame">
     <div id="page-host"></div>
+
+    <!-- standing side mark: one element in the frame chrome, so it shows on
+         every page without touching a single slide file. Reads bottom-to-top. -->
+    <div id="sidemark" aria-hidden="true">Plan for Humyn Labs by Dr. Aswin Chandarr</div>
 
     <!-- chrome -->
     <div id="rail" class="no-advance" aria-hidden="true">
@@ -66,13 +70,16 @@
 <script src="slides/02-end-goal.js"></script>
 <script src="slides/03-fragmentation-convergence.js"></script>
 <script src="slides/04-interaction-modalities.js"></script>
+<script src="slides/04a-pillars.js"></script>
+<script src="slides/04b-divider-adaptation.js"></script>
 <script src="slides/05-adaptation-problem.js"></script>
 <script src="slides/06-adaptation-approach.js"></script>
+<script src="slides/06a-divider-autonomy.js"></script>
 <script src="slides/07-autonomy.js"></script>
+<script src="slides/07a-divider-assurance.js"></script>
 <script src="slides/08-assurance-problem.js"></script>
 <script src="slides/09-assurance-approach.js"></script>
 <script src="slides/10-superhuman.js"></script>
-<script src="slides/11-beachhead-cascade.js"></script>
 <script src="slides/12-team.js"></script>
 <script src="slides/13-india-academy.js"></script>
 <script src="slides/14-agentic-execution.js"></script>

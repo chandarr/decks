@@ -10,11 +10,20 @@
 (function () {
   'use strict';
 
-  var HUB = { x: 960, y: 480 };
-  var LABEL_Y = [380, 470, 560, 650];
+  var HUB = { x: 960, y: 540 };
+  var LABEL_Y = [400, 520, 640, 760];
+
+  /* Orthogonal routing. Each item is a horizontal stub from its label to a
+     shared vertical trunk; one horizontal link carries the trunk into the hub.
+     Right angles only — no diagonals — and no two lines overlap, because the
+     trunk and the link are each drawn once rather than per item.
+       label --stub--> | trunk | --link--> hub
+     `x` is the label's inner edge; the stub starts LABEL_GAP past it. */
+  var LABEL_GAP = 18;
+  var HUB_GAP = 16;          // stop the link short of the hub circle (r=14)
 
   var LEFT = {
-    x: 480, headingX: 300, heading: 'FRONTIER LABS', side: 'left', tint: 'var(--accent-b)',
+    x: 620, trunkX: 780, headingX: 376, heading: 'FRONTIER LABS', side: 'left', tint: 'var(--accent-b)',
     items: [
       { t: 'Real-world edge &amp; failure cases', dir: 'out' },
       { t: 'Transfer &amp; adaptation onto embodiments', dir: 'out' },
@@ -23,7 +32,7 @@
     ]
   };
   var RIGHT = {
-    x: 1440, headingX: 1620, heading: 'EMBODIMENT VENDORS', side: 'right', tint: 'var(--accent-a)',
+    x: 1300, trunkX: 1140, headingX: 1544, heading: 'EMBODIMENT VENDORS', side: 'right', tint: 'var(--accent-a)',
     items: [
       { t: 'Hardware requirements for real intelligence', dir: 'out' },
       { t: 'Field failure modes &amp; fixes', dir: 'out' },
@@ -40,22 +49,37 @@
   }
 
   function fan(side) {
-    var angleOut = side.side === 'left' ? 180 : 0;
-    var angleReturn = side.side === 'left' ? 0 : 180;
+    var isLeft = side.side === 'left';
+    var out = isLeft ? -1 : 1;                       // outward direction, in x
+    var angleOut = isLeft ? 180 : 0;
+    var angleReturn = isLeft ? 0 : 180;
+    var anchor = isLeft ? 'end' : 'start';
+    var stubOuter = side.x - out * LABEL_GAP;        // stub end nearest the label
+    var linkEnd = HUB.x + out * HUB_GAP;             // link end nearest the hub
+
+    // shared spine: one vertical trunk spanning the item rows, then a single
+    // horizontal link into the hub
+    var spine =
+      '<line class="s04-trunk s04-trunk--' + side.side + '" x1="' + side.trunkX + '" y1="' + LABEL_Y[0] +
+        '" x2="' + side.trunkX + '" y2="' + LABEL_Y[LABEL_Y.length - 1] + '"/>' +
+      '<line class="s04-link s04-link--' + side.side + '" x1="' + side.trunkX + '" y1="' + HUB.y +
+        '" x2="' + linkEnd + '" y2="' + HUB.y + '"/>';
+
     return '' +
       '<text class="s04-heading mono" x="' + side.headingX + '" y="230" text-anchor="middle" fill="' + side.tint + '">' + side.heading + '</text>' +
+      spine +
       side.items.map(function (it, i) {
         var y = LABEL_Y[i];
         var isReturn = it.dir === 'return';
         var lineCls = 's04-line ' + (isReturn ? 's04-line--return' : 's04-line--out s04-line--' + side.side);
         var lblCls = 's04-lbl ' + (isReturn ? 's04-lbl--return' : 's04-lbl--' + side.side);
-        var anchor = side.side === 'left' ? 'end' : 'start';
-        var arrowMark = isReturn ? arrow(HUB.x + (side.side === 'left' ? 26 : -26), HUB.y, angleReturn, 's04-arrow--' + side.side)
-                                  : arrow(side.x, y, angleOut, 's04-arrow--' + side.side);
+        // a return item's arrow sits on the link, pointing in at the hub
+        var arrowMark = isReturn ? arrow(linkEnd, HUB.y, angleReturn, 's04-arrow--' + side.side)
+                                 : arrow(stubOuter, y, angleOut, 's04-arrow--' + side.side);
         return '' +
-          '<line class="' + lineCls + '" data-side="' + side.side + '" data-dir="' + it.dir + '" x1="' + HUB.x + '" y1="' + HUB.y + '" x2="' + side.x + '" y2="' + y + '"/>' +
+          '<line class="' + lineCls + '" data-side="' + side.side + '" data-dir="' + it.dir + '" x1="' + side.trunkX + '" y1="' + y + '" x2="' + stubOuter + '" y2="' + y + '"/>' +
           arrowMark +
-          '<text class="' + lblCls + '" x="' + side.x + '" y="' + (y + 6) + '" text-anchor="' + anchor + '">' + it.t + '</text>';
+          '<text class="' + lblCls + '" x="' + side.x + '" y="' + (y + 7) + '" text-anchor="' + anchor + '">' + it.t + '</text>';
       }).join('');
   }
 
@@ -72,7 +96,7 @@
           '<g class="s04-fan" data-side="right">' + fan(RIGHT) + '</g>' +
 
           '<circle class="s04-hub" cx="' + HUB.x + '" cy="' + HUB.y + '" r="14"/>' +
-          '<text class="s04-hublbl mono" x="' + HUB.x + '" y="' + (HUB.y + 40) + '" text-anchor="middle">US &middot; THE ORCHESTRATOR</text>' +
+          '<text class="s04-hublbl mono" x="' + HUB.x + '" y="' + (HUB.y + 42) + '" text-anchor="middle">US &middot; THE ORCHESTRATOR</text>' +
         '</svg>' +
       '</div>' +
 

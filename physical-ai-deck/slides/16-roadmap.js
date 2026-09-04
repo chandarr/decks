@@ -14,7 +14,7 @@
 (function () {
   'use strict';
 
-  var AXIS_Y = 470;
+  var AXIS_Y = 480;
   var AXIS_LEAD_X = 180;                              // run-up before station 0
   var STATION_X = [260, 610, 960, 1310, 1660];         // five stations, even spacing (350px apart, fits margins)
 
@@ -90,14 +90,19 @@
     var n = i + 1;
     var stepAttr = ' step" data-step="' + n + '" data-motion="none"';
     var chipHtml = stage.chip
-      ? '<div class="s16-chip mono' + stepAttr + ' style="left:' + px(x - CHIP_HALF) + ';">' + stage.chip + '</div>'
+      ? '<div class="s16-chip mono' + stepAttr + '>' + stage.chip + '</div>'
       : '';
+    // deliverable/proof/chip flow inside one centered column instead of each
+    // carrying its own hardcoded `top`: a two-line deliverable used to run
+    // straight through the proof line and the chip below it.
     return '' +
       '<div class="s16-stage" data-i="' + i + '">' +
         '<div class="s16-stage-label' + stepAttr + ' style="left:' + px(x - LABEL_HALF) + ';">' + stage.label + '</div>' +
-        '<div class="s16-stage-deliverable' + stepAttr + ' style="left:' + px(x - DELIV_HALF) + ';">' + stage.deliverable + '</div>' +
-        '<div class="s16-stage-proof mono' + stepAttr + ' style="left:' + px(x - PROOF_HALF) + ';">' + stage.proof + '</div>' +
-        chipHtml +
+        '<div class="s16-stage-body" style="left:' + px(x - DELIV_HALF) + ';">' +
+          '<div class="s16-stage-deliverable' + stepAttr + '>' + stage.deliverable + '</div>' +
+          '<div class="s16-stage-proof mono' + stepAttr + '>' + stage.proof + '</div>' +
+          chipHtml +
+        '</div>' +
       '</div>';
   }
 

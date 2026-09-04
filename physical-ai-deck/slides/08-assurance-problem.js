@@ -10,7 +10,7 @@
 (function () {
   'use strict';
 
-  var CX = 960, CY = 430;
+  var CX = 960, CY = 470;
 
   function envelopeSvg() {
     return '' +

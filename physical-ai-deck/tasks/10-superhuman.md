@@ -1,58 +1,74 @@
 # Page 10 — Superhuman · "Three capabilities, one superhuman goal"
 
-> Inherits `GLOBAL-INSTRUCTIONS.md` (§11 center-weight; §12 motion-conveys-the-message). Light theme, off-white/ink, no glow. Act III opener (bridges Act II's three A's to the beachhead). Deck v3.
-> Source: AC direction — the three A's only matter *together*; aiming at a superhuman goal forces integration and yields a tangible, monetizable target; superhuman is achievable via reasoning transfer, not imitation.
+> Inherits `GLOBAL-INSTRUCTIONS.md` (§11 center-weight; §12 motion where it helps; §13 reveal one group at a time). Light theme, off-white/ink, no glow. Act III opener. Deck v3.
+> **FULL REDESIGN — the previous build was broken:** it hand-placed SVG text at scattered fixed coordinates (streams far left, a lone dumbbell arrow mid-right, chain floating below) with a "converge" that animated invisible dots — rendering as disconnected fragments in mostly empty space, no boxes. **This rewrite is a boxed HTML/fl exbox layout** — every piece of text lives inside a real box, laid out with fl/grid, NOT absolute-positioned SVG. Convey the message cleanly; keep motion minimal.
 
 ## Purpose
 
-Turn the three capabilities into one integrated thesis: Adaptation, Autonomy, and Assurance are not a sequence — they only create value together, and a superhuman goal is what forces them together while giving direction, a tangible output, and something to monetize. Establish *why* superhuman is achievable (reasoning transfer, not imitation) and hand off to the beachhead.
+One integrated thesis: Adaptation, Autonomy, and Assurance are not a sequence — they only create value *together*, and pointing them at a **superhuman goal** (a task humans can't do) forces them to fire at once while giving direction, a tangible output, and something to monetize. Superhuman is reachable by **reasoning transfer**, not imitation.
 
-The one idea: *Point the three capabilities at a goal humans can't reach, and they're forced to fire together — with a proof you can sell.*
+The one idea: *Point the three capabilities at a goal humans can't reach, and they fire together.*
 
-## Layout (center-weighted — §11)
+## Layout — BOXED, flexbox/grid (NOT absolute SVG). Center-weighted (§11)
 
-All content in the central band (y ≈ 190–800); bottom ~20% chrome only.
+Use a centered container, max-width ~1640px (x ∈ [140, 1780]). Everything is real boxes laid out by flex/grid — **do not position text with absolute x/y SVG coordinates.** Bands, top→bottom:
 
-- **Top chrome:** kicker top-left; slide-no "10" top-right.
-- **Title** — Archivo, ~y150–230.
-- **Convergence (left→center):** three labeled A-streams — `Adaptation · Edge`, `Autonomy · Competence`, `Assurance · Confidence` (stacked left, ≈ x300, y 380/500/620) — `converge` into one **integrated node** at center (≈ x820, y500).
-- **The goal (center→right):** an arrow from the integrated node to a **GOAL node** (≈ x1300, y500) that reveals as `SUPERHUMAN`, with a compact **reasoning-transfer** chain beneath it.
-- **Tie-back + takeaway** in the central band (a short line that the goal needs all three at once; then the takeaway).
+| Band | y-ish | Contents |
+|---|---|---|
+| Chrome | 40–90 | kicker top-left; slide-no "10" top-right. |
+| **Title** | 110–200 | `Three capabilities, one superhuman goal.` |
+| **Row 1 — converge → goal** | 250–560 | LEFT: three stacked pillar boxes. MIDDLE: a converge connector + small label. RIGHT: one big GOAL box. |
+| **Row 2 — reasoning chain** | 600–720 | a left label + four small chain boxes joined by `→`. |
+| **Takeaway** | 760–825 | one centered line. |
 
-## The motion (the argument — §12)
+### Row 1 (flex, three parts, vertically centered)
 
-- **Beat 1 — together, not in sequence (hero):** the three A-streams `converge` from three points into one integrated node. The motion is the argument: not one-after-another — all three at once.
-- **Beat 2 — toward a goal:** an arrow `drawPath`s from the integrated node to the GOAL node; the goal-value line appears.
-- **Beat 3 — the goal is superhuman + how:** the GOAL node reveals `SUPERHUMAN`; a compact chain `language → physics → planning → unseen task ✓` draws in beneath it (reasoning transfer bridging to a task with no demo). TARS as a light aside.
-- **Beat 4 — it needs all three, and it's a beachhead:** three faint lines pulse from the GOAL back to the three A-streams (a superhuman task has no slack); the beachhead line + takeaway land.
+- **LEFT — three pillar boxes**, stacked, equal (~360w each, ~76h, ~16px gaps). Each box = bold pillar word + lighter need, on one line:
+  - `ADAPTATION` · Edge
+  - `AUTONOMY` · Competence
+  - `ASSURANCE` · Confidence
+  Hairline `--panel` boxes, ink pillar word, `--secondary` need.
+- **MIDDLE — converge connector** (~200w): three short lines from the three left boxes merging into one arrow pointing right (a simple SVG bracket/merge is fine HERE because it's purely decorative between two flex columns — or a CSS chevron). Small mono label above it: `all three, at once`.
+- **RIGHT — the GOAL box** (~480w, ~200h), visually the heaviest element: a bold box (thicker `--ink` border, `--panel` fill) containing:
+  - `SUPERHUMAN` — Archivo large, ink.
+  - `a task humans can't do.` — `--secondary` beneath.
+  - a footer chip row (mono, small): `direction · tangible output · monetizable`.
 
-## Steps (reveal order)
+### Row 2 (reasoning chain — boxes)
 
-**0 — Base:** kicker, slide-no, title, the three A-streams (labeled) at left, the integrated + goal nodes faint. Intentional.
-**1 — Together:** the three streams `converge` into the integrated node; the "not in sequence — all three, at once" line.
-**2 — Toward a goal:** arrow to the GOAL node; the goal-value line.
-**3 — Superhuman + reasoning transfer:** GOAL → `SUPERHUMAN`; the `language → physics → planning → unseen task` chain draws in.
-**4 — Needs all three + beachhead:** the goal pulses back to the three A's; beachhead line + takeaway.
+- A left-aligned label (mono/`--secondary`): `Reachable by reasoning transfer — not imitation:`
+- Then four small equal boxes joined by ink `→` glyphs: `LANGUAGE` → `PHYSICS` → `PLANNING` → `UNSEEN TASK ✓`. The `✓` is ink (capability, not `--alert`). Boxes hairline, mono labels.
 
-*(4 advance beats after base. Back reverses; `onLeave` cancels any pulse/converge loops.)*
+### Takeaway
+
+- One centered line, Archivo medium/bold (band 760–825).
+
+## Steps (reveal order — §13, minimal motion)
+
+**0 — Base (looks finished):** chrome, title, the three pillar boxes (left) present, the converge connector faint, the GOAL box present but **empty/faint** (outline only), Row 2 + takeaway hidden.
+**1 — All three, at once:** the converge connector emphasizes (the three merge lines draw toward the arrow) + the `all three, at once` label — the "not a sequence" point.
+**2 — The goal:** the GOAL box fills — `SUPERHUMAN`, the sub, and the footer chip fade up.
+**3 — Why it's reachable:** Row 2 reveals — the four chain boxes appear left→right with their `→`s, under the label.
+**4 — The payoff:** the takeaway lands.
+
+*(4 advance beats after base. `fadeUp` only — no converge-of-invisible-dots, no looping. Back reverses; End reveals all. `onLeave` trivial.)*
 
 ## Copy (exact)
 
 - **Kicker:** `The integrating goal`
 - **Title:** **Three capabilities, one superhuman goal.**
-- **The three streams:** `Adaptation · Edge` · `Autonomy · Competence` · `Assurance · Confidence`
-- **Convergence line:** **Not one after another — all three, at once.**
-- **Goal-value line:** A goal gives direction, a tangible output, and something to monetize.
-- **Goal reveal:** `SUPERHUMAN` — a task humans can't do.
-- **Reasoning transfer:** Not imitation of a million human demos — transfer of reasoning: **language → physics → planning**, applied to a task it was never shown. This is what makes novel, extreme domains possible *(the TARS end-state).*
-- **Tie-back + beachhead:** A superhuman task has no slack — it needs the edge, the competence, and the confidence, together. And it's a beachhead we can sell.
-- **Takeaway (central band):** **Aim at what humans can't do, and the three come together — with a proof you can sell.**
+- **Pillar boxes:** `ADAPTATION · Edge` · `AUTONOMY · Competence` · `ASSURANCE · Confidence`
+- **Converge label:** `all three, at once`
+- **Goal box:** **SUPERHUMAN** / a task humans can't do. / `direction · tangible output · monetizable`
+- **Row 2 label:** Reachable by reasoning transfer — not imitation:
+- **Chain boxes:** `LANGUAGE` → `PHYSICS` → `PLANNING` → `UNSEEN TASK ✓`
+- **Takeaway (central band):** **Aim at what humans can't do, and the three fire together.**
 
-*(Sentence case for prose; stream labels + `SUPERHUMAN` + the reasoning chain UPPER/mono where labels.)*
+*(Sentence case for prose; pillar words + `SUPERHUMAN` + chain labels UPPER/mono. Dropped from the old spec: the TARS aside and the separate beachhead/goal-value sentences — folded into the goal-box chip and the takeaway to cut clutter.)*
 
 ## Data / graphics
 
-Native inline SVG. Three A-streams = small ink nodes with labels; the integrated node = a filled ink node (the three merge into it). GOAL node = an ink node that gains a `SUPERHUMAN` label on reveal. Reasoning-transfer chain = three mono words connected by arrows, ending in `unseen task ✓` (the ✓ ink, not alert — this is capability, not failure). Tie-back = three faint ink lines from GOAL to the streams. No panels, no glow, no `--alert`.
+**Native HTML boxes via flex/grid — this is the crux.** Pillar boxes, goal box, and chain boxes are `<div>`s with the `.panel`/hairline card style, laid out by flexbox rows/columns and gaps — no hand-computed x/y. The only SVG allowed is the small decorative converge connector between the two flex columns (three short merge lines → one arrowhead); it must not carry any text. Goal box heavier (thicker ink border) so it's clearly the focal point. Ink/graphite only; no glow, no `--alert` (the `✓` is ink).
 
 ## Media slots
 
@@ -60,17 +76,18 @@ None — all native.
 
 ## Animations
 
-`converge` (three streams → integrated node — the hero); `drawPath` (arrow to goal; reasoning chain); `fadeUp` (labels, lines, takeaway); a subtle one-time pulse on the tie-back lines. **Reduced motion:** three streams shown already merged into the integrated node; arrow + GOAL `SUPERHUMAN` + full reasoning chain + tie-back lines all static; text visible. **Cleanup:** `onLeave` cancels any looped pulse.
+`fadeUp` per group (converge label/connector → goal box → chain boxes left→right → takeaway). No `converge` on invisible dots; no loops. **Reduced motion:** everything visible at rest — three pillar boxes, connector, filled goal box, full chain, takeaway. **Cleanup:** trivial.
 
 ## Acceptance criteria
 
-- **Center-weighted:** convergence, goal, reasoning chain, tie-back, takeaway all in the central band; nothing near the bottom edge (§11).
-- The convergence reads as **simultaneous integration**, not a sequence — that motion is the core point.
-- Reasoning transfer is present and clearly distinct from imitation (`language → physics → planning → unseen task`); TARS is a light aside, not the hero.
-- The tie-back shows a superhuman task requires all three A's; the beachhead hand-off is set up.
-- Off-white/ink only, no glow, no `--alert`; base state finished; reduced-motion correct; no console errors.
+- **Boxed & laid out by flex/grid** — every text element sits inside a real box; nothing is absolute-positioned SVG text; no scattered fragments; no large empty dead zones.
+- **Reads as one flow:** three pillar boxes → (converge) → one heavy SUPERHUMAN goal box, with the reasoning chain of boxes beneath. The "all three at once → one superhuman goal, reachable by reasoning transfer" message is unmistakable.
+- **§13:** groups reveal in order (converge → goal → chain → takeaway); base looks finished (pillar boxes + faint goal box).
+- Goal box is the clear focal point; chain ends in `UNSEEN TASK ✓` (ink ✓).
+- Center-weighted; takeaway ≤ y825; off-white/ink, no glow, no `--alert`; reduced-motion correct; no console errors.
 
 ## Notes
 
-- This bridges Act II (the three A's) to Act III (beachhead + cascade next). The three A-stream labels should echo slides 05–09.
-- Keep it about *integration + why superhuman is achievable*; the specific hardest problem, the proof, and the trust-cascade are the NEXT slide.
+- Bridges Act II (the three A's) to Act III (beachhead + cascade next). Pillar-box labels echo slides 05–09 and the 04a pillars page.
+- Keep it about *integration + why superhuman is reachable*; the specific hardest problem, the proof, and the trust-cascade are the NEXT slide (11).
+- **If in doubt, favor a clean static boxed layout over motion — AC wants the message conveyed, not animation.**

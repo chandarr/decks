@@ -24,25 +24,25 @@
 
       '<div class="s01-spine">' +
         '<svg class="s01-spine-svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
-          '<line class="s01-line" x1="520" y1="670" x2="1400" y2="670"/>' +
-          '<circle class="s01-endnode s01-endnode--left" cx="520" cy="670" r="9"/>' +
-          '<text class="s01-endlbl s01-endlbl--left mono" x="484" y="677" text-anchor="end">MODELS</text>' +
-          '<circle class="s01-endnode s01-endnode--right" cx="1400" cy="670" r="9"/>' +
-          '<text class="s01-endlbl s01-endlbl--right mono" x="1436" y="677" text-anchor="start">MACHINES</text>' +
+          '<line class="s01-line" x1="520" y1="750" x2="1400" y2="750"/>' +
+          '<circle class="s01-endnode s01-endnode--left" cx="520" cy="750" r="9"/>' +
+          '<text class="s01-endlbl s01-endlbl--left mono" x="484" y="757" text-anchor="end">MODELS</text>' +
+          '<circle class="s01-endnode s01-endnode--right" cx="1400" cy="750" r="9"/>' +
+          '<text class="s01-endlbl s01-endlbl--right mono" x="1436" y="757" text-anchor="start">MACHINES</text>' +
 
-          '<circle class="s01-centernode" cx="960" cy="670" r="15"/>' +
+          '<circle class="s01-centernode" cx="960" cy="750" r="15"/>' +
 
           '<g class="step s01-orch" data-step="1" data-motion="none">' +
-            '<text class="s01-orchlbl mono" x="960" y="620" text-anchor="middle">ORCHESTRATION</text>' +
+            '<text class="s01-orchlbl mono" x="960" y="700" text-anchor="middle">ORCHESTRATION</text>' +
           '</g>' +
 
           '<g class="step s01-needs" data-step="1" data-motion="none">' +
-            '<line class="s01-tick" x1="920" y1="686" x2="800" y2="710"/>' +
-            '<text class="s01-needlbl" data-need="edge" x="790" y="734" text-anchor="middle">Edge</text>' +
-            '<line class="s01-tick" x1="960" y1="686" x2="960" y2="710"/>' +
-            '<text class="s01-needlbl" data-need="competence" x="960" y="734" text-anchor="middle">Competence</text>' +
-            '<line class="s01-tick" x1="1000" y1="686" x2="1120" y2="710"/>' +
-            '<text class="s01-needlbl" data-need="confidence" x="1130" y="734" text-anchor="middle">Confidence</text>' +
+            '<line class="s01-tick" x1="920" y1="766" x2="800" y2="790"/>' +
+            '<text class="s01-needlbl" data-need="edge" x="790" y="814" text-anchor="middle">Edge</text>' +
+            '<line class="s01-tick" x1="960" y1="766" x2="960" y2="790"/>' +
+            '<text class="s01-needlbl" data-need="competence" x="960" y="814" text-anchor="middle">Competence</text>' +
+            '<line class="s01-tick" x1="1000" y1="766" x2="1120" y2="790"/>' +
+            '<text class="s01-needlbl" data-need="confidence" x="1130" y="814" text-anchor="middle">Confidence</text>' +
           '</g>' +
         '</svg>' +
       '</div>' +

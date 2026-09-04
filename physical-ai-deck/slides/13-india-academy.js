@@ -30,7 +30,6 @@
         '<rect x="' + BASE.x + '" y="' + BASE.y + '" width="' + BASE.w + '" height="' + BASE.h + '" rx="' + BASE.rx + '"/>' +
         '<rect x="' + BAR_TOP.x + '" y="' + BAR_TOP.y + '" width="' + BAR_TOP.w + '" height="' + BAR_TOP.h + '" rx="' + BAR_TOP.rx + '"/>' +
         '<rect x="' + BAR_NEXT.x + '" y="' + BAR_NEXT.y + '" width="' + BAR_NEXT.w + '" height="' + BAR_NEXT.h + '" rx="' + BAR_NEXT.rx + '"/>' +
-        '<text x="' + BAL_CX + '" y="508" text-anchor="middle" font-size="40">&asymp;</text>' +
         dots +
         '<path d="' + ARROW_D + '" fill="none"/>' +
         '<rect x="' + BADGE.x + '" y="' + BADGE.y + '" width="' + BADGE.w + '" height="' + BADGE.h + '" rx="' + BADGE.rx + '"/>' +

@@ -15,47 +15,74 @@
 (function () {
   'use strict';
 
-  var CENTRE = { x: 960, y: 500, r: 80 };
+  var CENTRE = { x: 960, y: 494, r: 76 };
   var NODE_R = 36;
+  /* Ring pulled in twice: 200 -> 180 to make room for the cards at all, then
+     180 -> 145 so every card has clearance for TWO wrapped lines. The card
+     fonts bottom out at their clamp minimum on a small stage while the boxes
+     keep shrinking with --px, so a one-line charter becomes two and grows
+     into the ring. The budget below assumes the two-line case everywhere. */
+  var RING_R = 145;
 
+  /* Each lab's charter used to be 14.5px SVG <text>, hand-split into tspans:
+     unreadable from the back of a room, and the left-hand one ran to the
+     stage edge. It now lives in an HTML card — a mild --panel box on the
+     side of the node that faces open space (above / right / below / left),
+     so the ring stays clear and each charter reads at 16px with real
+     wrapping. `card` is {left, top, width, align} in 1920×1080 design px. */
   var LABS = [
     {
-      key: 'research', step: 1, label: 'Research', cx: 960, cy: 300, r: NODE_R,
-      anchor: 'middle', tx: 960, labelY: 214,
-      lines: ['foundations: adaptation, world-model compression, embodied-assurance', 'science. Publishes.'],
-      charterYs: [234, 252]
+      key: 'research', step: 1, label: 'Research',
+      cx: CENTRE.x, cy: CENTRE.y - RING_R, r: NODE_R,
+      card: { left: 360, top: 190, width: 1200, align: 'center' },  // ends <=297; node top 313
+      charter: 'foundations: adaptation, world-model compression, embodied-assurance science. Publishes.'
     },
     {
-      key: 'applied', step: 2, label: 'Applied', cx: 1240, cy: 500, r: NODE_R,
-      anchor: 'start', tx: 1294, labelY: 494,
-      lines: ['the orchestration, the pipelines, beachhead delivery. Ships.'],
-      charterYs: [512]
+      key: 'applied', step: 2, label: 'Applied',
+      cx: CENTRE.x + RING_R, cy: CENTRE.y, r: NODE_R,
+      card: { left: 1159, top: 456, width: 560, align: 'left' },
+      charter: 'the orchestration, the pipelines, beachhead delivery. Ships.'
     },
     {
-      key: 'deployment', step: 3, label: 'Deployment', cx: 960, cy: 700, r: NODE_R,
-      anchor: 'middle', tx: 960, labelY: 752,
-      lines: ['field systems in customer environments (US/EU). Runs &mdash; and', 'captures real-world + failure data.'],
-      charterYs: [766, 782]
+      key: 'deployment', step: 3, label: 'Deployment',
+      cx: CENTRE.x, cy: CENTRE.y + RING_R, r: NODE_R,
+      card: { left: 360, top: 691, width: 1200, align: 'center' },  // node bottom 675
+      charter: 'field systems in customer environments (US/EU). Runs &mdash; and captures real-world + failure data.'
     },
     {
-      key: 'assurance', step: 4, label: 'Assurance', cx: 680, cy: 500, r: NODE_R,
-      anchor: 'end', tx: 626, labelY: 494,
-      lines: ['failure-data engine, safety cases, the standard. Gates adoption.'],
-      charterYs: [512]
+      key: 'assurance', step: 4, label: 'Assurance',
+      cx: CENTRE.x - RING_R, cy: CENTRE.y, r: NODE_R,
+      card: { left: 201, top: 456, width: 560, align: 'right' },
+      charter: 'failure-data engine, safety cases, the standard. Gates adoption.'
     }
   ];
 
   /* Clockwise ring Research(top) -> Applied(right) -> Deployment(bottom) ->
-     Assurance(left) -> Research. Endpoints are pulled in from each node
-     centre so the curves clear the node discs; control points bow outward
-     from CENTRE. d-as / as-r carry the compounding return (Deployment's
-     data feeding Assurance and Research) and are drawn heavier. */
-  var ARCS = [
-    { key: 'r-a', emph: false, d: 'M997.4,326.7 Q1132.6,376.7 1202.6,473.3' },
-    { key: 'a-d', emph: false, d: 'M1202.6,526.7 Q1132.6,623.3 997.4,673.3' },
-    { key: 'd-as', emph: true, d: 'M922.6,673.3 Q786.7,623.3 717.4,526.7' },
-    { key: 'as-r', emph: true, d: 'M717.4,473.3 Q786.7,376.7 922.6,326.7' }
-  ];
+     Assurance(left) -> Research. Derived from the node positions rather than
+     hard-coded, so moving the ring can never leave the arcs behind: each arc
+     starts/ends 46px out from its node centre along the chord (node r36 plus
+     10px clearance) and bows 40px outward from CENTRE at its midpoint.
+     d-as / as-r carry the compounding return (Deployment's data feeding
+     Assurance and Research) and are drawn heavier. */
+  function arcBetween(a, b) {
+    var dx = b.cx - a.cx, dy = b.cy - a.cy, len = Math.hypot(dx, dy);
+    var ux = dx / len, uy = dy / len;
+    var mx = (a.cx + b.cx) / 2, my = (a.cy + b.cy) / 2;
+    var ox = mx - CENTRE.x, oy = my - CENTRE.y, olen = Math.hypot(ox, oy) || 1;
+    var f = function (n) { return Math.round(n * 10) / 10; };
+    return 'M' + f(a.cx + 46 * ux) + ',' + f(a.cy + 46 * uy) +
+           ' Q' + f(mx + 40 * ox / olen) + ',' + f(my + 40 * oy / olen) +
+           ' ' + f(b.cx - 46 * ux) + ',' + f(b.cy - 46 * uy);
+  }
+
+  var ARCS = LABS.map(function (lab, i) {
+    var next = LABS[(i + 1) % LABS.length];
+    return {
+      key: lab.key + '-' + next.key,
+      emph: lab.key === 'deployment' || lab.key === 'assurance',
+      d: arcBetween(lab, next)
+    };
+  });
 
   function ghostMarkup() {
     return LABS.map(function (lab) {
@@ -70,15 +97,22 @@
   }
 
   function labMarkup(lab) {
-    var charterTspans = lab.lines.map(function (line, i) {
-      return '<tspan x="' + lab.tx + '" y="' + lab.charterYs[i] + '">' + line + '</tspan>';
-    }).join('');
     return '' +
       '<g class="s12-lab step" data-step="' + lab.step + '" data-motion="none" data-lab="' + lab.key + '">' +
         '<circle class="s12-lab-node" cx="' + lab.cx + '" cy="' + lab.cy + '" r="' + lab.r + '"/>' +
-        '<text class="s12-lab-label" x="' + lab.tx + '" y="' + lab.labelY + '" text-anchor="' + lab.anchor + '">' + lab.label + '</text>' +
-        '<text class="s12-lab-charter" text-anchor="' + lab.anchor + '">' + charterTspans + '</text>' +
       '</g>';
+  }
+
+  function cardMarkup(lab) {
+    var c = lab.card;
+    return '' +
+      '<div class="s12-card step" data-step="' + lab.step + '" data-motion="none"' +
+        ' data-card="' + lab.key + '" data-align="' + c.align + '"' +
+        ' style="left:calc(' + c.left + ' * var(--px)); top:calc(' + c.top + ' * var(--px));' +
+        ' width:calc(' + c.width + ' * var(--px))">' +
+        '<div class="s12-card-label">' + lab.label + '</div>' +
+        '<p class="s12-card-charter">' + lab.charter + '</p>' +
+      '</div>';
   }
 
   function centreMarkup() {
@@ -107,6 +141,7 @@
           LABS.map(labMarkup).join('') +
           centreMarkup() +
         '</svg>' +
+        LABS.map(cardMarkup).join('') +
       '</div>' +
 
       '<div class="s12-takeaway">' +
@@ -120,12 +155,9 @@
 
   function revealLab(el, key, o) {
     var g = el.querySelector('.s12-lab[data-lab="' + key + '"]');
-    if (!g) return;
-    Anim.scaleIn(g.querySelector('.s12-lab-node'), { duration: Anim.dur(o, 420), fadeFrom: 0, lift: false });
-    Anim.fadeUp(
-      [g.querySelector('.s12-lab-label'), g.querySelector('.s12-lab-charter')],
-      { duration: Anim.dur(o, 450), delay: Anim.dur(o, 140), stagger: Anim.dur(o, 70) }
-    );
+    var card = el.querySelector('.s12-card[data-card="' + key + '"]');
+    if (g) Anim.scaleIn(g.querySelector('.s12-lab-node'), { duration: Anim.dur(o, 420), fadeFrom: 0, lift: false });
+    if (card) Anim.fadeUp(card, { duration: Anim.dur(o, 450), delay: Anim.dur(o, 140) });
   }
 
   function onEnter(el) {

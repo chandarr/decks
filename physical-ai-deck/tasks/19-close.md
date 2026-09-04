@@ -17,20 +17,23 @@ Spacious and calm; everything in the central band.
 - **Faint spine callback (background):** the slide-01 spine `MODELS ——●—— MACHINES` centered, at low contrast (≤10% ink) — a quiet echo of the opener, the `●` (us) the only slightly-emphasized element.
 - **Final punch** (Archivo, large) centered over the spine.
 - **One mission line** beneath it (`--secondary`).
+- **A timing line** below that, in a subtle `--panel` box (hairline border, `--shadow-sm`) — the same mild highlight as the slide-12 charter cards. Names the company in the body of a slide (the persistent `#sidemark` already names it in the chrome).
 - **A quiet closer line** below that.
 
 ## Steps (reveal order)
 
 **0 — Base:** the faint spine + the mission line, at rest.
 **1 — The punch:** the final punch `fadeUp`s in and holds.
-**2 — The closer:** the quiet closer line fades in.
+**2 — The timing:** the boxed timing line `scaleIn`s.
+**3 — The closer:** the quiet closer line fades in.
 
-*(2 advance beats after base. Minimal — this is a closer, not a content slide.)*
+*(3 advance beats after base. Minimal — this is a closer, not a content slide.)*
 
 ## Copy (exact)
 
 - **Final punch:** **The middle is open.**
 - **Mission line:** The orchestration layer between the world's models and its machines — edge, competence, confidence.
+- **Timing line (boxed):** **The timing is perfect — and we can build this at Humyn Labs.**
 - **Closer line:** *And we know how to build it.*
 
 *(Sentence case; spine labels `MODELS` · `MACHINES` UPPER/mono, faint.)*
@@ -45,7 +48,7 @@ None — all native.
 
 ## Animations
 
-`fadeUp` the punch then the closer; the spine is static (present from base). **Reduced motion:** whole page at rest — spine, punch, mission line, closer all visible. **Cleanup:** trivial.
+`fadeUp` the punch, `scaleIn` the boxed timing line, `fadeUp` the closer; the spine is static (present from base). **Reduced motion:** whole page at rest — spine, punch, mission line, timing box, closer all visible. **Cleanup:** trivial.
 
 ## Acceptance criteria
 

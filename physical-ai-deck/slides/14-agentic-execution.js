@@ -11,7 +11,7 @@
 (function () {
   'use strict';
 
-  var BASE_Y = 460, LABEL_Y = 536, SUB_Y = 560;
+  var BASE_Y = 500, LABEL_Y = 576, SUB_Y = 600;
 
   var STATIONS = [
     { key: 'humans', x: 300,  label: 'HUMANS',       sub: 'intent + frontier' },
@@ -25,7 +25,7 @@
 
   function skeletonStation(s) {
     return '' +
-      '<g class="s14-skel-station">' +
+      '<g class="s14-skel-station" data-k="' + s.key + '">' +
         '<circle class="s14-skel-shape" cx="' + s.x + '" cy="' + BASE_Y + '" r="24"/>' +
         '<text class="s14-skel-label mono" x="' + s.x + '" y="' + LABEL_Y + '" text-anchor="middle">' + s.label + '</text>' +
         (s.sub ? '<text class="s14-skel-sub mono" x="' + s.x + '" y="' + SUB_Y + '" text-anchor="middle">' + s.sub + '</text>' : '') +
@@ -36,8 +36,6 @@
     return '' +
       '<g class="s14-station-lit s14-station-lit--humans step" data-step="2" data-motion="none">' +
         '<circle class="s14-node s14-node--humans" cx="' + HUMANS_X + '" cy="' + BASE_Y + '" r="27"/>' +
-        '<text class="s14-lit-label mono" x="' + HUMANS_X + '" y="' + LABEL_Y + '" text-anchor="middle">HUMANS</text>' +
-        '<text class="s14-lit-sub mono" x="' + HUMANS_X + '" y="' + SUB_Y + '" text-anchor="middle">intent + frontier</text>' +
       '</g>';
   }
 
@@ -54,8 +52,6 @@
     return '' +
       '<g class="s14-station-lit s14-station-lit--agents step" data-step="1" data-motion="none">' +
         nodes +
-        '<text class="s14-lit-label mono" x="' + cx + '" y="' + LABEL_Y + '" text-anchor="middle">AGENTS</text>' +
-        '<text class="s14-lit-sub mono" x="' + cx + '" y="' + SUB_Y + '" text-anchor="middle">build (parallel)</text>' +
       '</g>';
   }
 
@@ -66,8 +62,6 @@
         '<rect class="s14-gate-bar" x="' + (x - 27) + '" y="' + (BASE_Y - 28) + '" width="7" height="56" rx="3"/>' +
         '<rect class="s14-gate-bar" x="' + (x + 20) + '" y="' + (BASE_Y - 28) + '" width="7" height="56" rx="3"/>' +
         '<polyline class="s14-gate-glyph-check" points="' + (x - 14) + ',' + BASE_Y + ' ' + (x - 4) + ',' + (BASE_Y + 10) + ' ' + (x + 14) + ',' + (BASE_Y - 12) + '"/>' +
-        '<text class="s14-lit-label mono" x="' + x + '" y="' + LABEL_Y + '" text-anchor="middle">QUALITY GATE</text>' +
-        '<text class="s14-lit-sub mono" x="' + x + '" y="' + SUB_Y + '" text-anchor="middle">verify + review</text>' +
       '</g>';
   }
 
@@ -76,7 +70,6 @@
     return '' +
       '<g class="s14-station-lit s14-station-lit--ship step" data-step="3" data-motion="none">' +
         '<path class="s14-ship-glyph" d="M' + (x - 14) + ',' + (BASE_Y - 16) + ' L' + (x + 16) + ',' + BASE_Y + ' L' + (x - 14) + ',' + (BASE_Y + 16) + ' Z"/>' +
-        '<text class="s14-lit-label mono" x="' + x + '" y="' + LABEL_Y + '" text-anchor="middle">SHIP</text>' +
       '</g>';
   }
 
@@ -204,9 +197,6 @@
     if (i === 1) {
       Anim.scaleIn(el.querySelectorAll('.s14-station-lit--agents .s14-agent-node'), {
         stagger: Anim.dur(o, 60), duration: Anim.dur(o, 360), fadeFrom: 0, lift: false
-      });
-      Anim.fadeUp(el.querySelectorAll('.s14-station-lit--agents .s14-lit-label, .s14-station-lit--agents .s14-lit-sub'), {
-        duration: Anim.dur(o, 380), stagger: Anim.dur(o, 60)
       });
       Anim.fadeUp(el.querySelector('.s14-caption--agents'), { duration: Anim.dur(o, 450), delay: Anim.dur(o, 150) });
     }

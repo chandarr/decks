@@ -2,13 +2,16 @@
 02-end-goal.md
 03-fragmentation-convergence.md
 04-interaction-modalities.md
+04a-pillars.md
+04b-divider-adaptation.md
 05-adaptation-problem.md
 06-adaptation-approach.md
+06a-divider-autonomy.md
 07-autonomy.md
+07a-divider-assurance.md
 08-assurance-problem.md
 09-assurance-approach.md
 10-superhuman.md
-11-beachhead-cascade.md
 12-team.md
 13-india-academy.md
 14-agentic-execution.md

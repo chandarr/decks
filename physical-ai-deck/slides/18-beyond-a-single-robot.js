@@ -15,7 +15,7 @@
 (function () {
   'use strict';
 
-  var CORE = { x: 960, y: 460 };
+  var CORE = { x: 960, y: 480 };
   var RING_R = 150;   // node centres from CORE
   var CORE_R = 26;
   var NODE_R = 10;
@@ -71,7 +71,7 @@
 
           '<text class="s18-expansion step" data-step="1" data-motion="none" x="' + CORE.x + '" y="270" text-anchor="middle">The embodiment becomes the environment &mdash; many machines, one goal.</text>' +
 
-          '<text class="s18-orchline step" data-step="2" data-motion="none" x="' + CORE.x + '" y="675" text-anchor="middle">The same orchestration that composes a robot composes a whole environment.</text>' +
+          '<text class="s18-orchline step" data-step="2" data-motion="none" x="' + CORE.x + '" y="722" text-anchor="middle">The same orchestration that composes a robot composes a whole environment.</text>' +
 
         '</svg>' +
       '</div>' +
