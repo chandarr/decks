@@ -1,0 +1,175 @@
+<title>The Widening Middle</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --canvas:#F3F1EA; --panel:#FBFAF6; --hairline:#D8D4C8;
+    --ink:#191B18; --secondary:#5D6058; --faint:#8C8C82;
+    --model:#2C566E;      /* slate — model world */
+    --embody:#A96A2C;     /* bronze — embodiment world */
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#000;overflow:hidden;
+    font-family:"IBM Plex Sans",system-ui,sans-serif;color:var(--ink)}
+  .viewport{position:fixed;inset:0;display:grid;place-items:center;background:#0a0a0a}
+  .stage{position:relative;width:1920px;height:1080px;background:var(--canvas);
+    transform-origin:center;overflow:hidden}
+  .pad{position:absolute;inset:0;padding:64px 96px}
+
+  .rule{position:absolute;left:96px;right:96px;height:1px;background:var(--hairline)}
+  .rule.top{top:150px} .rule.bot{bottom:150px}
+
+  .kicker{font-family:"IBM Plex Mono",monospace;font-size:19px;letter-spacing:.24em;
+    text-transform:uppercase;color:var(--secondary)}
+  .eyebrow{position:absolute;left:96px;top:70px}
+  .slideno{position:absolute;right:96px;top:64px;font-family:"Archivo",sans-serif;
+    font-weight:700;font-size:26px;color:var(--faint);letter-spacing:.04em}
+  .idtag{position:absolute;right:96px;top:104px;font-family:"IBM Plex Mono",monospace;
+    font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--secondary)}
+  .title{position:absolute;left:94px;top:104px}
+  .title h1{margin:0;font-family:"Archivo",sans-serif;font-weight:800;font-size:60px;
+    line-height:1;letter-spacing:-.02em;color:var(--ink);text-wrap:balance}
+
+  .footer{position:absolute;left:96px;right:96px;bottom:64px}
+  .footer .punch{margin:0 0 10px;font-family:"Archivo",sans-serif;font-weight:700;
+    font-size:31px;letter-spacing:-.01em;color:var(--ink)}
+  .footer .punch em{font-style:normal;border-bottom:2px solid var(--ink);padding-bottom:1px}
+  .footer .line{font-family:"IBM Plex Mono",monospace;font-size:18px;letter-spacing:.02em;color:var(--secondary)}
+  .footer .line b{color:var(--model);font-weight:500}
+  .footer .line i{font-style:normal;color:var(--embody)}
+  .footer .line u{text-decoration:none;color:var(--ink);font-weight:500}
+
+  svg.map{position:absolute;inset:0;width:100%;height:100%}
+  .lbl{font-family:"IBM Plex Mono",monospace;fill:var(--secondary);letter-spacing:.03em}
+  .anchor{font-family:"Archivo",sans-serif;font-weight:700;letter-spacing:.01em}
+  .anchorsub{font-family:"IBM Plex Mono",monospace;font-size:14px;letter-spacing:.14em;
+    text-transform:uppercase;fill:var(--faint)}
+  .caplbl{font-family:"IBM Plex Mono",monospace;font-weight:500;font-size:20px;
+    letter-spacing:.2em;text-transform:uppercase;fill:var(--ink);
+    paint-order:stroke;stroke:var(--canvas);stroke-width:7px}
+  .keyttl{font-family:"Archivo",sans-serif;font-weight:800;font-size:24px;letter-spacing:.03em;
+    fill:var(--ink);paint-order:stroke;stroke:var(--canvas);stroke-width:7px}
+  .keysub{font-family:"IBM Plex Mono",monospace;font-size:14px;letter-spacing:.1em;
+    text-transform:uppercase;fill:var(--secondary)}
+  .super{font-family:"IBM Plex Mono",monospace;font-weight:500;font-size:19px;
+    letter-spacing:.36em;text-transform:uppercase;fill:var(--ink)}
+  .supersub{font-family:"IBM Plex Sans",sans-serif;font-style:italic;font-size:15px;fill:var(--faint)}
+  .rw{font-family:"IBM Plex Mono",monospace;font-weight:500;font-size:17px;
+    letter-spacing:.24em;text-transform:uppercase;fill:var(--ink)}
+
+  .cable{fill:none;stroke:var(--ink);stroke-linecap:round;stroke-dashoffset:0}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  @keyframes pop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+  @keyframes draw{from{stroke-dashoffset:1320}to{stroke-dashoffset:0}}
+  .fx-rise{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
+  .fx-fade{animation:fade .9s ease both}
+  .fx-pop{animation:pop .6s cubic-bezier(.2,1.1,.3,1) both;transform-box:fill-box;transform-origin:center}
+  .fx-draw{stroke-dasharray:1320;animation:draw 1.3s cubic-bezier(.5,0,.2,1) both}
+  @media (prefers-reduced-motion:reduce){
+    .fx-rise,.fx-fade,.fx-pop,.fx-draw{animation:none!important;opacity:1!important;
+      transform:none!important;stroke-dashoffset:0!important}
+  }
+</style>
+
+<div class="viewport">
+  <div class="stage" id="stage">
+    <div class="rule top fx-fade" style="animation-delay:.3s"></div>
+    <div class="rule bot fx-fade" style="animation-delay:.3s"></div>
+
+    <div class="kicker eyebrow fx-fade">Physical AI · Strategy Thesis</div>
+    <div class="title"><h1 class="fx-rise" style="animation-delay:.1s">Winning the Widening Middle</h1></div>
+    <div class="slideno fx-fade" style="animation-delay:.2s">01</div>
+    <div class="kicker idtag fx-fade" style="animation-delay:.25s">Vendor-neutral · India-HQ · Global</div>
+
+    <svg class="map" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" aria-label="Thesis map">
+      <!-- cables (the bridge) -->
+      <path class="cable fx-draw" style="animation-delay:1.4s" d="M470,520 Q960,398 1450,520" stroke-width="2"/>
+      <path class="cable fx-draw" style="animation-delay:1.55s" d="M470,520 Q960,520 1450,520" stroke-width="2.5"/>
+      <path class="cable fx-draw" style="animation-delay:1.7s" d="M470,520 Q960,620 1450,520" stroke-width="2"/>
+
+      <g class="fx-fade" style="animation-delay:2s">
+        <text class="caplbl" x="720" y="452" text-anchor="middle">Adaptation</text>
+        <text class="caplbl" x="720" y="508" text-anchor="middle">Autonomy</text>
+        <text class="caplbl" x="720" y="586" text-anchor="middle">Assurance</text>
+      </g>
+
+      <!-- left: model world -->
+      <g class="fx-fade" style="animation-delay:.5s">
+        <text class="anchor" x="360" y="384" text-anchor="middle" font-size="23" fill="var(--model)">THE MODEL WORLD</text>
+        <text class="anchorsub" x="360" y="410" text-anchor="middle">frontier &amp; open · commoditizing</text>
+      </g>
+      <g font-size="19">
+        <circle class="fx-pop" style="animation-delay:1.25s" cx="470" cy="520" r="8" fill="var(--model)"/>
+        <g>
+          <circle class="fx-pop" style="animation-delay:.85s" cx="362" cy="452" r="4.5" fill="var(--model)"/>
+          <text class="lbl" x="344" y="458" text-anchor="end">Frontier LLMs</text>
+          <circle class="fx-pop" style="animation-delay:.95s" cx="362" cy="497" r="4.5" fill="var(--model)"/>
+          <text class="lbl" x="344" y="503" text-anchor="end">World models</text>
+          <circle class="fx-pop" style="animation-delay:1.05s" cx="362" cy="542" r="4.5" fill="var(--model)"/>
+          <text class="lbl" x="344" y="548" text-anchor="end">VLAs</text>
+          <circle class="fx-pop" style="animation-delay:1.15s" cx="362" cy="587" r="4.5" fill="var(--model)"/>
+          <text class="lbl" x="344" y="593" text-anchor="end">Open-weight</text>
+        </g>
+        <g fill="var(--model)" opacity=".38">
+          <circle class="fx-fade" style="animation-delay:1.3s" cx="414" cy="474" r="2.6"/>
+          <circle class="fx-fade" style="animation-delay:1.4s" cx="420" cy="524" r="2.6"/>
+          <circle class="fx-fade" style="animation-delay:1.35s" cx="406" cy="566" r="2.6"/>
+        </g>
+      </g>
+
+      <!-- right: embodiment world -->
+      <g class="fx-fade" style="animation-delay:.6s">
+        <text class="anchor" x="1560" y="384" text-anchor="middle" font-size="23" fill="var(--embody)">THE EMBODIMENT WORLD</text>
+        <text class="anchorsub" x="1560" y="410" text-anchor="middle">proliferating · many bodies</text>
+      </g>
+      <g font-size="19">
+        <circle class="fx-pop" style="animation-delay:1.25s" cx="1450" cy="520" r="8" fill="var(--embody)"/>
+        <g>
+          <circle class="fx-pop" style="animation-delay:.9s" cx="1558" cy="452" r="4.5" fill="var(--embody)"/>
+          <text class="lbl" x="1576" y="458" text-anchor="start">Humanoids</text>
+          <circle class="fx-pop" style="animation-delay:1s" cx="1558" cy="497" r="4.5" fill="var(--embody)"/>
+          <text class="lbl" x="1576" y="503" text-anchor="start">Arms &amp; cobots</text>
+          <circle class="fx-pop" style="animation-delay:1.1s" cx="1558" cy="542" r="4.5" fill="var(--embody)"/>
+          <text class="lbl" x="1576" y="548" text-anchor="start">AMRs</text>
+          <circle class="fx-pop" style="animation-delay:1.2s" cx="1558" cy="587" r="4.5" fill="var(--embody)"/>
+          <text class="lbl" x="1576" y="593" text-anchor="start">Legged &amp; drones</text>
+        </g>
+        <g fill="var(--embody)" opacity=".38">
+          <circle class="fx-fade" style="animation-delay:1.3s" cx="1506" cy="474" r="2.6"/>
+          <circle class="fx-fade" style="animation-delay:1.4s" cx="1500" cy="524" r="2.6"/>
+          <circle class="fx-fade" style="animation-delay:1.35s" cx="1514" cy="566" r="2.6"/>
+        </g>
+      </g>
+
+      <!-- centre: superhuman / composer / real-world -->
+      <g class="fx-rise" style="animation-delay:2.3s">
+        <text class="super" x="960" y="330" text-anchor="middle">Superhuman</text>
+        <text class="supersub" x="960" y="356" text-anchor="middle">the bonus that falls out</text>
+        <path d="M960,372 l0,18" stroke="var(--ink)" stroke-width="1.5"/>
+      </g>
+
+      <g class="fx-pop" style="animation-delay:2s">
+        <rect x="937" y="497" width="46" height="46" rx="5" transform="rotate(45 960 520)"
+              fill="var(--panel)" stroke="var(--ink)" stroke-width="2.5"/>
+        <circle cx="960" cy="520" r="6" fill="var(--ink)"/>
+      </g>
+      <g class="fx-fade" style="animation-delay:2.5s">
+        <text class="keyttl" x="960" y="608" text-anchor="middle">THE COMPOSER</text>
+        <text class="keysub" x="960" y="632" text-anchor="middle">requirement · budget · application → tailored stack</text>
+        <path d="M960,648 l0,18 M952,658 l8,8 l8,-8" fill="none" stroke="var(--secondary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <text class="rw" x="960" y="700" text-anchor="middle">Real-world application</text>
+      </g>
+    </svg>
+
+    <div class="footer">
+      <p class="punch fx-rise" style="animation-delay:2.7s">Neither end delivers value alone — the enabler is <em>the middle</em>.</p>
+      <p class="line fx-fade" style="animation-delay:3s"><b>the right model</b> + <i>the right embodiment</i> + <u>a reliable harness</u>, composed for the application</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function(){var s=document.getElementById('stage');
+   function fit(){s.style.transform='scale('+Math.min(innerWidth/1920,innerHeight/1080)+')';}
+   fit();addEventListener('resize',fit);})();
+</script>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Winning the Widening Middle of Physical AI</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- CLAUDE.md / BUILD-ORDER.md: zero-based page indexes where Acts II–V
+     begin (0-based page 4 = page 5 = Act II, etc.). engine.js reads this. -->
+<script>
+  window.deckConfig = { actMarkers: [4, 9, 11, 16] };
+</script>
+
+<!-- 16:9 stage; every page mounts inside #frame -->
+<div id="stage">
+  <div id="frame">
+    <div id="page-host"></div>
+
+    <!-- chrome -->
+    <div id="rail" class="no-advance" aria-hidden="true">
+      <div id="rail-fill"></div>
+      <div id="rail-marks"></div>
+    </div>
+    <div id="dots" class="no-advance" aria-hidden="true"></div>
+
+    <!-- testing/dev aid: visible overview button (same principle as the other
+         decks' master-nav-btn) — opens the existing #overview grid so any
+         page can be jumped to directly, without stepping through it (e.g.
+         page 09's re-prove loop). Calls the engine's own public Deck.overview()
+         API; engine.js itself is untouched. -->
+    <button id="nav-btn" class="no-advance" type="button" aria-label="Open screen overview" title="Overview (O)">
+      <span id="nav-btn-grid" aria-hidden="true"></span>
+      <span>Overview</span>
+    </button>
+  </div>
+</div>
+
+<!-- overview grid (O) -->
+<div id="overview" class="no-advance" hidden>
+  <div id="overview-inner">
+    <div id="overview-title">All pages</div>
+    <div id="overview-grid"></div>
+    <div id="overview-hint">click a page to jump &middot; O or esc to close</div>
+  </div>
+</div>
+
+<!-- theme wash (engine-owned; inert — this deck never changes theme) -->
+<div id="wash" aria-hidden="true"></div>
+
+<script src="anim.js"></script>
+<script src="engine.js"></script>
+
+<!-- shared components (GLOBAL §9): locatorMap, tierChip, kicker, carry -->
+<script src="slides/_shared.js"></script>
+
+<!-- slides, in build order (BUILD-ORDER.md Stage 2) -->
+<script src="slides/01-mission.js"></script>
+<script src="slides/02-end-goal.js"></script>
+<script src="slides/03-fragmentation-convergence.js"></script>
+<script src="slides/04-interaction-modalities.js"></script>
+<script src="slides/05-adaptation-problem.js"></script>
+<script src="slides/06-adaptation-approach.js"></script>
+<script src="slides/07-autonomy.js"></script>
+<script src="slides/08-assurance-problem.js"></script>
+<script src="slides/09-assurance-approach.js"></script>
+<script src="slides/10-superhuman.js"></script>
+<script src="slides/11-beachhead-cascade.js"></script>
+<script src="slides/12-team.js"></script>
+<script src="slides/13-india-academy.js"></script>
+<script src="slides/14-agentic-execution.js"></script>
+<script src="slides/15-ip-strategy.js"></script>
+<script src="slides/16-roadmap.js"></script>
+<script src="slides/17-what-breaks-this.js"></script>
+<script src="slides/18-beyond-a-single-robot.js"></script>
+<script src="slides/19-close.js"></script>
+
+<script>
+  Deck.start();
+  document.getElementById('nav-btn').addEventListener('click', function () { Deck.overview(); });
+</script>
+</body>
+</html>
